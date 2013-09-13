@@ -1,0 +1,1 @@
+( ap-description  :name "MoodleEnv" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://guilherme-A410-K-BE47P1:7778/acc))))
