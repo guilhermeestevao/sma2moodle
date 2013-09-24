@@ -57,9 +57,8 @@ public class OrientarAlunoNotaBaixa extends Action {
 				for(Aluno al : results.getValue()){
 					
 					StringBuilder smallmessage = new StringBuilder();
-					smallmessage.append("Prezado Aluno, \n\n");
-					smallmessage.append("No curso " + results.getKey().getFullName() + ", o seu rendimento está baixo. Procure o seu grupo para apoio ou," +
-							"caso ainda não tenha um, busque apoio com seus colegas de curso");
+					smallmessage.append("Prezado(a) "+al.getCompleteName()+" \n\n");
+					smallmessage.append("Na disciplina " + results.getKey().getFullName() +" ,o seu rendimento está baixo.Procure o seu grupo de estudo ou,caso ainda não tenha um, busque apoio com seus colegas de curso \n\n");
 				
 					
 					Long time = System.currentTimeMillis();
