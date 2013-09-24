@@ -4,12 +4,14 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import moodle.Agentes.AcompanhanteDeProfessores;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Atividade;
 import moodle.dados.Curso;
@@ -40,13 +42,13 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(20 * 1000L);
 
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-		
-		if (!mantemAtivo)
+
+		if(!ControleActions.isInformarNotasAtrasadas())
 			return;
-
+		
+		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		boolean podeEnviar = false;
@@ -87,9 +89,9 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						}
 						
 						
-						String smallmessage = "Prezado "+professor.getLastName() +", \n";
-						smallmessage+="J� fazem duas semanas que a atidade "+atividade.getName()+" no curo "+curso.getFullName()+" teve seu perido de avalia��o encerrado, por�m as notas dos alunos n�o foram postadas \n\n";
-						smallmessage+="Procure postar as notas dos alunos o quanto antes.";
+						String smallmessage = "Prezado(a) "+professor.getLastName() +", \n";
+						smallmessage+="Já fazem duas semanas que a atidade "+atividade.getName()+" da disciplina "+curso.getFullName()+" teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas.\n";
+						smallmessage+="Favor postar as notas dos alunos o quanto antes. \n";
 						smallmessage +="\n";
 						
 						String fullmessage = smallmessage;
@@ -108,7 +110,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						((MoodleEnv)env).addMensagem(msg);
 						
 					}catch(NullPointerException e){
-						e.printStackTrace();
+						ControleActions.setInformarNotasAtrasadas(false);
 					}
 					
 				}
