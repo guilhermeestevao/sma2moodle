@@ -1,5 +1,6 @@
 package dao;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -26,6 +27,7 @@ public abstract class GenericJpaDAO<T> implements GenericDAO<T> {
 	 */
 	@Override
 	public T find(Object id) {
+		
 		return getEm().find(persistentClass, id);
 		
 	}

@@ -40,7 +40,8 @@ import moodle.dados.grupos.Grupo;
 public class GerenciaCurso {
 
 	private List<Curso> cursos;
-	 
+	CursoDAO dao = new CursoJpaDAO();
+
 	
 	public GerenciaCurso() {
 		cursos = new ArrayList<Curso>();
@@ -53,8 +54,11 @@ public class GerenciaCurso {
 	
 	
 	public void addCursos(){
-		CursoDAO dao = new CursoJpaDAO();
 		cursos = dao.findAll();
+	}
+	
+	public void addCurso(BigInteger id){
+		cursos.add(dao.find(id));
 	}
 
 	public static <T extends AtividadeParticipacao> List<T> addAtividadeParticipacaoCurso(String query, Curso curso){
@@ -400,10 +404,10 @@ public class GerenciaCurso {
 		
 			Coordenador coo = (Coordenador) query.getSingleResult();
 		
-			Tutor t = c.getTutor();
+			List<Tutor> ts = c.getTutores();
 			
-			
-			t.setCoordenador(coo);
+			for(Tutor t :ts)
+				t.setCoordenador(coo);
 		
 		}catch(NoResultException|NullPointerException e){
 			System.out.println("Não há coordenador no curso");
@@ -678,12 +682,11 @@ public class GerenciaCurso {
 		EntityManager manager = JPAUtil.getEntityManager();
 		
 		
-		BigInteger idTutor = null;
-		try {
-			idTutor = curso.getTutor().getId();
-		} catch (NullPointerException e) {
-
-		}
+		
+		List<Tutor> tutores  = curso.getTutores();
+	
+		for(Tutor tutor : tutores){
+		BigInteger idTutor = tutor.getId();
 
 		if (!foruns.isEmpty()) {
 
@@ -802,6 +805,8 @@ public class GerenciaCurso {
 			}
 															
 		}
+		
+	}
 			
 			
 		
