@@ -9,9 +9,13 @@ import java.util.List;
 
 
 
+
+import java.util.ResourceBundle.Control;
+
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.PedagogicoAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -42,12 +46,12 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
-		block(23 * 1000L);
-		
-		mantemAtivo = ((MoodleEnv)env).getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+	
+		if(!ControleActions.isInformaAtividadeDisciplina())
 			return;
+		
+		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
@@ -59,18 +63,19 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 			
 			
 			StringBuilder smallmessage = new StringBuilder();
-			smallmessage.append("Prezado Aluno, \n\n");
-			smallmessage.append("As atividades da disciplina " + curso.getFullName() + " s�o: \n");
-			
-			for(Atividade at : curso.getAllAtividades()){
-				smallmessage.append("- " + at.getName() + "\n");
-			}
-			
-			
+		
+		
+	
 			
 			
 			for(Aluno al : curso.getAlunos()){
 				
+				smallmessage.append("Prezado()" + al.getCompleteName()+", \n\n");
+				smallmessage.append("As atividades da disciplina " + curso.getFullName() + " s�o: \n");
+				
+				for(Atividade at : curso.getAllAtividades()){
+					smallmessage.append("- " + at.getName() + "\n");
+				}
 				
 				if(verificaControle(curso.getId(), al.getId()))
 					continue;
@@ -104,7 +109,7 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 			
 		}
 		
-				
+		ControleActions.setInformaAtividadeDisciplina(false);
 	}
 	
 	@Override

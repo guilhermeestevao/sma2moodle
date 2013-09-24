@@ -4,11 +4,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import dao.GerenciaCurso;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.PedagogicoAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -40,13 +40,12 @@ public class InformarPreRequisitos extends ActionMoodle {
 	
 	@Override
 	public void execute(Environment env, Object[] params) {
-		
-		block(24*1000L);
-		
-		mantemAtivo = ((MoodleEnv)env).getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+				
+		if(!ControleActions.isInformaPreRequisito())
 			return;
+		
+		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
@@ -60,25 +59,29 @@ public class InformarPreRequisitos extends ActionMoodle {
 				continue;
 			
 			
-			
-			StringBuilder smallmessage = new StringBuilder();
-			smallmessage.append("Prezado Aluno, \n\n");
-			smallmessage.append("Revise os principais conceitos da(s) disciplina(s) ");
-			
-			int cont = 0;
-			
-			for(Curso preReq : curso.getCursosPreRequisito()){
-				if(cont > 0)
-					smallmessage.append(", ");
-				smallmessage.append(preReq.getFullName());
-				cont++;
-			}
-			
-			smallmessage.append(" para que seu aprendizado em " + curso.getFullName() +  " seja maximizado");
-			
-			
+		
 			
 			for(Aluno al : curso.getAlunos()){
+				
+				
+				
+				StringBuilder smallmessage = new StringBuilder();
+				smallmessage.append("Prezado Aluno,"+ al.getCompleteName()+" \n\n");
+				smallmessage.append("Revise os principais conceitos da(s) disciplina(s) ");
+				
+				int cont = 0;
+				
+				for(Curso preReq : curso.getCursosPreRequisito()){
+					if(cont > 0)
+						smallmessage.append(", ");
+					smallmessage.append(preReq.getFullName());
+					cont++;
+				}
+				
+				smallmessage.append(" para que seu aprendizado em " + curso.getFullName() +  " seja maximizado");
+				
+				
+				
 				
 				if(verificaControle(curso.getId(), al.getId()))
 					continue;
@@ -112,7 +115,7 @@ public class InformarPreRequisitos extends ActionMoodle {
 			
 		}
 		
-				
+			ControleActions.setInformaPreRequisito(false);
 	}
 	
 	@Override
