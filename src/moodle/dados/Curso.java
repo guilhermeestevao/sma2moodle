@@ -21,7 +21,7 @@ import moodle.dados.grupos.Grupo;
 
 @Entity
 @Table(name = "mdl_course")
-@NamedQuery(name="Curso.findById", query="SELECT curso FROM Curso curso WHERE id = ?1")
+@NamedQuery(name="Curso.findById", query="SELECT curso FROM Curso curso WHERE id =?1")
 public class Curso implements Serializable{
 
 	/**
@@ -35,9 +35,7 @@ public class Curso implements Serializable{
 	private String sectioncache;
 	
 	@Transient
-	private Professor professor;
-	@Transient
-	private Tutor tutor;
+	private Professor professor ;
 	@Transient
 	private List<Tutor> tutores;
 	@Transient
@@ -77,9 +75,6 @@ public class Curso implements Serializable{
 		this.professor = professor;
 	}
 
-	public Tutor getTutor(){
-		return tutor;
-	}
 	
 	public List<Tutor> getTutores(){
 		return this.tutores;
