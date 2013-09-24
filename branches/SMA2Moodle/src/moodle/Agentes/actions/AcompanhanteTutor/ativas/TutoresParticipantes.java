@@ -10,6 +10,7 @@ import jamder.behavioural.Condition;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -41,13 +42,11 @@ public class TutoresParticipantes extends ActionMoodle{
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
-		block(21 * 1000L);
-		
-		mantemAtivo = ((MoodleEnv)env).getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+
+		if(!ControleActions.isTutoresPArticipantes())
 			return;
 		
+		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
 		
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
@@ -62,7 +61,9 @@ public class TutoresParticipantes extends ActionMoodle{
 		
 		for(Curso curso : cursos){
 			
-			Tutor tutor = curso.getTutor();
+			List<Tutor> tutores = curso.getTutores();
+			
+			for(Tutor tutor: tutores){
 			
 			if(tutor == null)
 				continue;
@@ -80,9 +81,9 @@ public class TutoresParticipantes extends ActionMoodle{
 			
 			forunsSemTotor.clear();
 			
-			String smallmessage = "Prezado "+tutor.getCompleteName() +", \n";
+			String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
 			
-			smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes f�runs: \n\n";
+			smallmessage+="Na disciplina "+curso.getFullName()+",  existe(m) o(s) seguinte(s) fórum(s) onde sua participação não foi identificada: \n  \n\n";
 			
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
@@ -100,10 +101,8 @@ public class TutoresParticipantes extends ActionMoodle{
 				}
 		
 			}
-			
-			smallmessage +="\n\nOnde sua participa��o n�o foi encontrada. ";
-		
-			smallmessage +="� necessario que voc� participe para incentivar os alunos desse curso";
+	
+			smallmessage +="\n  É necessário que você participe para motivar a interação entre os alunos \n";
 		
 			if(podeEnviar){
 				
@@ -126,10 +125,13 @@ public class TutoresParticipantes extends ActionMoodle{
 				
 				((MoodleEnv)env).addMensagem(msg);
 			}
+			
 			}catch(NullPointerException e){
-				
+				ControleActions.setTutoresPArticipantes(false);
+			}
 			}
 		}
+		ControleActions.setTutoresPArticipantes(false);
 	}
 	
 	public boolean done(){

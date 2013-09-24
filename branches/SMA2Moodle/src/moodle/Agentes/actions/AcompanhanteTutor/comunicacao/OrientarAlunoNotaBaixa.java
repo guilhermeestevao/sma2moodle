@@ -7,6 +7,7 @@ import java.util.Map;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
+import moodle.dados.Tutor;
 import moodle.dados.mensagem.Mensagem;
 import jamder.Environment;
 import jamder.behavioural.Action;
@@ -52,22 +53,24 @@ public class OrientarAlunoNotaBaixa extends Action {
 		
 			for(Map.Entry<Curso, List<Aluno>> results : alunosNotaBaixa.entrySet()){
 				
-				if(results.getKey().getTutor() == null)
+				if(results.getKey().getTutores().isEmpty())
 					continue;
 	
+				List<Tutor> tutores = results.getKey().getTutores();
 				
+				for(Tutor tutor : tutores){
 				
 				StringBuilder smallmessage = new StringBuilder();
-				smallmessage.append("Tutor, os seguintes alunos, em seu respectivo curso, estão com notas baixas: \n\n");
+				smallmessage.append("Prezado(a) "+tutor.getCompleteName()+" ''\n Os seguintes alunos, estão com notas baixas \n\n");
 				
 				smallmessage.append(results.getKey().getFullName() + ":\n\n");
 				
-				BigInteger useridto = new BigInteger(results.getKey().getTutor().getId().toString());			
+				BigInteger useridto = new BigInteger(tutor.getId().toString());			
 				
 				for(Aluno al : results.getValue()){
 					smallmessage.append(al.getCompleteName() + "\n");
 				}
-				smallmessage.append("Fa�a um acompanhamento mais pr�ximo sugerindo leituras e cobrando mais esfor�o.");
+				smallmessage.append("Faça um acompanhamento mais próximo sugerindo leituras e cobrando mais empenho..");
 				
 				
 				StringBuilder fullmessage = new StringBuilder(smallmessage);
@@ -83,6 +86,8 @@ public class OrientarAlunoNotaBaixa extends Action {
 				msg.setTimecreated(time);
 					
 				envir.addMensagem(msg);
+				
+			}
 				
 			}
 			

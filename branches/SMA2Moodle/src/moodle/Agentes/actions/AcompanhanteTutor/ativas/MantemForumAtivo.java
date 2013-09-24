@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 
+
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -13,6 +15,7 @@ import dao.GerenciaCurso;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -46,13 +49,11 @@ public class MantemForumAtivo extends ActionMoodle{
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
-		block(23*1000L);
-		
-		mantemAtivo = ((MoodleEnv)env).getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+
+		if(!ControleActions.isMantemForumAtivo())
 			return;
-		
+			
+		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
@@ -64,7 +65,9 @@ public class MantemForumAtivo extends ActionMoodle{
 		
 		for(Curso curso : cursos){
 			
-			Tutor tutor = curso.getTutor();
+			List<Tutor> tutores = curso.getTutores();
+			
+			for(Tutor tutor : tutores){
 			
 			if(tutor == null || tutor.getId() == null)
 				continue;
@@ -78,9 +81,9 @@ public class MantemForumAtivo extends ActionMoodle{
 			
 			podeEnviar = false;
 		
-			String smallmessage = "Prezado "+tutor.getCompleteName() +", \n";
+			String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
 			
-			smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes f�runs: \n\n";
+			smallmessage+="Na disciplina "+curso.getFullName()+", existe(m) o(s) seguinte(s) fórum(s): \n\n";
 			
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
@@ -106,9 +109,7 @@ public class MantemForumAtivo extends ActionMoodle{
 		
 			}
 			
-			smallmessage +="\n\nn�o foram encontradas publica��es dos alunos nos �ltimos dias. ";
-		
-			smallmessage +="Motive os alunos para que continuarem participando desses f�runs, pois s�o avaliativos!";
+			smallmessage +="\nnão foram encontradas publicações dos alunos nos últimos dias. Motive os alunos para que continuem participando desses fóruns, pois são avaliativos ";
 		
 			if(podeEnviar){
 			
@@ -133,10 +134,12 @@ public class MantemForumAtivo extends ActionMoodle{
 				((MoodleEnv)env).addMensagem(msg);
 			}
 			}catch(NullPointerException e){
-				
+				ControleActions.setMantemForumAtivo(false);
 			}
+			
 		}
-		
+		}
+		ControleActions.setMantemForumAtivo(false);
 	}
 	
 	

@@ -11,6 +11,7 @@ import org.joda.time.Days;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -44,13 +45,11 @@ public class MantemTutorAtivo extends ActionMoodle{
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-	block(24*1000L);
-		
-		mantemAtivo = ((MoodleEnv)env).getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+	
+		if(!ControleActions.isManteTutorAtivo())
 			return;
 		
+		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
@@ -62,8 +61,9 @@ public class MantemTutorAtivo extends ActionMoodle{
 		
 		for(Curso curso : cursos){
 			
-			Tutor tutor = curso.getTutor();
+			List<Tutor> tutores = curso.getTutores();
 			
+			for(Tutor tutor : tutores){
 			if(tutor == null)
 				continue;
 			
@@ -75,9 +75,9 @@ public class MantemTutorAtivo extends ActionMoodle{
 			
 			podeEnviar = false;
 			
-			String smallmessage = "Prezado "+tutor.getLastName() +", \n";
+			String smallmessage = "Prezado(a) "+tutor.getLastName() +", \n";
 			
-			smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes f�runs: \n\n";
+			smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes fóruns onde ocorreram publicações pelos alunos e não foi constatada a sua participação nos últimos dias: \n\n\n";
 			
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
@@ -114,10 +114,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 				}
 			}
 			
-			smallmessage +="\n\nonde acorreram publica��es pelos alunos, por�m n�o foi constatado sua participa��o nos �ltimos dias";
-		
-			smallmessage +="Procure analisar as publica��es, realizando comentarios, sugest�es ou criticas. ";
-		
+			smallmessage +="\n Analise as postagens dos alunos, realizando comentários, sugestões ou criticas.";
 			if(podeEnviar){
 				
 				AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
@@ -142,9 +139,11 @@ public class MantemTutorAtivo extends ActionMoodle{
 				((MoodleEnv)env).addMensagem(msg);
 			}
 			}catch(NullPointerException e){
-				
+				ControleActions.setManteTutorAtivo(false);
 			}
 		}
+		}
+		ControleActions.setManteTutorAtivo(false);
 	}
 	
 
