@@ -15,20 +15,18 @@ import javax.persistence.EntityManager;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Agentes.actions.Companheiro.comunicacao.InitiatorAcompanhanteTutorAgChatCriado;
 import moodle.Org.Dao;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
-
 import moodle.dados.contexto.Contexto;
 import moodle.dados.contexto.Topico;
 import moodle.dados.Curso;
 import moodle.dados.contexto.ModuloCurso;
 import moodle.dados.controleag.ActionAgente;
 import moodle.dados.atividades.AtividadeNota;
-
 import moodle.dados.atividades.Chat;
-
 import moodle.dados.atividades.Questionario;
 import moodle.dados.mensagem.Mensagem;
 import dao.GerenciaCurso;
@@ -37,7 +35,6 @@ import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jamder.Environment;
-
 import jamder.behavioural.Condition;
 
 public class CriaChat extends ActionMoodle {
@@ -65,13 +62,16 @@ public class CriaChat extends ActionMoodle {
 
 	public void execute(Environment env, Object[] params) {
 
-		block(20 * 1000L);
 
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
 
-		if (!mantemAtivo)
+		
+		
+		if(!ControleActions.isCriaChat())
 			return;
 
+		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		
+		
 		boolean podeEnviar = false;
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd:MM:yyyy - hh:mm:ss");
@@ -159,9 +159,9 @@ public class CriaChat extends ActionMoodle {
 								
 								BigInteger useridfrom = new BigInteger("2");
 								BigInteger useridto = aluno.getId();
-								String smallmessage = "Prezado " + aluno.getCompleteName() + ", \n";
-								smallmessage+="com a aproxima��o de uma atividade avaliativa foi marcado um chat na deguinte data e hora :"+dateFormat.format(chat.getChattime())+". \n\n";
-								smallmessage+="Aproveite para tirar possiveis d�vidas com o tutor e/ou seus colegas";
+								String smallmessage = "Prezado(a) " + aluno.getCompleteName() + ", \n";
+								smallmessage+="Por conta da aproximação de uma atividade avaliativa, foi marcado um chat na seguinte data e hora:"+dateFormat.format(chat.getChattime())+". \n\n";
+								smallmessage+="Aproveite para tirar possíveis dúvidas com o tutor e seus colegas \ns";
 								
 								
 								smallmessage += "\n"; 	
@@ -190,6 +190,8 @@ public class CriaChat extends ActionMoodle {
 
 		}
 		
+		ControleActions.setCriaChat(false);
+		
 		try {
 			ACLMessage aclMsg = new ACLMessage(ACLMessage.REQUEST);
 			aclMsg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -199,8 +201,11 @@ public class CriaChat extends ActionMoodle {
 			myAgent.addBehaviour(new InitiatorAcompanhanteTutorAgChatCriado(myAgent, aclMsg));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			ControleActions.setCriaChat(false);
 		}
 		
+
 
 	}
 

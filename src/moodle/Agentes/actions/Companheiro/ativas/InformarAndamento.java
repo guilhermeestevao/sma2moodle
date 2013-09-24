@@ -5,10 +5,12 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import dao.GerenciaCurso;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -46,15 +48,14 @@ public class InformarAndamento extends ActionMoodle {
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
-		block(21 * 1000L);
+
 		
 		MoodleEnv envir = (MoodleEnv) env;
 		
-		mantemAtivo = envir.getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+		if(!ControleActions.isInformaAndamento())
 			return;
-	
+		
+		System.out.println(ControleActions.isInformaAndamento()+" "+this.getClass());
 		
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		
@@ -85,8 +86,8 @@ public class InformarAndamento extends ActionMoodle {
 				
 				BigInteger useridto = aluno.getId();
 				
-				String smallmessage = "Prezado " + aluno.getCompleteName() + ", \n";
-				smallmessage += "Na disciplina " + curso.getFullName() + " , seu atual andamento �: \n\n";
+				String smallmessage = "Prezado(a)" + aluno.getCompleteName() + ", \n";
+				smallmessage += "Na disciplina " + curso.getFullName() + " ,  seu atual desempenho é: \n\n";
 				
 				
 				
@@ -135,13 +136,13 @@ public class InformarAndamento extends ActionMoodle {
 					
 					if(nota != null){
 					
-						smallmessage += "\n Sua nota final atual no curso �: " + nota.toString();
+						smallmessage += "\n Sua média atual é:: " + nota.toString();
 						
 						if(nota.intValue() < 70){
-							smallmessage += "\n Prezado aluno, sua m�dia final est� abaixo da m�dia necessaria. Procure estudar mais, pe�aa ajuda aos colegas e busque se envolver mais nas atividades";
+							smallmessage += "\n Procure estudar mais, peça ajuda aos colegas e ao tutor e busque se envolver mais nas atividades";
 							
 						}else{
-							smallmessage += "\n Parab�ns! Continue estudando e buscando evoluir em sua nota.";
+							smallmessage += "\n Parabéns! Continue estudando e buscando evoluir em seus estudos. \n";
 						}
 					
 						
@@ -197,7 +198,7 @@ public class InformarAndamento extends ActionMoodle {
 			
 		}
 		
-		//done = true;
+		ControleActions.setInformaAndamento(false);
 		
 	}
 	

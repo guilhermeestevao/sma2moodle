@@ -7,9 +7,12 @@ import java.util.Date;
 import java.util.List;
 
 
+import java.util.ResourceBundle.Control;
+
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -42,7 +45,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 	
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(23 * 1000L);
+	
 
 		
 		/*
@@ -52,11 +55,13 @@ public class MostraNovaDisciplina extends ActionMoodle{
 		 * E existe a MostraNovaDisciplina do Agente Acompanhante
 		 */
 		
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+		
+		if(!ControleActions.isMostraNovaDisciplinaAluno())
 			return;
-
+				
+		System.out.println(ControleActions.isMostraNovaDisciplinaAluno()+" "+this.getClass());
+		
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -90,13 +95,13 @@ public class MostraNovaDisciplina extends ActionMoodle{
 					try {
 						BigInteger useridto = al.getId();
 
-						String smallmessage = "Prezado " + al.getCompleteName() + ", \n";
+						String smallmessage = "Prezado(a)  " + al.getCompleteName() + ". \n";
 
-						smallmessage += " em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
+						smallmessage += " Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
 		
 						smallmessage += " chamada " + c.getFullName() + ".";
 						
-						smallmessage += " Procure ler o conte�do dessa disciplina";
+						smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n ";
 
 						if (podeEnviar) {
 					
@@ -120,12 +125,14 @@ public class MostraNovaDisciplina extends ActionMoodle{
 						}
 
 					} catch (NullPointerException e) {
-
+						ControleActions.setMostraNovaDisciplinaAluno(false);
 					}
 
 				}
 			}
 		}
+		
+		ControleActions.setMostraNovaDisciplinaAluno(false);
 
 	}
 

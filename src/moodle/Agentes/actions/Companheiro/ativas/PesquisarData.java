@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+import java.util.ResourceBundle.Control;
 
 import dao.GerenciaCurso;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -46,14 +47,15 @@ public class PesquisarData extends ActionMoodle {
 	
 	public void execute(Environment env, Object[] params){
 		
-		block(24 * 1000L);
+
 		
 		MoodleEnv envir = (MoodleEnv)env;
 		
-		mantemAtivo = envir.getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
+		if(!ControleActions.isPesquisaData())
 			return;
+		
+		System.out.println(ControleActions.isPesquisaData()+" "+this.getClass());
+		
 		
 		boolean podeEnviar = false;
 		
@@ -81,8 +83,8 @@ public class PesquisarData extends ActionMoodle {
 				
 				BigInteger useridto = aluno.getId();
 				
-				String smallmessage = "Prezado " + aluno.getCompleteName() + ", \n";
-				smallmessage += "Na disciplina " + curso.getFullName() + " h� algumas atividades pendentes, s�o elas: \n\n";
+				String smallmessage = "Prezado(a) " + aluno.getCompleteName() + ", \n";
+				smallmessage += "Na disciplina " + curso.getFullName() + "  há algumas atividades pendentes, são elas: \n";
 				
 				
 				for(AtividadeNota at : curso.getAtividadesNota()){
@@ -100,7 +102,7 @@ public class PesquisarData extends ActionMoodle {
 					dateFormat.applyPattern("dd/MM/yyyy");
 					smallmessage += at.getName() + " - Finaliza em: "  + dateFormat.format(at.getDataFinal());
 					dateFormat.applyPattern("H:mm");
-					smallmessage += " �s " + dateFormat.format(at.getDataFinal()) + "\n\n";
+					smallmessage += " às " + dateFormat.format(at.getDataFinal()) + "\n\n";
 				
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
@@ -125,8 +127,8 @@ public class PesquisarData extends ActionMoodle {
 					dateFormat.applyPattern("dd/MM/yyyy");
 					smallmessage += at.getName() + " - Finaliza em: " + dateFormat.format(at.getDataFinal());
 					dateFormat.applyPattern("H:mm");
-					smallmessage += " �s " + dateFormat.format(at.getDataFinal()) + "\n\n";
-				
+					smallmessage += " às " + dateFormat.format(at.getDataFinal()) + "\n\n";
+					smallmessage+="\n\n Fique atento com estas datas.";
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
 					}else{
@@ -171,7 +173,7 @@ public class PesquisarData extends ActionMoodle {
 		}
 		
 	
-		//done = true;
+		ControleActions.setPesquisaData(false);
 		
 	}
 	
