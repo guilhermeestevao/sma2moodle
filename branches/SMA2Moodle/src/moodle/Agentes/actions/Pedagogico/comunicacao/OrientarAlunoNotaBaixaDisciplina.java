@@ -73,8 +73,8 @@ public class OrientarAlunoNotaBaixaDisciplina extends Action {
 				for(Aluno al : results.getValue()){
 					
 					StringBuilder smallmessage = new StringBuilder();
-					smallmessage.append("Prezado Aluno, \n\n");
-					smallmessage.append("Estude mais a disciplina " + results.getKey().getFullName() + ", pois seu rendimento está baixo. É uma disciplina fundamental, sendo pre-requisito das seguintes disciplinas: \n");
+					smallmessage.append("Prezado Aluno,"+al.getCompleteName()+" \n\n");
+					smallmessage.append("Estude mais a disciplina " + results.getKey().getFullName() + ", pois seu rendimento está abaixo do desejado e esta é uma disciplina fundamental para o curso, sendo pré-requisito das seguintes disciplinas: \n\n");
 					smallmessage.append(cursos.toString());
 					
 					
