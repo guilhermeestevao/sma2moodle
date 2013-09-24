@@ -3,6 +3,7 @@ package moodle.Agentes.actions.AcompanhanteTutor.ativas;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -10,7 +11,9 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 import dao.GerenciaCurso;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Coordenador;
 import moodle.dados.Curso;
@@ -45,13 +48,11 @@ public class NotificaCoordenadorDeTutores extends Action {
 	
 	public void execute(Environment env, Object[] params) {
 		
-		block(20 * 1000L);
-		
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-		
-		if (!mantemAtivo)
-			return;
 
+		if(!ControleActions.isNotificaCoordenadorDeTutores())
+			return;
+		
+		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		boolean podeEnviar = false;
@@ -62,7 +63,9 @@ public class NotificaCoordenadorDeTutores extends Action {
 
 			try {
 
-				Tutor t = c.getTutor();
+				List<Tutor> tutores = c.getTutores();
+				
+				for(Tutor t: tutores){
 				Coordenador coordenador = t.getCoordenador();
 				
 				
@@ -72,7 +75,7 @@ public class NotificaCoordenadorDeTutores extends Action {
 				if(podeEnviar){
 					
 					String assunto = "A definir";
-					String mensagem = "  Sr(a) Coordenador(a) de tutores, \n\nFoi detectado que o(s) tutore(s) "+t.getCompleteName()+" n�o est�o desempenhando suas atividades a contento em rela��o a participa��o destes nos f�runs, COMPLETAR COM OS OUTROS RECURSOS QUE O AGENTE DE TUTORES MONITORA. Favor entrar em contato com estes para fazer o acompanhamento do que est� ocorrendo e incentiv�-los a uma melhor participa��o. ";
+					String mensagem = " Sr(a) Coordenador(a) de tutores \nFoi detectado que o(s) tutore(s) "+t.getCompleteName()+" não estão desempenhando suas atividades a contento em relação a participação nos fóruns. Favor entrar em contato com este(s) para fazer o acompanhamento e incentivá-los a uma melhor participação. ";
 					String destinatario = coordenador.getEmail();
 				
 					Properties props = new Properties();
@@ -98,13 +101,18 @@ public class NotificaCoordenadorDeTutores extends Action {
 						Transport.send(message);
 						
 					} catch (MessagingException e) {
+						ControleActions.setNotificaCoordenadorDeTutores(false);
 						throw new RuntimeException(e);
 					}
 				}
 				
-			} catch (NullPointerException e) {
-
 			}
+			} catch (NullPointerException e) {
+				ControleActions.setNotificaCoordenadorDeTutores(false);
+			}
+			
+			
+			ControleActions.setNotificaCoordenadorDeTutores(false);
 
 		}
 

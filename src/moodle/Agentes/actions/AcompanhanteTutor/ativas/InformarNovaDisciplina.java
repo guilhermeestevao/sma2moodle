@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -40,13 +41,13 @@ public class InformarNovaDisciplina extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(22 * 1000L);
-
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+	
+		
+		if(!ControleActions.isInformaAtividadeDisciplina())
 			return;
-
+		
+		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -60,7 +61,7 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for (Curso curso : cursos) {
-			tutores.add(curso.getTutor());
+			tutores.addAll(curso.getTutores());
 
 			dias = difDias(curso.getDataCriacao());
 
@@ -84,13 +85,13 @@ public class InformarNovaDisciplina extends ActionMoodle {
 					try {
 						BigInteger useridto = t.getId();
 
-						String smallmessage = "Prezado " + t.getLastName()+ ", \n";
+						String smallmessage = "Prezado(a) " + t.getLastName()+ ". \n";
 
-						smallmessage += " em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
+						smallmessage += "Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
 		
 						smallmessage += " chamada " + c.getFullName() + ".";
 						
-						smallmessage += " Procure ler o conte�do dessa disciplina";
+						smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
 
 						if (podeEnviar) {
 							
@@ -115,13 +116,14 @@ public class InformarNovaDisciplina extends ActionMoodle {
 						}
 
 					} catch (NullPointerException e) {
-
+						ControleActions.setInformaAtividadeDisciplina(false);
 					}
 
 				}
 			}
 		}
 
+		ControleActions.setInformaAtividadeDisciplina(false);
 	}
 
 	private int difDias(Date data) {

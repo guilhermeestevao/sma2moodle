@@ -8,6 +8,7 @@ import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
 import moodle.dados.Curso;
+import moodle.dados.Tutor;
 import moodle.dados.mensagem.Mensagem;
 import jamder.Environment;
 import jamder.behavioural.Action;
@@ -44,17 +45,19 @@ public class InformarAtividadesEncerrando extends Action {
 		
 		for(Curso curso : cursos){
 		
-			if(curso.getTutor() == null)
+			if(curso.getTutores().isEmpty())
 				continue;
 			
+			
+			for(Tutor tutor : curso.getTutores()){
 			
 			// Lembrar de add o nome do curso
 			//Lembrar de avisar ao guilherme para consertar problema de
 			//enviar aluno que nao tem atividades encerrando
 			
 			StringBuilder smallmessage = new StringBuilder();
-			smallmessage.append("Tutor, \n\n");
-			smallmessage.append("Abaixo os alunos que ainda não participaram das atividades que estão encerrando na disciplina " + curso.getFullName() +": \n\n");
+			smallmessage.append("Prezado(s),+"+tutor.getCompleteName()+". \n\n");
+			smallmessage.append("Abaixo segue a lista dos alunos que ainda não participaram das atividades que estão encerrando na disciplina " + curso.getFullName() +": \n\n");
 			
 			
 			for(Map.Entry<Aluno, List<Atividade>> results : atividades.entrySet()){
@@ -75,11 +78,12 @@ public class InformarAtividadesEncerrando extends Action {
 				}
 			
 			}
+			
 				
 				Long time = System.currentTimeMillis();
-				
+				smallmessage.append("Entre em contato com este(s) para alerta-los sobre as datas");
 				BigInteger useridfrom = new BigInteger("2");
-				BigInteger useridto = new BigInteger(curso.getTutor().getId().toString());
+				BigInteger useridto = new BigInteger(tutor.getId().toString());
 				
 				StringBuilder fullmessage = new StringBuilder(smallmessage);
 				fullmessage.append("\n--------------------------------------------------------------------- \nEste e-mail é a cópia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder.");
@@ -95,7 +99,8 @@ public class InformarAtividadesEncerrando extends Action {
 				
 				envir.addMensagem(msg);
 				
-			
+		
+		}
 		
 		}
 		

@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.hibernate.service.spi.Stoppable;
+
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -17,7 +21,6 @@ import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.atividades.Forum;
 import moodle.dados.mensagem.Mensagem;
 import dao.GerenciaCurso;
-
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -46,11 +49,9 @@ public class AlunosParticipantes extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(21 * 1000L);
 
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+		
+		if(!ControleActions.isAlunosParticipantes())
 			return;
 
 		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
@@ -64,10 +65,13 @@ public class AlunosParticipantes extends ActionMoodle {
 		
 		for (Curso curso : cursos) {
 
-			Tutor tutor = curso.getTutor();
+			List<Tutor> tutores = curso.getTutores();
 			
-			if(tutor == null)
+			
+			if(tutores.isEmpty())
 				continue;
+			
+			for(Tutor tutor : tutores){
 			
 			if(verificaControle(curso.getId(), tutor.getId()))
 				continue;
@@ -79,7 +83,7 @@ public class AlunosParticipantes extends ActionMoodle {
 
 				podeEnviar = false;
 
-				String smallmessage = "Prezado " + tutor.getCompleteName()+ ", \n";
+				String smallmessage = "Prezado(a) " + tutor.getCompleteName()+ ". \n";
 
 				smallmessage += "Na disciplina " + curso.getFullName()+ ", existem os seguintes f�runs: \n\n";
 
@@ -106,12 +110,11 @@ public class AlunosParticipantes extends ActionMoodle {
 									}
 								}
 							}
-
 						}
 					}
 				}
-				smallmessage += "\nn�o possuem nenhuma participa��o nos respectivos foruns ou n�o receberam suas devidas notas referentes a postagens realizadas \n";
-				smallmessage += "Seria interessante que voc� incentivasse essas alunos especificos a participarem dos f�runs, mesmo que tais n�o sejam avaliativos.";
+				smallmessage += "\nnão possue(m) nenhuma participação no(s) respectivo(s) fórum(ns) ou não receberam suas devidas notas referentes a postagens realizadas. \n";
+				smallmessage += "É necessário que você incentive e acompanhe a participação desse(s) aluno(s) nos respectivos fórum(s).";
 
 				if (podeEnviar) {
 			
@@ -138,9 +141,13 @@ public class AlunosParticipantes extends ActionMoodle {
 				}
 
 			} catch (NullPointerException e) {
-
+				ControleActions.setAlunosParticipantes(false);
 			}
+			
 		}
+		}
+		
+		ControleActions.setAlunosParticipantes(false);
 
 	}
 
