@@ -4,6 +4,7 @@ import jamder.Environment;
 import jamder.behavioural.Condition;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,28 +63,23 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		for(Curso curso : cursos){
 			
 			
-			StringBuilder smallmessage = new StringBuilder();
-		
-		
-	
+			String smallmessage = new String();
+			smallmessage+="Prezado(a) Aluno, \n\n";
+			smallmessage+="As atividades da disciplina " + curso.getFullName() + " s�o: \n";
 			
+			for(Atividade at : curso.getAllAtividades()){
+				smallmessage+="- " + at.getName() + "\n";
+			}
 			
 			for(Aluno al : curso.getAlunos()){
+
 				
-				smallmessage.append("Prezado()" + al.getCompleteName()+", \n\n");
-				smallmessage.append("As atividades da disciplina " + curso.getFullName() + " s�o: \n");
-				
-				for(Atividade at : curso.getAllAtividades()){
-					smallmessage.append("- " + at.getName() + "\n");
-				}
-				
-				if(verificaControle(curso.getId(), al.getId()))
+				PedagogicoAgente comp = (PedagogicoAgente)myAgent;
+				if(verificaMens(curso.getId(), al.getId(), smallmessage))
 					continue;
 				else{
-					
-					PedagogicoAgente comp = (PedagogicoAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), curso.getId());
-				
+					Timestamp atual = new Timestamp(System.currentTimeMillis());
+					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), curso.getId(),atual,smallmessage);
 				}
 				
 				BigInteger useridto = al.getId();

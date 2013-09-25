@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.Companheiro.ativas;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,10 +73,7 @@ public class PesquisarData extends ActionMoodle {
 			
 			for(Aluno aluno : curso.getAlunos()){
 				
-				if(verificaControle(curso.getId(), aluno.getId()))
-					continue;
 				
-					
 				
 				
 				
@@ -140,12 +138,18 @@ public class PesquisarData extends ActionMoodle {
 				}
 				
 				
-				
 				if(podeEnviar){
-				
-					CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId());
+					//Timestamp atual = new Timestamp(System.currentTimeMillis());
+					//CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+					//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId(),atual);
 					
+					CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+					if(verificaMens(curso.getId(), aluno.getId(), smallmessage))
+						continue;
+					else{
+						Timestamp atual = new Timestamp(System.currentTimeMillis());
+						AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId(),atual,smallmessage);
+					}
 					
 					String fullmessage = smallmessage;
 					

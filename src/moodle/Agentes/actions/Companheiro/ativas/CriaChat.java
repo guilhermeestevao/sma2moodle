@@ -3,6 +3,7 @@ package moodle.Agentes.actions.Companheiro.ativas;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -146,16 +147,6 @@ public class CriaChat extends ActionMoodle {
 							
 							if(podeEnviar){
 							
-								if(verificaControle(c.getId(), aluno.getId()))
-									continue;
-								else{
-									
-									CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), c.getId());
-									
-									
-								}
-								
 								
 								BigInteger useridfrom = new BigInteger("2");
 								BigInteger useridto = aluno.getId();
@@ -165,6 +156,16 @@ public class CriaChat extends ActionMoodle {
 								
 								
 								smallmessage += "\n"; 	
+								
+								
+								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+								if(verificaMens(c.getId(), aluno.getId(), smallmessage))
+									continue;
+								else{
+									Timestamp atual = new Timestamp(System.currentTimeMillis());
+									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), c.getId(),atual,smallmessage);
+								}
+								
 								String fullmessage = smallmessage;
 								fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail é a cópia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
 								Long time = System.currentTimeMillis();

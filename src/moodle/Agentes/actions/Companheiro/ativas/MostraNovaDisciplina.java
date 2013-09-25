@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.Companheiro.ativas;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,11 +87,6 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 			for (Curso c : novosCursos) {
 				for (Aluno al : c.getAlunos()) {
-
-					if(verificaControle(c.getId(), al.getId()))
-						continue;
-					
-					
 					
 					try {
 						BigInteger useridto = al.getId();
@@ -103,13 +99,20 @@ public class MostraNovaDisciplina extends ActionMoodle{
 						
 						smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n ";
 
-						if (podeEnviar) {
-					
-							CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId());
-							
-							
-							smallmessage += "\n";
+							if (podeEnviar) {
+								//Timestamp atual = new Timestamp(System.currentTimeMillis());
+								//CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+								//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual);
+								
+								
+								smallmessage += "\n";
+								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+								if(verificaMens(c.getId(), al.getId(), smallmessage))
+									continue;
+								else{
+									Timestamp atual = new Timestamp(System.currentTimeMillis());
+									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
+								}
 							String fullmessage = smallmessage;
 							fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
 							Long time = System.currentTimeMillis();

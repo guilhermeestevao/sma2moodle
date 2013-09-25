@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.AcompanhanteDeProfessores;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -79,21 +80,19 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						BigInteger useridfrom = new BigInteger("2");
 						
 						
-						if(verificaControle(curso.getId(), useridto))
-							continue;
-						else{
-							
-							AcompanhanteDeProfessores comp = (AcompanhanteDeProfessores)myAgent;
-							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), useridto, curso.getId());
-
-						}
-						
 						
 						String smallmessage = "Prezado(a) "+professor.getLastName() +", \n";
 						smallmessage+="Já fazem duas semanas que a atidade "+atividade.getName()+" da disciplina "+curso.getFullName()+" teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas.\n";
 						smallmessage+="Favor postar as notas dos alunos o quanto antes. \n";
 						smallmessage +="\n";
 						
+						AcompanhanteDeProfessores comp = (AcompanhanteDeProfessores)myAgent;
+						if(verificaMens(curso.getId(), useridto, smallmessage))
+							continue;
+						else{
+							Timestamp atual = new Timestamp(System.currentTimeMillis());
+							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), useridto, curso.getId(),atual,smallmessage);
+						}
 						String fullmessage = smallmessage;
 						fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
 						
