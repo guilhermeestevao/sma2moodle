@@ -2,6 +2,7 @@ package moodle.Agentes.actions.AcompanhanteTutor.ativas;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +73,7 @@ public class AlunosParticipantes extends ActionMoodle {
 				continue;
 			
 			for(Tutor tutor : tutores){
-			
-			if(verificaControle(curso.getId(), tutor.getId()))
-				continue;
-			
+		
 
 			Set<Aluno> alunos = curso.getAlunos();
 			try {
@@ -116,12 +114,21 @@ public class AlunosParticipantes extends ActionMoodle {
 				smallmessage += "\nnão possue(m) nenhuma participação no(s) respectivo(s) fórum(ns) ou não receberam suas devidas notas referentes a postagens realizadas. \n";
 				smallmessage += "É necessário que você incentive e acompanhe a participação desse(s) aluno(s) nos respectivos fórum(s).";
 
-				if (podeEnviar) {
-			
-					AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), tutor.getId(), curso.getId());
-					
-					smallmessage += "\n";
+						
+					if (podeEnviar) {
+						//Timestamp atual = new Timestamp(System.currentTimeMillis());
+						//AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
+						//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), tutor.getId(), curso.getId(),atual);
+						
+						smallmessage += "\n";
+						
+						AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
+						if(verificaMens(curso.getId(), tutor.getId(), smallmessage))
+							continue;
+						else{
+							Timestamp atual = new Timestamp(System.currentTimeMillis());
+							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), tutor.getId(), curso.getId(),atual,smallmessage);
+						}
 					String fullmessage = smallmessage;
 					fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="
 							+ useridto
