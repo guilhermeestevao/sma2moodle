@@ -14,9 +14,9 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
+import moodle.dados.atividades.Licao;
 import moodle.dados.grupos.Grupo;
 
 @Entity
@@ -52,6 +52,12 @@ public class Curso implements Serializable{
 	private Collection<Curso> cursosPreRequisito; 
 	@Transient
 	private Collection<Grupo> grupos;	
+	@Transient
+	private Collection<Licao> licoes;
+	@Transient
+	private Collection<Url> url;
+	@Transient
+	private Collection<Folder> folder;
 	
 	public Curso(){
 		alunos = new HashSet<Aluno>();
@@ -61,6 +67,9 @@ public class Curso implements Serializable{
 		grupos = new HashSet<Grupo>();
 		notaGeralAlunos = new HashMap<Aluno, BigDecimal>();
 		cursosPreRequisito = new HashSet<Curso>();
+		licoes = new HashSet<Licao>();
+		url = new HashSet<Url>();
+		folder = new HashSet<Folder>();
 	}
 	
 	public void setSectioncache(String sectioncache) {
@@ -164,6 +173,39 @@ public class Curso implements Serializable{
 		return cursosPreRequisito;
 	}
 
+	public void addLicao(Licao licao){
+		licoes.add(licao);
+	}
+	public void addLicao(Collection<Licao> licao){
+		licoes.addAll(licao);
+	}
+	
+	public Collection<Licao> getLicaoCurso(){
+		return licoes;
+	}
+	
+	public void addUrl(Url url){
+		this.url.add(url);
+	}
+	
+	public void addUrl(Collection<Url> urls){
+		this.url.addAll(urls);
+	}
+	
+	public Collection<Url> getUrlCurso(){
+		return this.url;
+	}
+	
+	public void addFolder(Folder fold){
+		this.folder.add(fold);
+	}
+	public void addFolder(Collection<Folder> folders){
+		folder.addAll(folders);
+	}
+	public Collection<Folder> getFolderCurso(){
+		return folder;
+	}
+	
 	public Date getDataCriacao(){
 		long milisec = 1000;
 		return new Date(timecreated*milisec); 
