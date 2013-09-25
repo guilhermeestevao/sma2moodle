@@ -1,18 +1,17 @@
 package moodle.Agentes.actions.AjudanteAgente.ativas;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
-
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import moodle.dados.Log;
-
 import moodle.dados.mensagem.Mensagem;
 import dao.GerenciaCurso;
 import jamder.Environment;
@@ -80,17 +79,12 @@ public class ExibirDicasCalendario extends ActionMoodle {
 
 			for (Aluno al : c.getAlunos()) {
 
-				if(verificaControle(c.getId(), al.getId()))
-					continue;
 				
 				
 				
 				podeEnviar = isAddCalendar(al);
 
 				if (podeEnviar) {
-					
-					AjudanteAgente comp = (AjudanteAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId());
 					
 					
 					
@@ -100,6 +94,15 @@ public class ExibirDicasCalendario extends ActionMoodle {
 					smallmessage += "Voc� tamb�m pode cadastar eventos de acordo com o ritimo de seus estudos clicando em NOVO EVENTO";
 					
 					smallmessage += "\n";
+					
+					AjudanteAgente comp = (AjudanteAgente)myAgent;
+					if(verificaMens(c.getId(), al.getId(), smallmessage))
+						continue;
+					else{
+						Timestamp atual = new Timestamp(System.currentTimeMillis());
+						AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
+					}
+					
 					String fullmessage = smallmessage;
 					fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="
 							+ useridto

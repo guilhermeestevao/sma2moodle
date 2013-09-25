@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.AjudanteAgente.ativas;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,19 +81,11 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 
 			for (Aluno al : c.getAlunos()) {
 
-				if(verificaControle(c.getId(), al.getId()))
-					continue;
-				
-				
 				
 				podeEnviar = isViewAll(al);
 				
 				if (podeEnviar) {
 				
-					AjudanteAgente comp = (AjudanteAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId());
-					
-					
 					BigInteger useridto = al.getId();
 					String smallmessage = "Ol� "+ al.getCompleteName()+ " para saber quem mais est�o matriculado no mesmo curso que voc�, ";
 					smallmessage += "ou mesmos quem seja o respomsavel pelo andamento do curso como tutores e professres, basta ir no menu de navega��o no canto direito da tela ";
@@ -101,6 +94,14 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 
 					
 					smallmessage += "\n";
+					
+					AjudanteAgente comp = (AjudanteAgente)myAgent;
+					if(verificaMens(c.getId(), al.getId(), smallmessage))
+						continue;
+					else{
+						Timestamp atual = new Timestamp(System.currentTimeMillis());
+						AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
+					}
 					String fullmessage = smallmessage;
 					fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="
 							+ useridto

@@ -1,6 +1,7 @@
 package moodle.Agentes;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 
 import moodle.dados.controleag.ActionAgente;
 import dao.ActionAgenteDAO;
@@ -9,7 +10,7 @@ import jade.core.Agent;
 
 public final class AgenteUtil {
 
-	public static void addActionAgente(int idAction, int idAgente, BigInteger idAluno, BigInteger idCurso){
+public static void addActionAgente(int idAction, int idAgente, BigInteger idAluno, BigInteger idCurso, Timestamp s, String mens){
 		
 		ActionAgenteDAO actAg = new ActionAgenteJpaDAO();
 		
@@ -22,6 +23,8 @@ public final class AgenteUtil {
 			ag.setId_agente(idAgente);
 			ag.setId_aluno(idAluno);
 			ag.setId_curso(idCurso);
+			ag.setData_envio(s);
+			ag.setMensagem(mens);
 			
 			actAg.save(ag);
 			actAg.commit();

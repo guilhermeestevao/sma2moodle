@@ -2,6 +2,7 @@ package moodle.Agentes.actions.Companheiro.ativas;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,14 +74,14 @@ public class InformarAndamento extends ActionMoodle {
 			
 			for(Aluno aluno : curso.getAlunos()){
 			
-				if(verificaControle(curso.getId(), aluno.getId()))
-					continue;
-				else{
+			//	if(verificaControle(curso.getId(), aluno.getId()))
+				//	continue;
+				//else{
 					
-					CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId());
+					//CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+					//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId());
 					
-				}
+			//	}
 				
 				atividadesAlunoSemNota.clear();
 				
@@ -175,6 +176,13 @@ public class InformarAndamento extends ActionMoodle {
 					
 				Long time = System.currentTimeMillis();
 				
+				CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+				if(verificaMens(curso.getId(), aluno.getId(), smallmessage))
+					continue;
+				else{
+					Timestamp atual = new Timestamp(System.currentTimeMillis());
+					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId(),atual,smallmessage);
+				}
 				
 				Mensagem msg = new Mensagem();
 				msg.setSubject("Nova mensagem do Administrador");

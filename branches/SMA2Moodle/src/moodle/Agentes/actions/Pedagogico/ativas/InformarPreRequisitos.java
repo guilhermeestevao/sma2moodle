@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.Pedagogico.ativas;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,35 +63,31 @@ public class InformarPreRequisitos extends ActionMoodle {
 		
 			
 			for(Aluno al : curso.getAlunos()){
+
+				String smallmessage = new String();
+				smallmessage+="Prezado(a) Aluno(a), \n\n";
+				smallmessage+="Revise os principais conceitos da(s) disciplina(s)";
 				
-				
-				
-				StringBuilder smallmessage = new StringBuilder();
-				smallmessage.append("Prezado Aluno,"+ al.getCompleteName()+" \n\n");
-				smallmessage.append("Revise os principais conceitos da(s) disciplina(s) ");
 				
 				int cont = 0;
 				
 				for(Curso preReq : curso.getCursosPreRequisito()){
 					if(cont > 0)
-						smallmessage.append(", ");
-					smallmessage.append(preReq.getFullName());
+						smallmessage+=", ";
+					smallmessage+=preReq.getFullName();
 					cont++;
 				}
 				
-				smallmessage.append(" para que seu aprendizado em " + curso.getFullName() +  " seja maximizado");
+				smallmessage+=" para que seu aprendizado em " + curso.getFullName() +  " seja maximizado";
 				
 				
-				
-				
-				if(verificaControle(curso.getId(), al.getId()))
+				PedagogicoAgente comp = (PedagogicoAgente)myAgent;
+				if(verificaMens(curso.getId(), al.getId(), smallmessage))
 					continue;
 				else{
-					
-					PedagogicoAgente comp = (PedagogicoAgente)myAgent;
-					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), curso.getId());
+					Timestamp atual = new Timestamp(System.currentTimeMillis());
+					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), curso.getId(),atual,smallmessage);
 				}
-				
 				
 				BigInteger useridto = al.getId();
 				

@@ -26,6 +26,7 @@ import moodle.dados.contexto.Topico;
 import moodle.dados.Material;
 import moodle.dados.contexto.ModuloCurso;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import dao.GerenciaCurso;
 import dao.JPAUtil;
@@ -62,6 +63,7 @@ public class CriarUrl extends ActionMoodle{
 		
 		if(!mantemAtivo)
 			return;
+		
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 		licaoCurso = ((MoodleEnv) env).getLicaoCursoProcessado();
