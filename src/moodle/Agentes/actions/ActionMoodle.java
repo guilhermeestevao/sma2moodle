@@ -1,6 +1,7 @@
 package moodle.Agentes.actions;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -62,4 +63,35 @@ public class ActionMoodle extends Action {
 		
 	}
 
+	protected boolean verificaMens(BigInteger idCurso, BigInteger idAluno, String mens){
+		try{
+			
+			JPAUtil.beginTransaction();
+			
+			Query q = 	JPAUtil.getEntityManager().createNativeQuery("SELECT mensagem FROM ag_actions_agentes WHERE id_curso = ? AND id_aluno = ? AND id_action = ?");
+			q.setParameter(1, idCurso);
+			q.setParameter(2, idAluno);
+			q.setParameter(3, idAction);
+			
+			List<String> mensagens = q.getResultList();
+			
+			for(String mensa: mensagens){
+				if(mensa.equals(mens)){
+					return true;
+				}
+			}
+			
+			
+		}catch(NoResultException e){
+			//retorna false caso não exista mensagem enviada por essa action nesse curso para esse atual aluno
+			// retornando falso ele irá enviar a mensagem
+			return false;
+		}finally{
+			JPAUtil.closeEntityManager();
+		}
+		//retorna false caso exista mensagem enviada por essa action mas não sejá igual a que já foi enviada.
+		return false;
+	}
+	
+	
 }
