@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,11 +31,13 @@ import moodle.Agentes.AgentesSimuladores.Aluno.AlunoRuim;
 import moodle.Agentes.AgentesSimuladores.Tutor.TutorBom;
 import moodle.dados.Atividade;
 import moodle.dados.Curso;
+import moodle.dados.Url;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.controleag.ActionAgente;
 import moodle.dados.grupos.Grupo;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.atividades.Licao;
 
 public class MoodleEnv extends Environment {
 	
@@ -48,6 +51,8 @@ public class MoodleEnv extends Environment {
 	private List<Grupo> grupos;
 	private Map<Curso, List<Aluno>> alunosNotaBaixa;
 	private Map<Aluno, List<Atividade>> atividadesEncerrando;
+	private Map<Curso, HashSet<Licao>> licaoCurso;
+	private Map<Curso, HashSet<Url>> urlCurso;
 	
 	public MoodleEnv (String name, String host, String port) {
 	    super(name, host, port);
@@ -107,6 +112,8 @@ public class MoodleEnv extends Environment {
 	    grupos = Collections.synchronizedList(new ArrayList<Grupo>());
 	    alunosNotaBaixa = Collections.synchronizedMap(new HashMap<Curso, List<Aluno>>());
 	    atividadesEncerrando = Collections.synchronizedMap(new HashMap<Aluno, List<Atividade>>());
+	    licaoCurso = Collections.synchronizedMap(new HashMap<Curso, HashSet<Licao>>());
+	    urlCurso =  Collections.synchronizedMap(new HashMap<Curso, HashSet<Url>>());
 	    
 	    gerenciadorBeans = new GerenciadorBeans(gerenciadorCurso, this);
 	    controladorActions = new ControladorActions(this);
@@ -213,6 +220,52 @@ public class MoodleEnv extends Environment {
 		
 		setAtividadesEncerrando();
 		return getAtividadesEncerrando();
+	}
+	
+	public Map<Curso, HashSet<Licao>> getLicaoCurso(){
+		return licaoCurso;
+	}
+	
+	public Map<Curso, HashSet<Licao>> getLicaoCursoProcessado(){
+		if(!getLicaoCurso().isEmpty()){
+			getLicaoCurso().clear();
+		}
+		setLicaoCurso();
+		return getLicaoCurso();
+	}
+	
+	public void setLicaoCurso(){
+		for(Curso curso: getGerenciaCurso().getCursos()){
+			if(!getLicaoCurso().containsKey(curso)){
+				getLicaoCurso().put(curso, new HashSet<Licao>());
+			}
+			
+			GerenciaCurso.addLicaoCurso(curso);
+			getLicaoCurso().put(curso, (HashSet<Licao>)curso.getLicaoCurso());
+		}
+	}
+	
+	public Map<Curso, HashSet<Url>> getUrlCurso(){
+		return urlCurso;
+	}
+	
+	public Map<Curso, HashSet<Url>> getUrlCursoProcessado(){
+		if(!getUrlCurso().isEmpty()){
+			getUrlCurso().clear();
+		}
+		setUrlCurso();
+		return getUrlCurso();
+	}
+	
+	public void setUrlCurso(){
+		for(Curso curso: getGerenciaCurso().getCursos()){
+			if(!getUrlCurso().containsKey(curso)){
+				getUrlCurso().put(curso, new HashSet<Url>());
+			}
+			
+			GerenciaCurso.addUrlCurso(curso);
+			getUrlCurso().put(curso, (HashSet<Url>)curso.getUrlCurso());
+		}
 	}
 	
 	public Map<Aluno, List<Atividade>> getAtividadesEncerrando(){

@@ -18,10 +18,13 @@ import moodle.dados.Aluno;
 import moodle.dados.Atividade;
 import moodle.dados.Coordenador;
 import moodle.dados.Curso;
+import moodle.dados.Files;
+import moodle.dados.Folder;
 import moodle.dados.Log;
 import moodle.dados.Professor;
 import moodle.dados.Tag;
 import moodle.dados.Tutor;
+import moodle.dados.Url;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.atividades.Chat;
@@ -146,6 +149,84 @@ public class GerenciaCurso {
 		
 		
 	}
+	
+	
+public static void addLicaoCurso(Curso curso){
+		
+		EntityManager manager = JPAUtil.getEntityManager();
+		
+		Query query = manager.createNamedQuery("Licao.findByCourse");
+		query.setParameter(1, curso.getId());
+
+		List<Licao> licao = query.getResultList();
+		
+		if(!licao.isEmpty()){
+			curso.addLicao(licao);
+		}
+		
+	}
+	
+	public static void addUrlCurso(Curso curso){
+		
+		EntityManager manager = JPAUtil.getEntityManager();
+		
+		Query query = manager.createNamedQuery("UrlByCurso");
+		query.setParameter(1, curso.getId());
+		
+		List<Url> urls = query.getResultList();
+		
+		if(!urls.isEmpty()){
+			curso.addUrl(urls);
+		}   
+	}
+	
+	public static void addFolderCurso(Curso curso){
+	
+		EntityManager manager = JPAUtil.getEntityManager();
+		
+		Query query = manager.createNamedQuery("FolderByCurso");
+		query.setParameter(1, curso.getId());
+		
+		List<Folder> folders = query.getResultList();
+		
+		if(!folders.isEmpty()){
+			for(Folder f : folders){
+				addFilesFolder(f);
+				curso.addFolder(f);
+			}	
+		}   
+	}
+	
+	public static void addFilesFolder(Folder folder){
+		
+		EntityManager manager = JPAUtil.getEntityManager();
+		
+		Query query_modulo = manager.createNativeQuery("SELECT id FROM mdl_course_modules WHERE module = 8 AND instance = ?1");
+		query_modulo.setParameter(1, folder.getId());
+		List<BigInteger> ids_modulo = query_modulo.getResultList();
+		BigInteger course_modulo = new BigInteger("0");
+		for(BigInteger b:ids_modulo){
+			 course_modulo = b;
+		}
+		
+		Query query_contexto = manager.createNativeQuery("SELECT id FROM mdl_context WHERE contextlevel = 70 AND instanceid = ?1");
+		query_contexto.setParameter(1, course_modulo);
+		List<BigInteger> ids_context = query_contexto.getResultList();
+		BigInteger id_contexto = new BigInteger("0");
+		for(BigInteger c:ids_context){
+			 id_contexto = c;
+		}
+		
+		Query query = manager.createNamedQuery("FilesByFolder");
+		query.setParameter(1, id_contexto);
+		
+		List<Files> files_f = query.getResultList();
+		if(!files_f.isEmpty()){
+			folder.addFiles(files_f);
+		}  
+	}
+	
+	
 	
 	public static void addGruposCurso(Curso curso){
 		
