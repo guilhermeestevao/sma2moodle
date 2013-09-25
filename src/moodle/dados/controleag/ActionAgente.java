@@ -1,6 +1,7 @@
 package moodle.dados.controleag;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,8 @@ public class ActionAgente {
 	private int id_action;
 	private BigInteger id_curso;
 	private BigInteger id_aluno;
+	private Timestamp data_envio;
+	private String mensagem;
 	
 	public long getId() {
 		return id;
@@ -51,6 +54,17 @@ public class ActionAgente {
 		this.id_aluno = id_aluno;
 	}
 	
-	
+	public Timestamp getData_envio() {
+		return data_envio;
+	}
+	public void setData_envio(Timestamp data_envio) {
+		this.data_envio = data_envio;
+	}
+	public String getMensagem() {
+		return mensagem;
+	}
+	public void setMensagem(String mensagem) {
+		this.mensagem = mensagem;
+	}
 	
 }

@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.AcompanhanteTutor.ativas;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -78,9 +79,6 @@ public class InformarNovaDisciplina extends ActionMoodle {
 				for (Tutor t : tutores) {
 
 					
-					if(verificaControle(c.getId(), t.getId()))
-						continue;
-					
 					
 					try {
 						BigInteger useridto = t.getId();
@@ -92,15 +90,25 @@ public class InformarNovaDisciplina extends ActionMoodle {
 						smallmessage += " chamada " + c.getFullName() + ".";
 						
 						smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
-
-						if (podeEnviar) {
-							
-							AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
-							
-							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), t.getId(), c.getId());
-						
 							
 							smallmessage += "\n";
+							if (podeEnviar) {
+								//Timestamp atual = new Timestamp(System.currentTimeMillis());
+								//AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
+								
+								//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), t.getId(), c.getId(),atual);
+							
+								
+								smallmessage += "\n";
+								
+								AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
+								if(verificaMens(c.getId(), t.getId(), smallmessage))
+									continue;
+								else{
+									Timestamp atual = new Timestamp(System.currentTimeMillis());
+									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), t.getId(), c.getId(),atual,smallmessage);
+								}
+							
 							String fullmessage = smallmessage;
 							fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
 							Long time = System.currentTimeMillis();
