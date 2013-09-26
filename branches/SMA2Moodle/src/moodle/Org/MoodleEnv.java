@@ -38,6 +38,7 @@ import moodle.dados.controleag.ActionAgente;
 import moodle.dados.grupos.Grupo;
 import moodle.dados.mensagem.Mensagem;
 import moodle.dados.atividades.Licao;
+import moodle.Agentes.AgenteAuxiliarDeEvasao;
 
 public class MoodleEnv extends Environment {
 	
@@ -66,25 +67,33 @@ public class MoodleEnv extends Environment {
 	    AgentRole CompanheiroAgRole = new ModelAgentRole("CompanheiroAgRole", MoodleOrg, CompanheiroAg); 
 	    addAgent("CompanheiroAg", CompanheiroAg); 
 		
+	    GenericAgent BuscadorAg= new BuscadorAgente("BuscadorAg", this, null);
+	    AgentRole BuscadorAgRole = new ModelAgentRole("BuscadorAgRole", MoodleOrg, BuscadorAg); 
+	    //addAgent("BuscadorAg", BuscadorAg); 
+	    
 		GenericAgent FormadorAg = new FormadorAgente("FormadorAg", this, null);
 	    AgentRole FormadorAgRole = new ProactiveAgentRole("FormadorAgRole", MoodleOrg, FormadorAg); 
 	    //addAgent("FormadorAg", FormadorAg);
 		
 	    GenericAgent AcompanhanteTutorAg = new AcompanhanteTutorAgente("AcompanhanteTutorAg", this, null);
 	    AgentRole AcompanhanteTutorAgRole = new ModelAgentRole("AcompanhanteTutorAgRole", MoodleOrg, AcompanhanteTutorAg); 
-	    addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
+	    //addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
 	    
 		GenericAgent PedagogicoAg = new PedagogicoAgente("PedagogicoAg", this, null);
 	    AgentRole PedagogicoAgRole = new ProactiveAgentRole("PedagogicoAgRole", MoodleOrg, PedagogicoAg); 
-	    addAgent("PedagogicoAg", PedagogicoAg);   
+	    //addAgent("PedagogicoAg", PedagogicoAg);   
 	    
 		GenericAgent AjudanteAg = new AjudanteAgente("AjudanteAg", this, null);
 	    AgentRole AjudanteAgRole = new AgentRole("AjudanteAgRole", MoodleOrg, AjudanteAg); 
 	    //addAgent("AjudanteAg", AjudanteAg);   
 	    
+	    GenericAgent AgenteAuxiliarDeEvasaoAg = new AgenteAuxiliarDeEvasao("AgenteAuxiliarDeEvasaoAg", this, null);
+	    AgentRole AgenteAuxiliarDeEvasaoAgRole = new AgentRole("AgenteAuxiliarDeEvasaoAgRole", MoodleOrg, AgenteAuxiliarDeEvasaoAg); 
+	    addAgent("AgenteAuxiliarDeEvasaoAg", AgenteAuxiliarDeEvasaoAg);   
+	    
 	    GenericAgent AcompanhanteDeProfessoresAg = new AcompanhanteDeProfessores("AcompanhanteDeProfessoresAg", this, null);
 	    AgentRole AcompanhanteDeProfessoresAgAgRole = new ProactiveAgentRole("AcompanhanteDeProfessoresAgRole", MoodleOrg, AjudanteAg); 
-	    addAgent("AcompanhanteDeProfessoresAg", AjudanteAg);
+	    //addAgent("AcompanhanteDeProfessoresAg", AjudanteAg);
 	    
 		GenericAgent alunoBom = new AlunoBom("alunoBom", this, null);
 		AgentRole alunoBomRole = new ReflexAgentRole("alunoBomRole", MoodleOrg, alunoBom);
