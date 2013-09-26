@@ -3,6 +3,7 @@ package moodle.Agentes;
 import java.util.List;
 import java.util.Map;
 
+import moodle.Agentes.actions.AjudanteAgente.comunicacao.VerificarEvasao;
 import moodle.Agentes.actions.Formador.comunicacao.ResponderAgentes;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -17,9 +18,17 @@ import jamder.structural.Goal;
 
 public class AgenteAuxiliarDeEvasao extends UtilityAgent{
 
-	protected AgenteAuxiliarDeEvasao(String name, Environment environment, AgentRole agentRole) {
+	private int idAgente;
+	
+	public AgenteAuxiliarDeEvasao(String name, Environment environment, AgentRole agentRole) {
 		super(name, environment, agentRole);
 		// TODO Auto-generated constructor stub
+	
+		setIdAgente(9);
+	
+		Action verificarEvasao = new VerificarEvasao("verificarEvasao ",null,null);
+		addAction("verificarEvasao ", verificarEvasao);
+	
 	}
 
 	
@@ -67,5 +76,11 @@ public class AgenteAuxiliarDeEvasao extends UtilityAgent{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public int getIdAgente() {
+		return idAgente;
+	}
 
+	public void setIdAgente(int idAgente) {
+		this.idAgente = idAgente;
+	}
 }

@@ -38,20 +38,20 @@ public class CompanheiroAgente extends ModelAgent {
       */
       
      Action comunicarFormadorAgNotasBaixas = new ComunicarFormadorAgNotasBaixas("comunicarFormadorAgNotasBaixas", null, null);
-     addAction("comunicarFormadorAgNotasBaixas", comunicarFormadorAgNotasBaixas);
+     //addAction("comunicarFormadorAgNotasBaixas", comunicarFormadorAgNotasBaixas);
      
      
      Action comunicarAcompanhanteTutorAgNotasBaixas = new ComunicarAcompanhanteTutorAgNotasBaixas("comunicarAcompanhanteTutorAgNotasBaixas", null, null);
-     addAction("comunicarAcompanhanteTutorAgNotasBaixas",comunicarAcompanhanteTutorAgNotasBaixas);
+     //addAction("comunicarAcompanhanteTutorAgNotasBaixas",comunicarAcompanhanteTutorAgNotasBaixas);
      
      
      Action comunicarPedagogicoAgNotasBaixas = new ComunicarPedagogicoAgNotasBaixas("comunicarPedagogicoAgNotasBaixas", null, null);
-     addAction("comunicarPedagogicoAgNotasBaixas",comunicarPedagogicoAgNotasBaixas);
+     //addAction("comunicarPedagogicoAgNotasBaixas",comunicarPedagogicoAgNotasBaixas);
      
      
      
      Action comunicarAcompanhanteTutorAgAtividadesEncerrando = new ComunicarAcompanhanteTutorAgAtividadesEncerrando("ComunicarAcompanhanteTutorAgAtividadesEncerrando", null, null);
-     addAction("ComunicarAcompanhanteTutorAgAtividadesEncerrando", comunicarAcompanhanteTutorAgAtividadesEncerrando);
+     //addAction("ComunicarAcompanhanteTutorAgAtividadesEncerrando", comunicarAcompanhanteTutorAgAtividadesEncerrando);
      
      
      /*
@@ -71,9 +71,7 @@ public class CompanheiroAgente extends ModelAgent {
      Action mostraNovaDisciplina = new MostraNovaDisciplina("mostraNovaDisciplina", null, null);
      addAction("mostraNovaDisciplina", mostraNovaDisciplina);
      
-     
-     
-     
+ 
      
      
    }

@@ -3,9 +3,14 @@ import jamder.behavioural.*;
 import jamder.Environment;
 import jamder.roles.AgentRole;
 import jamder.structural.*;
+
 import java.util.List;
 import java.util.Map;
 
+
+import moodle.Agentes.actions.AjudanteAgente.comunicacao.CriarFolderFiles;
+import moodle.Agentes.actions.AjudanteAgente.comunicacao.CriarUrl;
+import moodle.Agentes.actions.AjudanteAgente.comunicacao.VerificarEvasao;
 //import moodle.Agentes.actions.BuscadorAgente.ExibirPessoasRelacionadasAc;
 import jamder.agents.*;
 
@@ -22,6 +27,13 @@ public class BuscadorAgente extends MASMLAgent {
    addBelief("crencasBuscador.pl", new Belief("crencasBuscador.pl", "String", ""));
    //Action exibirPessoasRelacionadasAc = new ExibirPessoasRelacionadasAc("exibirPessoasRelacionadasAc", null, null);
    //addAction("exibirPessoasRelacionadasAc", exibirPessoasRelacionadasAc);
+
+   Action criarUrl = new CriarUrl("criarUrl",null,null);
+   addAction("criarUrl", criarUrl);
+   
+   Action criarFolderFiles = new CriarFolderFiles("criarFolderFiles ",null,null);
+   addAction("criarFolderFiles ", criarFolderFiles);
+   
    
    
    /*
