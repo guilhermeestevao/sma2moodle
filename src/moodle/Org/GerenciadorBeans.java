@@ -3,6 +3,7 @@ package moodle.Org;
 import java.util.List;
 import java.util.ResourceBundle.Control;
 
+import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
 
 import moodle.Agentes.actions.ControleActions;
@@ -11,6 +12,7 @@ import moodle.dados.Curso;
 import moodle.dados.Tutor;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
+import moodle.dados.mensagem.Mensagem;
 import dao.GerenciaCurso;
 import dao.JPAUtil;
 
@@ -108,6 +110,37 @@ public class GerenciadorBeans extends ThreadsServicos {
 				} finally {
 					JPAUtil.closeEntityManager();
 				}
+				
+				
+				
+				List<Mensagem> mensagens = environment.getMensagens();
+				  
+				  
+				  if(!mensagens.isEmpty()){
+				  
+				  System.out.println("\n ADICIONANDO MENSAGENS \n");
+				  
+				  
+				  EntityManager managerDao = Dao.getEntityManager();
+				  managerDao.getTransaction().begin();
+				  
+				  
+				  synchronized (mensagens) {
+				  
+				  for(Mensagem msg : mensagens){ managerDao.persist(msg);
+				  
+				  
+				  
+				 }
+				  
+				 }
+				  
+				 managerDao.getTransaction().commit();
+		
+				 
+				 mensagens.clear(); }
+				  
+		
 
 				/*
 				 * 
