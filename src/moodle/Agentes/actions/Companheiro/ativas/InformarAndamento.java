@@ -89,7 +89,7 @@ public class InformarAndamento extends ActionMoodle {
 						if(at.getAlunosComNotas().containsKey(aluno)){
 						
 							smallmessage += "Atividade " + at.getName() + ": \n";
-							smallmessage += "Sua nota: " + at.getAlunosComNotas().get(aluno) + " / Nota m�xima: " + at.getNotaMaxima() + "\n\n";
+							smallmessage += "Sua nota: " + at.getAlunosComNotas().get(aluno) + " / Nota máxima: " + at.getNotaMaxima() + "\n\n";
 						
 						}else{
 							
