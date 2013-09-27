@@ -74,9 +74,6 @@ public class PesquisarData extends ActionMoodle {
 			for(Aluno aluno : curso.getAlunos()){
 				
 				
-				
-				
-				
 				podeEnviar = false;
 				
 				BigInteger useridto = aluno.getId();
@@ -100,8 +97,11 @@ public class PesquisarData extends ActionMoodle {
 					dateFormat.applyPattern("dd/MM/yyyy");
 					smallmessage += at.getName() + " - Finaliza em: "  + dateFormat.format(at.getDataFinal());
 					dateFormat.applyPattern("H:mm");
-					smallmessage += " às " + dateFormat.format(at.getDataFinal()) + "\n\n";
-				
+					if(calculaDias(at.getDataFinal())==0){
+						smallmessage += " às " + dateFormat.format(at.getDataFinal())+".";
+					}else{
+						smallmessage += " às " + dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n";
+					}
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
 					}else{
@@ -125,8 +125,12 @@ public class PesquisarData extends ActionMoodle {
 					dateFormat.applyPattern("dd/MM/yyyy");
 					smallmessage += at.getName() + " - Finaliza em: " + dateFormat.format(at.getDataFinal());
 					dateFormat.applyPattern("H:mm");
-					smallmessage += " às " + dateFormat.format(at.getDataFinal()) + "\n\n";
-					smallmessage+="\n\n Fique atento com estas datas.";
+					if(calculaDias(at.getDataFinal())==0){
+						smallmessage += " às " + dateFormat.format(at.getDataFinal())+".";
+					}else{
+						smallmessage += " às " + dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n";
+					}
+					
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
 					}else{
@@ -167,9 +171,6 @@ public class PesquisarData extends ActionMoodle {
 					
 					envir.addMensagem(msg);
 		
-
-
-					
 				}
 				
 				
@@ -203,7 +204,7 @@ public class PesquisarData extends ActionMoodle {
 			if(calDataAtividade.get(Calendar.MONTH) == calDataAtual.get(Calendar.MONTH)){
 				
 				
-				if(calDataAtividade.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH) <= 7 )
+				if(calDataAtividade.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH) <= 3 && calDataAtividade.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH)>=0  )
 					return true;
 		
 			}
@@ -212,8 +213,18 @@ public class PesquisarData extends ActionMoodle {
 			
 		}
 		
-		return false;
+		return false;	
+	}
+
+	public int calculaDias(Date dataAtividade){
 		
+		Calendar calDataAt = Calendar.getInstance();
+		calDataAt.setTime(dataAtividade);
+		
+		Date dataAtual = new Date();
+		Calendar calDataAtual = Calendar.getInstance();
+		calDataAtual.setTime(dataAtual);
+		return calDataAt.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH);
 		
 	}
 
