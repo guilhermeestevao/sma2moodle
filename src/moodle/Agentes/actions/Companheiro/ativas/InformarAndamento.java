@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import dao.GerenciaCurso;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
@@ -73,15 +75,6 @@ public class InformarAndamento extends ActionMoodle {
 			
 			
 			for(Aluno aluno : curso.getAlunos()){
-			
-			//	if(verificaControle(curso.getId(), aluno.getId()))
-				//	continue;
-				//else{
-					
-					//CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-					//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), aluno.getId(), curso.getId());
-					
-			//	}
 				
 				atividadesAlunoSemNota.clear();
 				
@@ -89,7 +82,6 @@ public class InformarAndamento extends ActionMoodle {
 				
 				String smallmessage = "Prezado(a)" + aluno.getCompleteName() + ", \n";
 				smallmessage += "Na disciplina " + curso.getFullName() + " ,  seu atual desempenho é: \n\n";
-				
 				
 				
 					for(AtividadeNota at : curso.getAtividadesNota()){
@@ -146,13 +138,9 @@ public class InformarAndamento extends ActionMoodle {
 							smallmessage += "\n Parabéns! Continue estudando e buscando evoluir em seus estudos. \n";
 						}
 					
-						
 					}
 					
 						
-				
-				
-				
 				
 				if(!atividadesAlunoSemNota.isEmpty()){
 				
@@ -166,9 +154,11 @@ public class InformarAndamento extends ActionMoodle {
 				}
 								
 				
-				if(nota == null && atividadesAlunoSemNota.isEmpty())
-					smallmessage += "\n\n Sem atividades no curso até o momento.";
-				
+				if(nota == null && atividadesAlunoSemNota.isEmpty()){
+					//smallmessage += "\n\n Sem atividades no curso até o momento.";
+					continue;
+				}
+					
 				smallmessage += "\n"; 	
 				String fullmessage = smallmessage;
 					
@@ -195,15 +185,8 @@ public class InformarAndamento extends ActionMoodle {
 				((MoodleEnv)env).addMensagem(msg);
 				
 				
-				
-				
-				
-				
 			}
 	
-			
-			
-			
 		}
 		
 		ControleActions.setInformaAndamento(false);
