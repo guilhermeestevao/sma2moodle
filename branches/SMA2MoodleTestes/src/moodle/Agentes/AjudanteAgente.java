@@ -2,6 +2,7 @@ package moodle.Agentes;
 
 import jamder.Environment;
 import jamder.roles.AgentRole;
+
 import java.util.Date;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import moodle.Agentes.actions.AjudanteAgente.ativas.ExibirDicasCalendario;
 import moodle.Agentes.actions.AjudanteAgente.ativas.ExibirDicasConfiguracoes;
 import moodle.Agentes.actions.AjudanteAgente.ativas.ExibirDicasForuns;
 import moodle.Agentes.actions.AjudanteAgente.ativas.ExibirDicasParticipantes;
+import moodle.Agentes.actions.AjudanteAgente.ativas.NotificarForuns;
 import jamder.agents.*;
 import jamder.behavioural.Action;
 
@@ -23,14 +25,15 @@ public class AjudanteAgente extends ReflexAgent {
    setIdAgente(2);
    
    Action exibirDicasForuns = new ExibirDicasForuns("exibirDicasForuns", null, null);
-   addAction("exibirDicasForuns", exibirDicasForuns);
+   //addAction("exibirDicasForuns", exibirDicasForuns);
    Action exibirDicasCalendario = new ExibirDicasCalendario("exibirDicasCalendario", null, null);
-   addAction("exibirDicasCalendario", exibirDicasCalendario);
+   //addAction("exibirDicasCalendario", exibirDicasCalendario);
    Action exibirDicasConfiguracoes = new ExibirDicasConfiguracoes("exibirDicasConfiguracoes", null, null);
-   addAction("exibirDicasConfiguracoes", exibirDicasConfiguracoes);
+   //addAction("exibirDicasConfiguracoes", exibirDicasConfiguracoes);
    Action exibirDicasParticipantes = new ExibirDicasParticipantes("exibirDicasParticipantes", null, null);
-   addAction("exibirDicasParticipantes", exibirDicasParticipantes);
-   
+   //addAction("exibirDicasParticipantes", exibirDicasParticipantes);
+   Action notificarForuns = new NotificarForuns(null);
+   //addAction(key, action);
  
    }
    
