@@ -2,6 +2,7 @@ package moodle.Org;
 
 import java.util.List;
 import java.util.ResourceBundle.Control;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
@@ -51,6 +52,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 						GerenciaCurso.addTags(c);
 						GerenciaCurso.addAtividadeWiki(c);
 						GerenciaCurso.addAtividadeQuestionario(c);
+						GerenciaCurso.addAtividadeLicao(c);
 						GerenciaCurso.addAtividadeTarefas(c);
 						GerenciaCurso.addAtividadeFerramentaExterna(c);
 						GerenciaCurso.addAtividadeGlossario(c);
@@ -66,7 +68,17 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 						System.err.println("*** \nCurso: " + c.getId() + " -> "
 								+ c.getFullName() + "\n");
-
+						Set<AtividadeNota> atividadesN = c.getAtividadesNota();
+						Set<AtividadeParticipacao> atividadesP = c.getAtividadesParticipacao();
+						
+						for(AtividadeNota a: atividadesN){
+							System.out.println(a.getName());
+						}
+						for(AtividadeParticipacao a: atividadesP){
+							System.out.println(a.getName());
+						}
+					
+						
 						/*
 						 * 
 						 * if(c.getProfessor() != null)

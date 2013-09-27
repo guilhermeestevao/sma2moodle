@@ -1,4 +1,4 @@
-package moodle.Agentes.actions.Companheiro.ativas;
+package moodle.Agentes.actions.AjudanteAgente.comunicacao;
 
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Org.MoodleEnv;
