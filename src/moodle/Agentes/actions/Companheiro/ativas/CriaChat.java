@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
@@ -96,11 +97,21 @@ public class CriaChat extends ActionMoodle {
 						JPAUtil.beginTransaction();
 						EntityManager entManager = JPAUtil.getEntityManager();
 						
+						Query query = entManager.createQuery("SELECT c FROM Chat c WHERE c.name = ?1");
+						String name_chat = "Chat para tirar dúvidas - "+questionario.getName();
+						query.setParameter(1, name_chat);
+						List<Chat> chats = query.getResultList();
+						
+						if(!chats.isEmpty()){
+							JPAUtil.closeEntityManager();
+							continue;
+						}
+						
 						// MAPEA UM CHAT PARA MDL_CHAT
 						Chat chat = new Chat();
-						chat.setName("Chat para tirar d�vidas");
+						chat.setName("Chat para tirar dúvidas - "+questionario.getName());
 						chat.setCourse(c.getId());
-						chat.setIntro("Chat criado autom�ticamente para que possam ser tidadas d�vidas antes da proxima Avalia��o");
+						chat.setIntro("Chat criado automoticamente para que possam ser tidadas dúvidas antes da proxima Avalia��o");
 						long criadoEm = getTimeStamp(new Date());
 						chat.setTimemodified(criadoEm);
 						// Falta criar ainda a data para o chat
@@ -139,7 +150,7 @@ public class CriaChat extends ActionMoodle {
 						Topico top = entManager.find(Topico.class, section);
 				    	top.setSequence(newSequence);
 						
-						c.setSectioncache("NULL");
+						c.setSectioncache(" ");
 						
 						JPAUtil.closeEntityManager();
 						
