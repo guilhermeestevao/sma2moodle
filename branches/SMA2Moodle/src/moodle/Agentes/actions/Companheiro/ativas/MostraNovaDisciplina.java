@@ -47,15 +47,6 @@ public class MostraNovaDisciplina extends ActionMoodle{
 	@Override
 	public void execute(Environment env, Object[] params) {
 	
-
-		
-		/*
-		 * Verificar com o guilherme sobre essa action
-		 * Há repetição de action:
-		 * Existe essa do Agente Acompanhante Tutor
-		 * E existe a MostraNovaDisciplina do Agente Acompanhante
-		 */
-		
 		
 		if(!ControleActions.isMostraNovaDisciplinaAluno())
 			return;
@@ -85,53 +76,60 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
-			for (Curso c : novosCursos) {
-				for (Aluno al : c.getAlunos()) {
+			for(Curso c : manager.getCursos()){
+				
+				
+				for (Curso cn : novosCursos) {
+					//Se os dois cursos estiverem na mesma categoria
+					if(c.getCategory() == cn.getCategory()){
 					
-					try {
-						BigInteger useridto = al.getId();
-
-						String smallmessage = "Prezado(a)  " + al.getCompleteName() + ". \n";
-
-						smallmessage += " Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
-		
-						smallmessage += " chamada " + c.getFullName() + ".";
+					for (Aluno al : c.getAlunos()) {
 						
-						smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n ";
+						try {
+							BigInteger useridto = al.getId();
 
-							if (podeEnviar) {
-								//Timestamp atual = new Timestamp(System.currentTimeMillis());
-								//CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-								//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual);
-								
-								
-								smallmessage += "\n";
-								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-								if(verificaMens(c.getId(), al.getId(), smallmessage))
-									continue;
-								else{
-									Timestamp atual = new Timestamp(System.currentTimeMillis());
-									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
-								}
-							String fullmessage = smallmessage;
-							fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
-							Long time = System.currentTimeMillis();
-							Mensagem msg = new Mensagem();
-							msg.setSubject("Nova mensagem do Administrador");
-							msg.setUseridfrom(useridfrom);
-							msg.setUseridto(useridto);
-							msg.setSmallmessage(smallmessage);
-							msg.setFullmessage(fullmessage);
-							msg.setTimecreated(time);
+							String smallmessage = "Prezado(a)  " + al.getCompleteName() + ". \n";
 
-							((MoodleEnv) env).addMensagem(msg);
+							smallmessage += " Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
+			
+							smallmessage += " chamada " + cn.getFullName() + ".";
+							
+							smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n ";
+
+								if (podeEnviar) {
+						
+									smallmessage += "\n";
+									CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+									if(verificaMens(c.getId(), al.getId(), smallmessage))
+										continue;
+									else{
+										Timestamp atual = new Timestamp(System.currentTimeMillis());
+										AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
+									}
+								String fullmessage = smallmessage;
+								fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
+								Long time = System.currentTimeMillis();
+								Mensagem msg = new Mensagem();
+								msg.setSubject("Nova mensagem do Administrador");
+								msg.setUseridfrom(useridfrom);
+								msg.setUseridto(useridto);
+								msg.setSmallmessage(smallmessage);
+								msg.setFullmessage(fullmessage);
+								msg.setTimecreated(time);
+
+								((MoodleEnv) env).addMensagem(msg);
+							}
+
+						} catch (NullPointerException e) {
+							ControleActions.setMostraNovaDisciplinaAluno(false);
 						}
 
-					} catch (NullPointerException e) {
-						ControleActions.setMostraNovaDisciplinaAluno(false);
 					}
-
 				}
+				}
+				
+				
+				
 			}
 		}
 		
