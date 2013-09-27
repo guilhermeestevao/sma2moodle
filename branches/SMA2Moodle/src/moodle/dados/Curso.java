@@ -30,6 +30,7 @@ public class Curso implements Serializable{
 	private static final long serialVersionUID = 2933651153564657169L;
 	@Id
 	private BigInteger id;	
+	private BigInteger category;
 	private String fullname;
 	private Long timecreated;
 	private String sectioncache;
@@ -204,6 +205,14 @@ public class Curso implements Serializable{
 	}
 	public Collection<Folder> getFolderCurso(){
 		return folder;
+	}
+	
+	public void setCategory(BigInteger category){
+		this.category = category;
+	}
+	
+	public BigInteger getCategory(){
+		return category;
 	}
 	
 	public Date getDataCriacao(){
