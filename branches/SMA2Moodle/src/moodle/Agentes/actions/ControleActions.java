@@ -9,6 +9,7 @@ public class ControleActions {
 	private static boolean informaAndamento = false;
 	private static boolean mostraNovaDisciplinaAluno = false;
 	private static boolean pesquisaData = false;
+	private static boolean informaDataModificada = false;
 	
 	
 	//Agente companheiro de tutores
@@ -130,12 +131,22 @@ public class ControleActions {
 		ControleActions.informaPreRequisito = informaPreRequisito;
 	}
 	
+	
+	public static boolean isInformaDataModificada() {
+		return informaDataModificada;
+	}
+
+	public static void setInformaDataModificada(boolean informaDataModificada) {
+		ControleActions.informaDataModificada = informaDataModificada;
+	}
+
 	public static void liberarActions(){
 		//Action companheiro de aprendizagem 
 		criaChat = true;
 		informaAndamento = true;
 		mostraNovaDisciplinaAluno = true;
 		pesquisaData = true;
+		informaDataModificada = true;
 		
 		//Agente companheiro de tutores
 		alunosParticipantes = true;
@@ -159,6 +170,7 @@ public class ControleActions {
 		(informaAndamento = false) &&
 		(mostraNovaDisciplinaAluno = false) &&
 		(pesquisaData = false) && 
+		(informaDataModificada = false) && 
 		(alunosParticipantes = true) && 
 		(informaNovaDisciplinaTutor = true) &&
 		(mantemForumAtivo = true) &&
