@@ -27,7 +27,7 @@ public class AgenteAuxiliarDeEvasao extends UtilityAgent{
 		setIdAgente(9);
 	
 		Action verificarEvasao = new VerificarEvasao("verificarEvasao ",null,null);
-		addAction("verificarEvasao ", verificarEvasao);
+		//addAction("verificarEvasao ", verificarEvasao);
 	
 	}
 
