@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import moodle.Agentes.actions.Companheiro.ativas.CriaChat;
+import moodle.Agentes.actions.Companheiro.ativas.InformaDataModificada;
 import moodle.Agentes.actions.Companheiro.ativas.InformarAndamento;
 import moodle.Agentes.actions.Companheiro.ativas.MostraNovaDisciplina;
 import moodle.Agentes.actions.Companheiro.ativas.PesquisarData;
@@ -71,6 +72,8 @@ public class CompanheiroAgente extends ModelAgent {
      Action mostraNovaDisciplina = new MostraNovaDisciplina("mostraNovaDisciplina", null, null);
      addAction("mostraNovaDisciplina", mostraNovaDisciplina);
      
+     Action informaDatamodificada = new InformaDataModificada("informaDataModificada", null, null);
+     addAction("informaDataModificada", informaDatamodificada);
  
      
      
