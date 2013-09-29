@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -91,7 +93,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 							DateTime hoje = new DateTime(new Date());
 							DateTime ultimaPartTutor = new DateTime(forum.getUltimaPartipacao());
 							int diasPassadosPartTutor = Days.daysBetween(ultimaPartTutor, hoje).getDays();
-							 
+							
 							if(forum.isAvaliativo()){
 								//Verifica se h� topicos ou posts no forum
 								if(!forum.getAlunosComNotas().isEmpty()){
@@ -100,7 +102,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 									int diaPassadosUltimoPost = Days.daysBetween(ultimoPostAluno, hoje).getDays();
 									//verifica se houve partici��o do tutor desde o ultimo post feito pelos alunos 
 									
-									if(diasPassadosPartTutor > diaPassadosUltimoPost && (diasPassadosPartTutor - diaPassadosUltimoPost) >= 3){
+									if(diasPassadosPartTutor >= diaPassadosUltimoPost && (diasPassadosPartTutor - diaPassadosUltimoPost) >= 0){
 										podeEnviar = true;
 										smallmessage+=forum.getName();
 									}
