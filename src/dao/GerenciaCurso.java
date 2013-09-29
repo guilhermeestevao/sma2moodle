@@ -402,7 +402,7 @@ public static void addLicaoCurso(Curso curso){
 			queryTutor.setParameter(1, idTutor);
 			Tutor t = (Tutor) queryTutor.getSingleResult();
 			curso.addTutor(t);
-			
+			//JOptionPane.showMessageDialog(null,"Curso = "+curso.getFullName()+" Tutor:"+t.getFirstName());
 		}catch(NonUniqueResultException e){
 	
 			return;
@@ -454,7 +454,7 @@ public static void addLicaoCurso(Curso curso){
 		
 		EntityManager manager = JPAUtil.getEntityManager();
 		try{
-			Query query = manager.createNativeQuery("SELECT userid FROM mdl_role_assignments WHERE roleid=10 and contextid = (SELECT id FROM mdl_context WHERE contextlevel=50 and instanceid = ?1)");
+			Query query = manager.createNativeQuery("SELECT userid FROM mdl_role_assignments WHERE roleid=3 and contextid = (SELECT id FROM mdl_context WHERE contextlevel=50 and instanceid = ?1)");
 			query.setParameter(1, c.getId());
 			
 			List<BigInteger> idsTutores = query.getResultList();

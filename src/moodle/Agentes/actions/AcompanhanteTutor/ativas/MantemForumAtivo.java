@@ -10,6 +10,9 @@ import java.util.List;
 
 
 
+
+import javax.swing.JOptionPane;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -68,13 +71,13 @@ public class MantemForumAtivo extends ActionMoodle{
 		for(Curso curso : cursos){
 			
 			List<Tutor> tutores = curso.getTutores();
-			
 			for(Tutor tutor : tutores){
-			
+				
 			if(tutor == null || tutor.getId() == null)
 				continue;
 			
 			
+			//JOptionPane.showMessageDialog(null,tutor.getFirstName());
 			
 			try{
 			BigInteger useridto = tutor.getId();
@@ -92,14 +95,14 @@ public class MantemForumAtivo extends ActionMoodle{
 					Forum forum = (Forum) atividade ;
 						//1� verificar se o tutor participou do forum
 						if(forum.isTutorParticipa()){
-						
+							
 							//Cacula o periodo em dias da �ltima participa��o de alunos
 							DateTime hoje = new DateTime(new Date());
 							DateTime ultimoPost = new DateTime(forum.getUltimoPost());
 							int diasDoUltimoPost = Days.daysBetween(ultimoPost, hoje).getDays();	
 							
 							//Caso tenha passado mais de dois dias � liberado o envio da mensagem
-							if(forum.isAvaliativo() && diasDoUltimoPost > 2){
+							if(forum.isAvaliativo() && diasDoUltimoPost >= 0){
 								podeEnviar = true;
 								smallmessage+=forum.getName()+"\n";
 							}
@@ -109,7 +112,7 @@ public class MantemForumAtivo extends ActionMoodle{
 		
 			}
 			
-			smallmessage +="\nnão foram encontradas publicações dos alunos nos últimos dias. Motive os alunos para que continuem participando desses fóruns, pois são avaliativos ";
+			smallmessage +="\nnão foram encontradas publicações dos alunos nos últimos dias. Motive os alunos para que continuem participando desses fóruns, pois são avaliativos.";
 		
 			if(podeEnviar){
 				

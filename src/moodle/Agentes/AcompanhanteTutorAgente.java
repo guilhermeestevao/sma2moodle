@@ -32,22 +32,22 @@ public class AcompanhanteTutorAgente extends ModelAgent{
 				
 		
 		Action alunosParticipantes = new AlunosParticipantes("alunosParticipantes", null, null);
-		addAction("alunosParticipantes", alunosParticipantes);
+		//addAction("alunosParticipantes", alunosParticipantes);
 		
 		Action mantemForumAtivo = new MantemForumAtivo("mantemForumAtivo", null, null);
 		addAction("mantemForumAtivo", mantemForumAtivo);
 		
 		Action mantemTutorAtivo = new MantemTutorAtivo("mantemTutorAtivo", null, null);
-		addAction("mantemTutorAtivo", mantemTutorAtivo);
+	//	addAction("mantemTutorAtivo", mantemTutorAtivo);
 		
 		Action tutoresParticipantes = new TutoresParticipantes("tutoresParticipantes", null, null);
-		addAction("tutoresParticipantes", tutoresParticipantes);
+		//addAction("tutoresParticipantes", tutoresParticipantes);
 		
 		Action informarNovaDisciplina = new InformarNovaDisciplina("informarNovaDisciplina", null, null);
-		addAction("informarNovaDisciplina", informarNovaDisciplina);
+		//addAction("informarNovaDisciplina", informarNovaDisciplina);
 		
 		Action notificaCoordenadorDeTutores = new NotificaCoordenadorDeTutores("notificaCoordenadorDeTutores", null, null);
-		addAction("notificaCoordenadorDeTutores", notificaCoordenadorDeTutores);
+		//addAction("notificaCoordenadorDeTutores", notificaCoordenadorDeTutores);
 		
 		
 		

@@ -77,7 +77,7 @@ public class MoodleEnv extends Environment {
 		
 	    GenericAgent AcompanhanteTutorAg = new AcompanhanteTutorAgente("AcompanhanteTutorAg", this, null);
 	    AgentRole AcompanhanteTutorAgRole = new ModelAgentRole("AcompanhanteTutorAgRole", MoodleOrg, AcompanhanteTutorAg); 
-	    //addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
+	    addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
 	    
 		GenericAgent PedagogicoAg = new PedagogicoAgente("PedagogicoAg", this, null);
 	    AgentRole PedagogicoAgRole = new ProactiveAgentRole("PedagogicoAgRole", MoodleOrg, PedagogicoAg); 
