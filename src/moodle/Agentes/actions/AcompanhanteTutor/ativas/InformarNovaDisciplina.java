@@ -19,7 +19,6 @@ import dao.GerenciaCurso;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
-
 public class InformarNovaDisciplina extends ActionMoodle {
 
 	/**
@@ -42,13 +41,12 @@ public class InformarNovaDisciplina extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-	
-		
-		if(!ControleActions.isInformaAtividadeDisciplina())
+
+		if (!ControleActions.isInformaAtividadeDisciplina())
 			return;
-		
-		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
-		
+
+		System.out.println(myAgent.getLocalName() + " -- " + this.getClass());
+
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -58,11 +56,10 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		int dias;
 		List<Curso> novosCursos = new ArrayList<Curso>();
 		List<Tutor> tutores = new ArrayList<Tutor>();
-		
+
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
-		
+
 		for (Curso curso : cursos) {
-			tutores.addAll(curso.getTutores());
 
 			dias = difDias(curso.getDataCriacao());
 
@@ -76,57 +73,70 @@ public class InformarNovaDisciplina extends ActionMoodle {
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 			for (Curso c : novosCursos) {
-				for (Tutor t : tutores) {
 
-					
-					
-					try {
-						BigInteger useridto = t.getId();
+				for (Curso cn : novosCursos) {
 
-						String smallmessage = "Prezado(a) " + t.getLastName()+ ". \n";
+					if (c.getCategory() == cn.getCategory()) {
 
-						smallmessage += "Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
-		
-						smallmessage += " chamada " + c.getFullName() + ".";
-						
-						smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
-							
-							smallmessage += "\n";
-							if (podeEnviar) {
-								//Timestamp atual = new Timestamp(System.currentTimeMillis());
-								//AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
-								
-								//AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), t.getId(), c.getId(),atual);
-							
-								
+						for (Tutor t : c.getTutores()) {
+
+							try {
+								BigInteger useridto = t.getId();
+
+								String smallmessage = "Prezado(a) "+ t.getLastName() + ". \n";
+
+								smallmessage += "Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
+
+								smallmessage += " chamada " + c.getFullName()+ ".";
+
+								smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
+
 								smallmessage += "\n";
-								
-								AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
-								if(verificaMens(c.getId(), t.getId(), smallmessage))
-									continue;
-								else{
-									Timestamp atual = new Timestamp(System.currentTimeMillis());
-									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), t.getId(), c.getId(),atual,smallmessage);
+								if (podeEnviar) {
+									// Timestamp atual = new
+									// Timestamp(System.currentTimeMillis());
+									// AcompanhanteTutorAgente comp =
+									// (AcompanhanteTutorAgente)myAgent;
+
+									// AgenteUtil.addActionAgente(getId_action(),
+									// comp.getIdAgente(), t.getId(),
+									// c.getId(),atual);
+
+									smallmessage += "\n";
+
+									AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente) myAgent;
+									if (verificaMens(c.getId(), t.getId(),smallmessage))
+										continue;
+									else {
+										Timestamp atual = new Timestamp(System.currentTimeMillis());
+										AgenteUtil.addActionAgente(getId_action(),comp.getIdAgente(), t.getId(),c.getId(), atual, smallmessage);
+									}
+
+									String fullmessage = smallmessage;
+									fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="
+											+ useridto
+											+ "&id= "
+											+ useridfrom
+											+ " para responder. ";
+									Long time = System.currentTimeMillis();
+									Mensagem msg = new Mensagem();
+									msg.setSubject("Nova mensagem do Administrador");
+									msg.setUseridfrom(useridfrom);
+									msg.setUseridto(useridto);
+									msg.setSmallmessage(smallmessage);
+									msg.setFullmessage(fullmessage);
+									msg.setTimecreated(time);
+
+									((MoodleEnv) env).addMensagem(msg);
 								}
-							
-							String fullmessage = smallmessage;
-							fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
-							Long time = System.currentTimeMillis();
-							Mensagem msg = new Mensagem();
-							msg.setSubject("Nova mensagem do Administrador");
-							msg.setUseridfrom(useridfrom);
-							msg.setUseridto(useridto);
-							msg.setSmallmessage(smallmessage);
-							msg.setFullmessage(fullmessage);
-							msg.setTimecreated(time);
 
-							((MoodleEnv) env).addMensagem(msg);
+							} catch (NullPointerException e) {
+								ControleActions
+										.setInformaAtividadeDisciplina(false);
+							}
+
 						}
-
-					} catch (NullPointerException e) {
-						ControleActions.setInformaAtividadeDisciplina(false);
 					}
-
 				}
 			}
 		}
