@@ -88,7 +88,7 @@ public class TutoresParticipantes extends ActionMoodle{
 				
 					Forum forum = (Forum) atividade ;
 						//Adiciona o nome dos furuns em q o tutor n�o participou
-						if(!forum.isTutorParticipa()){
+						if(!forum.isTutorParticipa() && forum.isAvaliativo()){
 					
 							podeEnviar = true;
 	
