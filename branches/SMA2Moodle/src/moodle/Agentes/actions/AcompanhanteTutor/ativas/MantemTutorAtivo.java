@@ -101,9 +101,12 @@ public class MantemTutorAtivo extends ActionMoodle{
 									DateTime ultimoPostAluno = new DateTime(forum.getUltimoPost());
 									int diaPassadosUltimoPost = Days.daysBetween(ultimoPostAluno, hoje).getDays();
 									//verifica se houve partici��o do tutor desde o ultimo post feito pelos alunos 
-									
-									if(diasPassadosPartTutor >= diaPassadosUltimoPost && (diasPassadosPartTutor - diaPassadosUltimoPost) >= 0){
+									//JOptionPane.showMessageDialog(null, "TUTOR:"+diasPassadosPartTutor);
+									//JOptionPane.showMessageDialog(null, "POST:"+diaPassadosUltimoPost);
+									if(diasPassadosPartTutor > diaPassadosUltimoPost && (diasPassadosPartTutor - diaPassadosUltimoPost) >3){
 										podeEnviar = true;
+										tutor.setContAdveretencias(tutor.getContAdveretencias()+1);
+										
 										smallmessage+=forum.getName();
 									}
 								}
