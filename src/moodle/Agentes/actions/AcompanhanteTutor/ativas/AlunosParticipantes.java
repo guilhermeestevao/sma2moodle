@@ -99,7 +99,11 @@ public class AlunosParticipantes extends ActionMoodle {
 							// caso faltem at� dois dias para o fim da avalia��o
 
 							if (MoodleEnv.verificarData(forum.getDataFinal(), 3)) {
-								podeEnviar = true;
+								if(alunos.containsAll(alunosComNota.keySet())){
+									podeEnviar = false;	
+								}else{
+									podeEnviar = true;
+								}
 								smallmessage += "> " + forum.getName();
 								smallmessage += "\nOnde o(s) aluno(s): \n";
 								for (Aluno aluno : alunos) {
