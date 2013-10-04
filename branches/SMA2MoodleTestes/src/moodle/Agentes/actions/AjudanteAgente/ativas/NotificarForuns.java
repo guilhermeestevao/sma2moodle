@@ -33,7 +33,7 @@ public class NotificarForuns extends ActionMoodle{
 	//aa
 	
 	
-	@SuppressWarnings("null")
+
 	public boolean lastViewForum(Aluno a){
 		List<Log> logsDoCurso = a.getLogs();
 		List<Date> logForum = null;
