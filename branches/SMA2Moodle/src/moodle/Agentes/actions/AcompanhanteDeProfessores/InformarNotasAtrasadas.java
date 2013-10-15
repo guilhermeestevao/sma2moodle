@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -48,17 +50,17 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		if(!ControleActions.isInformarNotasAtrasadas())
 			return;
 		
-		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		boolean podeEnviar = false;
 
 		
-		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
+		List<Curso> cursos =  manager.getCursos();
 		
 		for (Curso curso : cursos) {
-			
+			JOptionPane.showMessageDialog(null,curso.getFullName());
 			for(Atividade atividade : curso.getAtividadesNota()){
 				
 				Date data = new Date();
@@ -67,7 +69,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 				
 				//Quantidades de dias que se passaram desde o fim da avalia��o
 				int diferenca =  Days.daysBetween(fimDaAvaliacao, hoje).getDays();
-			
+				
 				if(atividade.getAlunosComNotas().isEmpty() && diferenca >= 14)
 					podeEnviar = true;
 				
@@ -82,7 +84,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						
 						
 						String smallmessage = "Prezado(a) "+professor.getLastName() +", \n";
-						smallmessage+="Já fazem duas semanas que a atidade "+atividade.getName()+" da disciplina "+curso.getFullName()+" teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas.\n";
+						smallmessage+="Já fazem duas semanas que a atividade "+atividade.getName()+" da disciplina "+curso.getFullName()+" teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas.\n";
 						smallmessage+="Favor postar as notas dos alunos o quanto antes. \n";
 						smallmessage +="\n";
 						
@@ -94,7 +96,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), useridto, curso.getId(),atual,smallmessage);
 						}
 						String fullmessage = smallmessage;
-						fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
+						fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
 						
 						Long time = System.currentTimeMillis();						
 						
@@ -116,5 +118,6 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 			}
 			
 		}
+		ControleActions.setInformarNotasAtrasadas(false);
 	}
 }

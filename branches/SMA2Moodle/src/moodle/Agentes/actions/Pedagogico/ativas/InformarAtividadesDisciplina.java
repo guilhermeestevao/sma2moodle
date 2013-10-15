@@ -51,8 +51,8 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		if(!ControleActions.isInformaAtividadeDisciplina())
 			return;
 		
-		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
 		
+		System.out.println(myAgent.getLocalName()+ " - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		

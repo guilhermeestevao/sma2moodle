@@ -46,9 +46,6 @@ public class ComunicarFormadorAgNotasBaixas extends Action{
 		MoodleEnv envir = (MoodleEnv) env;
 		GenericAgent agent = (GenericAgent) myAgent;
 		
-		
-		
-		
 		mantemAtivo = envir.getMantemAgentesAtivos();
 		
 		if(!mantemAtivo)

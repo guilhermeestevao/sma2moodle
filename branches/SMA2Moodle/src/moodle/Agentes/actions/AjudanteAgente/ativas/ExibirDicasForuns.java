@@ -8,6 +8,7 @@ import java.util.List;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -57,13 +58,13 @@ public class ExibirDicasForuns extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(24 * 1000L);
-
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+		
+		
+		if(!ControleActions.isExibirDicasForum())
 			return;
 
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -84,13 +85,13 @@ public class ExibirDicasForuns extends ActionMoodle {
 				
 										
 					BigInteger useridto = al.getId();
-					String smallmessage = "Ol� "+ al.getCompleteName()+ ", caso esteja com alguma d�vida em algum dos conteudo, ";
-					smallmessage += "bastar clicar sobre o nome do curso que est� matriculado e procurar algum f�rum, ";
-					smallmessage += "todos os cursos por padr�o possuem uma atividade chamada F�rum de noticias. ";
-					smallmessage += "Voc� tanto pode criar um t�pico ou participar de um j� existente. ";
-					smallmessage += "Em um f�rum os alunos podem interagir com tutores e professores com o objetivo de compatilhar conhecimentos ";
-					smallmessage += "tirando d�vidas dos conteudos ou postando not�cias ligadas ao assunto em discuss�o.";
-					smallmessage += "Procure participar dos f�runs dos cursos em que est� matrculado, pois alguns s�o avaliativos. \n ";
+					String smallmessage = "Olá "+ al.getCompleteName()+ ", caso esteja com alguma dúvida em algum dos conteudo, ";
+					smallmessage += "bastar clicar sobre o nome do curso que está matriculado e procurar algum fórum, ";
+					smallmessage += "todos os cursos por padrão possuem uma atividade chamada Fórum de noticias. ";
+					smallmessage += "Você tanto pode criar um tópico ou participar de um já existente. ";
+					smallmessage += "Em um fórum os alunos podem interagir com tutores e professores com o objetivo de compatilhar conhecimentos ";
+					smallmessage += "tirando dúvidas dos conteudos ou postando noticias ligadas ao assunto em discussão.";
+					smallmessage += "Procure participar dos fóruns dos cursos em que está matrculado, pois alguns são avaliativos. \n ";
 					
 					smallmessage += "\n";
 					
@@ -121,7 +122,7 @@ public class ExibirDicasForuns extends ActionMoodle {
 			}
 
 		}
-		done = true;
+		ControleActions.setExibirDicasForum(false);
 
 	}
 

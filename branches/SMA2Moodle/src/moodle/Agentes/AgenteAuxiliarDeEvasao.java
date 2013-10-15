@@ -3,7 +3,7 @@ package moodle.Agentes;
 import java.util.List;
 import java.util.Map;
 
-import moodle.Agentes.actions.AjudanteAgente.comunicacao.VerificarEvasao;
+import moodle.Agentes.actions.AgenteAuxiliarDeEvasao.ativas.VerificarEvasao;
 import moodle.Agentes.actions.Formador.comunicacao.ResponderAgentes;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;

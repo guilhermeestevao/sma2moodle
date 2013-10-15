@@ -52,7 +52,8 @@ public class MantemTutorAtivo extends ActionMoodle{
 		if(!ControleActions.isManteTutorAtivo())
 			return;
 		
-		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
@@ -133,7 +134,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 					AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), tutor.getId(), curso.getId(),atual,smallmessage);
 				}
 				String fullmessage = smallmessage;
-				fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
+				fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail é uma copia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
 				
 				Long time = System.currentTimeMillis();
 				

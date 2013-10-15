@@ -5,6 +5,7 @@ import jamder.behavioural.Condition;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.HashMap;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import moodle.dados.Assunto;
 import moodle.dados.Curso;
@@ -26,6 +28,7 @@ import moodle.dados.contexto.Topico;
 import moodle.dados.Material;
 import moodle.dados.contexto.ModuloCurso;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import dao.GerenciaCurso;
 import dao.JPAUtil;
@@ -37,6 +40,9 @@ public class CriarUrl extends ActionMoodle{
 	private boolean mantemAtivo;
 
 	private Map<Curso, HashSet<Licao>> licaoCurso = new HashMap<Curso, HashSet<Licao>>();
+	private Map<Curso, HashSet<Questionario>> questionarioCurso = new HashMap<Curso, HashSet<Questionario>>();
+	private Map<Curso, HashSet<Tarefa>> tarefaCurso = new HashMap<Curso, HashSet<Tarefa>>();
+	
 	private Map<Curso, HashSet<Url>> urlCurso = new HashMap<Curso, HashSet<Url>>();
 	private Date dataAtual = new Date();
 	private GregorianCalendar d_Atual = new GregorianCalendar();
@@ -53,63 +59,78 @@ public class CriarUrl extends ActionMoodle{
 		idAction = 20;// atribuir ao idAction o id da action no banco
 	}
 	
-		@Override
+	@Override
 	public void execute(Environment env, Object[] params) {
 	
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		block(8*1000L);
-		
-		if(!mantemAtivo)
+		if(!ControleActions.isCriarUrl())
 			return;
+
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 		licaoCurso = ((MoodleEnv) env).getLicaoCursoProcessado();
+		questionarioCurso = ((MoodleEnv) env).getQuestionarioCursoProcessado();
+		tarefaCurso = ((MoodleEnv) env).getTarefaCursoProcessado();
 		urlCurso = ((MoodleEnv) env).getUrlCursoProcessado();
 		d_Atual.setTime(dataAtual);
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for(Curso c: cursos){
-			
+
+			try{
 			//criando urls para lições
 			HashSet<Licao> licoes = licaoCurso.get(c);
 			if(!licoes.isEmpty()){
 				for(Licao l: licoes){
 					d_Inicio.setTime(l.getDataInicio());
 					d_Final.setTime(l.getDataFinal());
-					
+
+
 					if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
 						BigInteger m_l = new BigInteger("13");
 						inserirUrl(c,l,m_l);
 					}
 				}
 			}
-			
-			//criando urls para os restantes das atividades com nota
-			for(AtividadeNota atividade : c.getAtividadesNota()){
-				if(atividade instanceof Questionario){
-					Questionario questionario = (Questionario) atividade;
-					d_Inicio.setTime(questionario.getDataInicio());
-					d_Final.setTime(questionario.getDataFinal());
+			//criando urls para questionarios
+			HashSet<Questionario> questionarios = questionarioCurso.get(c);
+			if(!questionarios.isEmpty()){
+				for(Questionario q: questionarios){
+					d_Inicio.setTime(q.getDataInicio());
+					d_Final.setTime(q.getDataFinal());
+					
 						if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
 							BigInteger m_q= new BigInteger("16");
-							inserirUrl(c,questionario,m_q);
+							inserirUrl(c,q,m_q);
 						}
-			    }
-			    if(atividade instanceof Tarefa){
-			    		Tarefa tarefa = (Tarefa) atividade;
-			    		d_Inicio.setTime(tarefa.getDataInicio());
-						d_Final.setTime(tarefa.getDataFinal());
-			    		if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
-			    			BigInteger m_t= new BigInteger("1");	
-			    			inserirUrl(c,tarefa,m_t);
-			    		}
-			    }
-	      }		
-	}
-}
+			    	
+				}
+			}
+			
+			
+			//criando urls para os restantes das atividades com nota
+			HashSet<Tarefa> tarefas = tarefaCurso.get(c);
+			if(!tarefas.isEmpty()){
+				for(Tarefa t: tarefas){
+					d_Inicio.setTime(t.getDataInicio());
+					d_Final.setTime(t.getDataFinal());
+					
+						if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
+							BigInteger m_q= new BigInteger("1");
+							inserirUrl(c,t,m_q);
+						}
+			    	
+				}
+			}
+					
+	    }catch (NullPointerException e) {
+			ControleActions.setCriarUrl(false);;
+		}
 
+	}
+	ControleActions.setCriarUrl(false);
+}
 	public boolean done(){
 		return done;
 	}
@@ -117,16 +138,27 @@ public class CriarUrl extends ActionMoodle{
 	// Metodos para persistir a URL.
 	public void inserirUrl(Curso c, Questionario qst, BigInteger m){
 		
-		for(Assunto assunto : qst.getAssuntos()){
-			
-			for(Material mate : assunto.getMaterial()){
+		JPAUtil.beginTransaction();
+		EntityManager entManager = JPAUtil.getEntityManager();
+		
+			for(Material mate : qst.getMateriais()){
 				
-				JPAUtil.beginTransaction();
-				EntityManager entManager = JPAUtil.getEntityManager();
+				
+				if(mate.getLink().isEmpty()){
+					continue;
+				}
+				
+				Query q = entManager.createQuery("SELECT url FROM Url url WHERE name = ?1");
+				q.setParameter(1,mate.getNome()+" - "+qst.getName());
+			    List<Url> urls = q.getResultList();
+			    
+			    if(!urls.isEmpty()){
+			    	continue;
+			    }
 				
 				Url url = new Url();
 				url.setCourse(c.getId());
-				url.setName(mate.getNome());
+				url.setName(mate.getNome()+" - "+qst.getName());
 				url.setExternalurl(mate.getLink());
 				url.setTimemodified(new Date().getTime());
 				entManager.persist(url);
@@ -161,26 +193,40 @@ public class CriarUrl extends ActionMoodle{
 				Topico top = entManager.find(Topico.class, section);
 				top.setSequence(newSequence);
 
-				c.setSectioncache("NULL");
-				JPAUtil.closeEntityManager();
+				c.setSectioncache(" ");
+				entManager.merge(c);
 				
 				
-			}
-		}
+				
+				
+		  }
+		JPAUtil.closeEntityManager();
 	}
 	
+
 public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 		
-		for(Assunto assunto : trf.getAssuntos()){
-			
-			for(Material mate : assunto.getMaterial()){
+	JPAUtil.beginTransaction();
+	EntityManager entManager = JPAUtil.getEntityManager();
+	
+			for(Material mate : trf.getMateriais()){
 				
-				JPAUtil.beginTransaction();
-				EntityManager entManager = JPAUtil.getEntityManager();
 				
+				if(mate.getLink().isEmpty()){
+					continue;
+				}
+				
+				Query q = entManager.createQuery("SELECT url FROM Url url WHERE name = ?1");
+				q.setParameter(1,mate.getNome()+" - "+trf.getName());
+			    List<Url> urls = q.getResultList();
+			    
+			    if(!urls.isEmpty()){
+			    	continue;
+			    }
+			    
 				Url url = new Url();
 				url.setCourse(c.getId());
-				url.setName(mate.getNome());
+				url.setName(mate.getNome()+" - "+trf.getName());
 				url.setExternalurl(mate.getLink());
 				url.setTimemodified(new Date().getTime());
 				entManager.persist(url);
@@ -215,23 +261,36 @@ public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 				Topico top = entManager.find(Topico.class, section);
 				top.setSequence(newSequence);
 
-				c.setSectioncache("NULL");
-				JPAUtil.closeEntityManager();
-							}
-		}
+				c.setSectioncache(" ");
+				entManager.merge(c);
+
+			}
+			JPAUtil.closeEntityManager();
+		
 	}
 	
 public void inserirUrl(Curso c, Licao l, BigInteger m){
-		
 
-	for(Assunto assunto : l.getAssuntos()){
-		for(Material mate: assunto.getMaterial()){
-				JPAUtil.beginTransaction();
-				EntityManager entManager = JPAUtil.getEntityManager();
+	JPAUtil.beginTransaction();
+	EntityManager entManager = JPAUtil.getEntityManager();
+
+		for(Material mate: l.getMateriais()){
+
+			    if(mate.getLink().isEmpty()){
+					continue;
+				}
 				
+				Query q = entManager.createQuery("SELECT url FROM Url url WHERE name = ?1");
+				q.setParameter(1,mate.getNome()+" - "+l.getName());
+			    List<Url> urls = q.getResultList();
+			    
+			    if(!urls.isEmpty()){
+			    	continue;
+			    }
+			    
 				Url url = new Url();
 				url.setCourse(c.getId());
-				url.setName(mate.getNome());
+				url.setName(mate.getNome()+" - "+l.getName());
 				url.setExternalurl(mate.getLink());
 				url.setTimemodified(new Date().getTime());
 				entManager.persist(url);
@@ -265,12 +324,13 @@ public void inserirUrl(Curso c, Licao l, BigInteger m){
 				
 				Topico top = entManager.find(Topico.class, section);
 				top.setSequence(newSequence);
+				
+				c.setSectioncache(" ");
+				entManager.merge(c);
 
-				c.setSectioncache("NULL");
-				JPAUtil.closeEntityManager();
 				
 			}
-		}
-}
+		JPAUtil.closeEntityManager();
+	}
 
 }

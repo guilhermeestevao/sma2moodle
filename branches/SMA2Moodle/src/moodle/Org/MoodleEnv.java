@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.swing.JOptionPane;
+
 import dao.GerenciaCurso;
 import jamder.Environment;
 import jamder.Organization;
@@ -34,6 +36,8 @@ import moodle.dados.Curso;
 import moodle.dados.Url;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
+import moodle.dados.atividades.Questionario;
+import moodle.dados.atividades.Tarefa;
 import moodle.dados.controleag.ActionAgente;
 import moodle.dados.grupos.Grupo;
 import moodle.dados.mensagem.Mensagem;
@@ -53,6 +57,8 @@ public class MoodleEnv extends Environment {
 	private Map<Curso, List<Aluno>> alunosNotaBaixa;
 	private Map<Aluno, List<Atividade>> atividadesEncerrando;
 	private Map<Curso, HashSet<Licao>> licaoCurso;
+	private Map<Curso, HashSet<Questionario>> questionarioCurso;
+	private Map<Curso, HashSet<Tarefa>> tarefaCurso;
 	private Map<Curso, HashSet<Url>> urlCurso;
 	
 	public MoodleEnv (String name, String host, String port) {
@@ -69,11 +75,11 @@ public class MoodleEnv extends Environment {
 		
 	    GenericAgent BuscadorAg= new BuscadorAgente("BuscadorAg", this, null);
 	    AgentRole BuscadorAgRole = new ModelAgentRole("BuscadorAgRole", MoodleOrg, BuscadorAg); 
-	    //addAgent("BuscadorAg", BuscadorAg); 
+	    addAgent("BuscadorAg", BuscadorAg); 
 	    
 		GenericAgent FormadorAg = new FormadorAgente("FormadorAg", this, null);
 	    AgentRole FormadorAgRole = new ProactiveAgentRole("FormadorAgRole", MoodleOrg, FormadorAg); 
-	    //addAgent("FormadorAg", FormadorAg);
+	    addAgent("FormadorAg", FormadorAg);
 		
 	    GenericAgent AcompanhanteTutorAg = new AcompanhanteTutorAgente("AcompanhanteTutorAg", this, null);
 	    AgentRole AcompanhanteTutorAgRole = new ModelAgentRole("AcompanhanteTutorAgRole", MoodleOrg, AcompanhanteTutorAg); 
@@ -81,15 +87,15 @@ public class MoodleEnv extends Environment {
 	    
 		GenericAgent PedagogicoAg = new PedagogicoAgente("PedagogicoAg", this, null);
 	    AgentRole PedagogicoAgRole = new ProactiveAgentRole("PedagogicoAgRole", MoodleOrg, PedagogicoAg); 
-	    //addAgent("PedagogicoAg", PedagogicoAg);   
+	    addAgent("PedagogicoAg", PedagogicoAg);   
 	    
 		GenericAgent AjudanteAg = new AjudanteAgente("AjudanteAg", this, null);
 	    AgentRole AjudanteAgRole = new AgentRole("AjudanteAgRole", MoodleOrg, AjudanteAg); 
-	    //addAgent("AjudanteAg", AjudanteAg);   
+	    addAgent("AjudanteAg", AjudanteAg);   
 	    
 	    GenericAgent AgenteAuxiliarDeEvasaoAg = new AgenteAuxiliarDeEvasao("AgenteAuxiliarDeEvasaoAg", this, null);
 	    AgentRole AgenteAuxiliarDeEvasaoAgRole = new AgentRole("AgenteAuxiliarDeEvasaoAgRole", MoodleOrg, AgenteAuxiliarDeEvasaoAg); 
-	    addAgent("AgenteAuxiliarDeEvasaoAg", AgenteAuxiliarDeEvasaoAg);   
+	    //addAgent("AgenteAuxiliarDeEvasaoAg", AgenteAuxiliarDeEvasaoAg);   
 	    
 	    GenericAgent AcompanhanteDeProfessoresAg = new AcompanhanteDeProfessores("AcompanhanteDeProfessoresAg", this, null);
 	    AgentRole AcompanhanteDeProfessoresAgAgRole = new ProactiveAgentRole("AcompanhanteDeProfessoresAgRole", MoodleOrg, AjudanteAg); 
@@ -122,10 +128,13 @@ public class MoodleEnv extends Environment {
 	    alunosNotaBaixa = Collections.synchronizedMap(new HashMap<Curso, List<Aluno>>());
 	    atividadesEncerrando = Collections.synchronizedMap(new HashMap<Aluno, List<Atividade>>());
 	    licaoCurso = Collections.synchronizedMap(new HashMap<Curso, HashSet<Licao>>());
+	    questionarioCurso = Collections.synchronizedMap(new HashMap<Curso, HashSet<Questionario>>());
+	    tarefaCurso = Collections.synchronizedMap(new HashMap<Curso, HashSet<Tarefa>>());
 	    urlCurso =  Collections.synchronizedMap(new HashMap<Curso, HashSet<Url>>());
 	    
 	    gerenciadorBeans = new GerenciadorBeans(gerenciadorCurso, this);
 	    controladorActions = new ControladorActions(this);
+	    controladorActions.setMantemAtualizando(false);
 	    executorThread = Executors.newFixedThreadPool(2);
 	    executorThread.execute(gerenciadorBeans);
 	    executorThread.execute(controladorActions);
@@ -200,7 +209,6 @@ public class MoodleEnv extends Environment {
 			for(Map.Entry<Aluno, BigDecimal> alunosNota : alunos.entrySet()){
 				
 				BigDecimal nota = alunosNota.getValue();
-				
 				if(nota != null){
 					
 					if(nota.intValue() < 70){
@@ -251,6 +259,52 @@ public class MoodleEnv extends Environment {
 			
 			GerenciaCurso.addLicaoCurso(curso);
 			getLicaoCurso().put(curso, (HashSet<Licao>)curso.getLicaoCurso());
+		}
+	}
+	
+	public Map<Curso, HashSet<Questionario>> getQuestionarioCurso(){
+		return questionarioCurso;
+	}
+	
+	public Map<Curso, HashSet<Questionario>> getQuestionarioCursoProcessado(){
+		if(!getQuestionarioCurso().isEmpty()){
+			getQuestionarioCurso().clear();
+		}
+		setQuestionarioCurso();
+		return getQuestionarioCurso();
+	}
+	
+	public void setQuestionarioCurso(){
+		for(Curso curso: getGerenciaCurso().getCursos()){
+			if(!getQuestionarioCurso().containsKey(curso)){
+				getQuestionarioCurso().put(curso, new HashSet<Questionario>());
+			}
+			
+			GerenciaCurso.addQuestionarioCurso(curso);
+			getQuestionarioCurso().put(curso, (HashSet<Questionario>)curso.getQuestionarioCurso());
+		}
+	}
+	
+	public Map<Curso, HashSet<Tarefa>> getTarefaCurso(){
+		return tarefaCurso;
+	}
+	
+	public Map<Curso, HashSet<Tarefa>> getTarefaCursoProcessado(){
+		if(!getTarefaCurso().isEmpty()){
+			getTarefaCurso().clear();
+		}
+		setTarefaCurso();
+		return getTarefaCurso();
+	}
+	
+	public void setTarefaCurso(){
+		for(Curso curso: getGerenciaCurso().getCursos()){
+			if(!getTarefaCurso().containsKey(curso)){
+				getTarefaCurso().put(curso, new HashSet<Tarefa>());
+			}
+			
+			GerenciaCurso.addTarefaCurso(curso);
+			getTarefaCurso().put(curso, (HashSet<Tarefa>)curso.getTarefaCurso());
 		}
 	}
 	

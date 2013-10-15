@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -50,6 +52,9 @@ public class OrientarAlunoNotaBaixaDisciplina extends Action {
 		
 			for(Map.Entry<Curso, List<Aluno>> results : alunosNotaBaixa.entrySet()){
 				
+				if(results.getValue().isEmpty())
+					continue;
+			
 				StringBuilder cursos = new StringBuilder();
 				boolean isPreRequisito = false;
 				
@@ -68,8 +73,7 @@ public class OrientarAlunoNotaBaixaDisciplina extends Action {
 					continue;
 				
 				
-				
-				
+
 				for(Aluno al : results.getValue()){
 					
 					StringBuilder smallmessage = new StringBuilder();
@@ -96,8 +100,6 @@ public class OrientarAlunoNotaBaixaDisciplina extends Action {
 					msg.setTimecreated(time);
 					
 					envir.addMensagem(msg);
-		
-					
 					
 					
 				}

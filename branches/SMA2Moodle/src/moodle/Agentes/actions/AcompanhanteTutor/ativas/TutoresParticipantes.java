@@ -47,7 +47,7 @@ public class TutoresParticipantes extends ActionMoodle{
 		if(!ControleActions.isTutoresPArticipantes())
 			return;
 		
-		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
@@ -88,7 +88,7 @@ public class TutoresParticipantes extends ActionMoodle{
 				
 					Forum forum = (Forum) atividade ;
 						//Adiciona o nome dos furuns em q o tutor n�o participou
-						if(!forum.isTutorParticipa() && forum.isAvaliativo()){
+						if(!forum.isTutorParticipa()){
 					
 							podeEnviar = true;
 	

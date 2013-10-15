@@ -1,5 +1,6 @@
 package moodle.Org;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.ResourceBundle.Control;
 import java.util.Set;
@@ -13,6 +14,8 @@ import moodle.dados.Curso;
 import moodle.dados.Tutor;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
+import moodle.dados.grupos.Grupo;
+import moodle.dados.grupos.MembrosGrupo;
 import moodle.dados.mensagem.Mensagem;
 import dao.GerenciaCurso;
 import dao.JPAUtil;
@@ -35,7 +38,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 				gerenciador.getCursos().clear();
 
-				gerenciador.addCursos();
+				gerenciador.addCurso(new BigInteger("203"));
 				List<Curso> listaCursos = gerenciador.getCursos();
 
 				try {
@@ -43,14 +46,16 @@ public class GerenciadorBeans extends ThreadsServicos {
 					JPAUtil.beginTransaction();
 
 					for (Curso c : listaCursos) {
-
+						System.out.println("Atualizando ambiente...");
+						
 						GerenciaCurso.addTutorCurso(c);
 						GerenciaCurso.addTutoresCurso(c);
 						GerenciaCurso.addAlunosCurso(c);
 						GerenciaCurso.addProfessorCurso(c);
-						// GerenciaCurso.addLogsDoAluno(c);
+						//GerenciaCurso.addLogsDoAluno(c);
 						GerenciaCurso.addTags(c);
 						GerenciaCurso.addAtividadeWiki(c);
+						GerenciaCurso.addLicaoCurso(c);
 						GerenciaCurso.addAtividadeQuestionario(c);
 						GerenciaCurso.addAtividadeLicao(c);
 						GerenciaCurso.addAtividadeTarefas(c);
@@ -66,348 +71,98 @@ public class GerenciadorBeans extends ThreadsServicos {
 						GerenciaCurso.addCursosPreRequisito(c);
 						GerenciaCurso.addContatoDoCoordenador(c);
 
-						System.err.println("*** \nCurso: " + c.getId() + " -> "
+						System.out.println("*** \nCurso: " + c.getId() + " -> "
 								+ c.getFullName() + "\n");
-						Set<AtividadeNota> atividadesN = c.getAtividadesNota();
-						Set<AtividadeParticipacao> atividadesP = c.getAtividadesParticipacao();
-						
-						for(AtividadeNota a: atividadesN){
-							System.out.println(a.getName());
-						}
-						for(AtividadeParticipacao a: atividadesP){
-							System.out.println(a.getName());
-						}
-					
-						
-						/*
-						 * 
-						 * if(c.getProfessor() != null)
-						 * System.out.println("Professor: " +
-						 * c.getProfessor().getCompleteName()+"\n");
-						 * 
-						 * System.out.println("\nAlunos: \n"); for(Aluno a :
-						 * c.getAlunos()){ System.out.println("- " +
-						 * a.getCompleteName()); }
-						 * 
-						 * 
-						 * if(c.getTutores() != null) for(Tutor t :
-						 * c.getTutores()){ System.out.println("Tutor: " +
-						 * t.getCompleteName()+"\n"); }
-						 * 
-						 * else System.out.println("Tutor: Sem tutor");
-						 * 
-						 * 
-						 * 
-						 * 
-						 * System.out.println("\nAtividade Nota: \n");
-						 * for(AtividadeNota atNota : c.getAtividadesNota()){
-						 * System.out.println("- " + atNota.getName()); }
-						 * 
-						 * System.out.println("\nAtividade Participacao: \n");
-						 * for(AtividadeParticipacao atPart :
-						 * c.getAtividadesParticipacao()){
-						 * System.out.println("- " + atPart.getName()); }
-						 */
 
 					}
 
 				} catch (Exception e) {
 					JPAUtil.rollback();
 					e.printStackTrace();
-					System.out
-							.println("\n************** ERRO ************\nMensagem: "
-									+ e.getMessage());
+					System.out.println("\n************** ERRO ************\nMensagem: "+ e.getMessage());
 					System.out.println("Causa: " + e.getCause());
-
 				} finally {
 					JPAUtil.closeEntityManager();
 				}
-				
-				
-				
+
 				List<Mensagem> mensagens = environment.getMensagens();
-				  
-				  
-				  if(!mensagens.isEmpty()){
-				  
-				  System.out.println("\n ADICIONANDO MENSAGENS \n");
-				  
-				  
-				  EntityManager managerDao = Dao.getEntityManager();
-				  managerDao.getTransaction().begin();
-				  
-				  
-				  synchronized (mensagens) {
-				  
-				  for(Mensagem msg : mensagens){ managerDao.persist(msg);
-				  
-				  
-				  
-				 }
-				  
-				 }
-				  
-				 managerDao.getTransaction().commit();
-		
-				 
-				 mensagens.clear(); }
-				  
-		
 
-				/*
-				 * 
-				 * for(Curso c: listaCursos ){
-				 * 
-				 * System.out.println(c.getFullName());
-				 * 
-				 * 
-				 * 
-				 * System.out.println("***********\nCurso: " + c.getFullName() +
-				 * "\n");
-				 * 
-				 * 
-				 * System.out.println("Tutor: " +
-				 * c.getTutor().getCompleteName());
-				 * 
-				 * /*
-				 */
+				if (!mensagens.isEmpty()) {
 
-				/*
-				 * Set<Aluno> listaAlunos = c.getAlunos();
-				 * 
-				 * try{
-				 * System.out.println("\n\nTutor: "+c.getTutor().getCompleteName
-				 * ()); }catch(NullPointerException e){
-				 * System.out.println("Tutor : N�o definido"); }
-				 * System.out.printf("\nAlunos:\n");
-				 * 
-				 * for(Aluno a : listaAlunos){
-				 * System.out.println(a.getCompleteName());
-				 * 
-				 * System.out.println("\n");
-				 * 
-				 * 
-				 * System.out.println(
-				 * "-------------------------LOGS-------------------------");
-				 * System.out.println("\n");
-				 * 
-				 * List<Log> logs = a.getLogs(); for (Log log : logs) {
-				 * System.out.println(log); }
-				 * 
-				 * System.out.println("\n\n");
-				 * 
-				 * 
-				 * System.out.println(
-				 * "-------------------------TAGS-------------------------");
-				 * 
-				 * List<Tag> tags = a.getTags();
-				 * 
-				 * for(Tag t : tags){ System.out.println(t.getName()); } }
-				 * 
-				 * System.out.println("\n\nAtividades:\n"); Set<AtividadeNota>
-				 * listaAtividadeN = c.getAtividadesNota();
-				 * Set<AtividadeParticipacao> listaAtividadeP =
-				 * c.getAtividadesParticipacao(); for(AtividadeNota a :
-				 * listaAtividadeN){
-				 * 
-				 * System.out.println("Nome: " + a.getName());
-				 * System.out.println("Data inicio: " +
-				 * a.getDataInicio().toString());
-				 * System.out.println("Data final: " +
-				 * a.getDataFinal().toString());
-				 * 
-				 * Map<Aluno, BigDecimal> alNotasMap = a.getAlunosComNotas();
-				 * 
-				 * if(!alNotasMap.isEmpty()){
-				 * 
-				 * for(Map.Entry<Aluno, BigDecimal> results :
-				 * alNotasMap.entrySet()){
-				 * System.out.println(results.getKey().getFirstName() + " " +
-				 * results.getValue()); } }
-				 * 
-				 * if(a instanceof LaboratorioDeAvaliacao){ Map<Aluno,
-				 * BigDecimal> alNotasMap2 = ((LaboratorioDeAvaliacao)
-				 * a).getNota2();
-				 * 
-				 * if(!alNotasMap2.isEmpty()){
-				 * 
-				 * for(Map.Entry<Aluno, BigDecimal> results :
-				 * alNotasMap2.entrySet()){
-				 * System.out.println(results.getKey().getFirstName() + " " +
-				 * results.getValue()); } } } }
-				 * 
-				 * System.out.println(
-				 * "--------------*********************-------------------");
-				 * System.out.println();
-				 * 
-				 * for(AtividadeParticipacao a : listaAtividadeP){ try{ if(a
-				 * instanceof Forum){ Forum f = (Forum)a;
-				 * System.out.println("Nome: " +
-				 * f.getName()+" - Avaliativo ("+f.isAvaliativo()+")");
-				 * System.out.println("Data inicio: " +
-				 * f.getDataInicio().toString());
-				 * System.out.println("Data final: " +
-				 * f.getDataFinal().toString());
-				 * System.out.println("Data atual: "+(new Date().toString()));
-				 * if(f.isTutorParticipa())
-				 * System.out.println("\nParticipa��o do tutor: "
-				 * +f.isTutorParticipa
-				 * ()+" "+f.getUltimaPartipacao().toString()); else
-				 * System.out.println
-				 * ("N�o h� participa��o de tutores nesse forum");
-				 * 
-				 * 
-				 * System.out.println("�ltimo Post "+f.getUltimoPost()+" <");
-				 * 
-				 * }else{ System.out.println("Nome: " + a.getName());
-				 * System.out.println("Data inicio: " +
-				 * a.getDataInicio().toString());
-				 * System.out.println("Data final: " +
-				 * a.getDataFinal().toString());
-				 * 
-				 * } }catch(NullPointerException e){
-				 * System.out.println("N�o h� participa��o"); } Set<Aluno>
-				 * alunos = a.getAlunosParticipantes(); for(Aluno al : alunos){
-				 * try{ System.out.print(al.getCompleteName() + " ");
-				 * 
-				 * }catch(NullPointerException e){
-				 * 
-				 * 
-				 * e.printStackTrace(); } }
-				 * 
-				 * 
-				 * System.out.println();
-				 * 
-				 * Map<Aluno, BigDecimal> alNotasMap = a.getAlunosComNotas();
-				 * 
-				 * if(!alNotasMap.isEmpty()){
-				 * 
-				 * for(Map.Entry<Aluno, BigDecimal> results :
-				 * alNotasMap.entrySet()){
-				 * System.out.println(results.getKey().getFirstName() + " " +
-				 * results.getValue()); } }
-				 * 
-				 * 
-				 * 
-				 * System.out.println("---------------------");
-				 * System.out.println(); }
-				 * 
-				 * System.out.println("***************************************");
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * System.out.printf("\n\n FIM CURSO \n\n");
-				 * 
-				 * Set<Aluno> listaAlunos = c.getAlunos();
-				 * 
-				 * System.out.printf("\nAlunos:\n");
-				 * 
-				 * for(Aluno a : listaAlunos){
-				 * System.out.println(a.getCompleteName());
-				 * 
-				 * }
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * List<Mensagem> mensagens = environment.getMensagens();
-				 * 
-				 * 
-				 * if(!mensagens.isEmpty()){
-				 * 
-				 * System.out.println("\n ADICIONANDO MENSAGENS \n");
-				 * 
-				 * 
-				 * EntityManager managerDao = Dao.getEntityManager();
-				 * managerDao.getTransaction().begin();
-				 * 
-				 * 
-				 * synchronized (mensagens) {
-				 * 
-				 * for(Mensagem msg : mensagens){ managerDao.persist(msg);
-				 * 
-				 * 
-				 * 
-				 * }
-				 * 
-				 * }
-				 * 
-				 * managerDao.getTransaction().commit();
-				 * 
-				 * 
-				 * 
-				 * 
-				 * mensagens.clear(); }
-				 * 
-				 * 
-				 * 
-				 * List<Grupo> grupos = environment.getGrupos();
-				 * 
-				 * if(!grupos.isEmpty()){
-				 * 
-				 * System.out.println("\n ADICIONANDO GRUPOS \n");
-				 * 
-				 * EntityManager managerDao = Dao.getEntityManager();
-				 * managerDao.getTransaction().begin();
-				 * 
-				 * synchronized (grupos) {
-				 * 
-				 * for(Grupo g : grupos){ managerDao.persist(g);
-				 * 
-				 * for(Aluno a : g.getMembros()){
-				 * 
-				 * 
-				 * MembrosGrupo m = new MembrosGrupo(); m.setGroupid(g.getId());
-				 * m.setUserid(a.getId());
-				 * m.setTimeadded(System.currentTimeMillis());
-				 * 
-				 * managerDao.persist(m);
-				 * 
-				 * }
-				 * 
-				 * 
-				 * 
-				 * 
-				 * }
-				 * 
-				 * 
-				 * managerDao.getTransaction().commit();
-				 * 
-				 * grupos.clear();
-				 * 
-				 * 
-				 * }
-				 * 
-				 * 
-				 * }
-				 * 
-				 * 
-				 * }
-				 */
-				System.out.println("Libera");
-				ControleActions.liberarActions();
+					System.out.println("\n ADICIONANDO MENSAGENS \n");
+
+					EntityManager managerDao = Dao.getEntityManager();
+					managerDao.getTransaction().begin();
+
+					synchronized (mensagens) {
+
+						for (Mensagem msg : mensagens) {
+							managerDao.persist(msg);
+
+						}
+
+					}
+
+					managerDao.getTransaction().commit();
+
+					mensagens.clear();
+				}
+
+				List<Grupo> grupos = environment.getGrupos();
+
+				if (!grupos.isEmpty()) {
+
+					System.out.println("\n ADICIONANDO GRUPOS \n");
+
+					EntityManager managerDao = Dao.getEntityManager();
+					managerDao.getTransaction().begin();
+
+					synchronized (grupos) {
+
+						for (Grupo g : grupos) {
+							managerDao.persist(g);
+
+							for (Aluno a : g.getMembros()) {
+
+								MembrosGrupo m = new MembrosGrupo();
+								m.setGroupid(g.getId());
+								m.setUserid(a.getId());
+								m.setTimeadded(System.currentTimeMillis());
+
+								managerDao.persist(m);
+
+							}
+
+						}
+
+						managerDao.getTransaction().commit();
+
+						grupos.clear();
+
+					}
+
+				}
+
+				System.out.println("******Agentes liberados*******");
+				environment.getControladorActions().setMantemAtualizando(true);
 				
-				Thread.currentThread().sleep(10*1000);
-				while(ControleActions.liberarGerenciaBeans()){
+				ControleActions.liberarActions();
+				Thread.currentThread().sleep(10 * 1000);
+				while (ControleActions.liberarGerenciaBeans()) {
 					System.out.println("Vai dormir!");
-					Thread.currentThread().sleep(10*1000);
+					Thread.currentThread().sleep(10 * 1000);
 					System.out.println("Acordou!");
 				}
+				environment.getControladorActions().setMantemAtualizando(false);
 				
-				System.out.println("Aqui");
+				System.out.println("***** Agentes bloqueados ********");
 			}
 
 		} catch (InterruptedException e) {
 			System.out.println("Exception sleep thread");
 			System.exit(1);
 		} finally {
-			environment.setMantemAgentesAtivos(false);
+			
 
 		}
 

@@ -1,6 +1,7 @@
 package moodle.Agentes.actions.BuscadorAgente.ativas;
 
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.Licao;
@@ -51,7 +52,6 @@ public class CriarFolderFiles extends ActionMoodle {
 	private GregorianCalendar d_Atual = new GregorianCalendar();
 	private GregorianCalendar d_Inicio = new GregorianCalendar();
 	private GregorianCalendar d_Final = new GregorianCalendar();
-	//private MoodleDAO dao = new MoodleDAO();
 	private int condicao = 0;
 
 	public CriarFolderFiles(String name) {
@@ -68,24 +68,26 @@ public class CriarFolderFiles extends ActionMoodle {
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
-		MoodleEnv envir = (MoodleEnv) env;
-		mantemAtivo = envir.getMantemAgentesAtivos();
-		block(10 * 1000L);
-		if(!mantemAtivo)
+		
+		if(!ControleActions.isCriarFolderFiles())
 			return;
-					
+
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
+		MoodleEnv envir = (MoodleEnv) env;	
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		licaoCurso = envir.getLicaoCursoProcessado();
 		d_Atual.setTime(dataAtual);
 		
 		List<Curso> cursos = manager.getCursos();
-		JPAUtil.beginTransaction();
-		EntityManager entManager = JPAUtil.getEntityManager();
 		
 		synchronized (cursos) {
 			for(Curso c: cursos){
+				JPAUtil.beginTransaction();
+				EntityManager entManager = JPAUtil.getEntityManager();
 				
 				HashSet<Licao> licao = licaoCurso.get(c);
+				try{
 				if(!licao.isEmpty()){
 					
 					for(Licao li : licao){
@@ -106,9 +108,8 @@ public class CriarFolderFiles extends ActionMoodle {
 								}
 							 }
 						 
-							 for(Assunto assunto : li.getAssuntos()){
 
-								 for(Material material : assunto.getMaterial()){
+								 for(Material material : li.getMateriais()){
 									 
 									 	String hash = new String();
 										Long ta = new Long(0);
@@ -187,9 +188,7 @@ public class CriarFolderFiles extends ActionMoodle {
 									  }
 								 }
 							 }
-							 
 						}
-					}
 				}
 				for(AtividadeNota atividade : c.getAtividadesNota()){
 					if(atividade instanceof Questionario){
@@ -205,16 +204,14 @@ public class CriarFolderFiles extends ActionMoodle {
 								
 								BigInteger contextoId = new BigInteger("0");
 								if(folder.isEmpty()){
-								   contextoId = inserirFolder(c,questionario,new BigInteger("13"));
+								   contextoId = inserirFolder(c,questionario,new BigInteger("16"));
 								}else{
 									for (Folder f : folder) {								 
 										contextoId = buscaContextoid(f.getId(),c.getId());
 									}
 								 }
 							 
-								 for(Assunto assunto : questionario.getAssuntos()){
-
-									 for(Material material : assunto.getMaterial()){
+									 for(Material material : questionario.getMateriais()){
 										 
 										 	String hash = new String();
 											Long ta = new Long(0);
@@ -292,9 +289,7 @@ public class CriarFolderFiles extends ActionMoodle {
 												
 										  }
 									 }
-								 }
-							
-							}
+							 }
 				    }
 				    if(atividade instanceof Tarefa){
 				    		Tarefa tarefa = (Tarefa) atividade;
@@ -308,16 +303,14 @@ public class CriarFolderFiles extends ActionMoodle {
 								
 								BigInteger contextoId = new BigInteger("0");
 								if(folder.isEmpty()){
-								   contextoId = inserirFolder(c,tarefa,new BigInteger("13"));
+								   contextoId = inserirFolder(c,tarefa,new BigInteger("1"));
 								}else{
 									for (Folder f : folder) {								 
 										contextoId = buscaContextoid(f.getId(),c.getId());
 									}
 								 }
 							 
-								 for(Assunto assunto : tarefa.getAssuntos()){
-
-									 for(Material material : assunto.getMaterial()){
+									 for(Material material : tarefa.getMateriais()){
 										 
 										 	String hash = new String();
 											Long ta = new Long(0);
@@ -346,7 +339,6 @@ public class CriarFolderFiles extends ActionMoodle {
 											BigInteger size = BigInteger.valueOf(ta);
 											
 											if(fil.isEmpty()){
-											//	JOptionPane.showMessageDialog(null, "folder vazio");
 												Long item;
 												while(true){
 													item = gerarItemid();
@@ -394,17 +386,19 @@ public class CriarFolderFiles extends ActionMoodle {
 												
 										  }
 									 }
-								 }
-							
-				    		}
-				    }
-				
+								 }	
+				    	}
 				}
+				
+				}catch (NullPointerException e) {
+					ControleActions.setCriarFolderFiles(false);
+				}
+			  JPAUtil.closeEntityManager();
 			}
 
 		}
-		JPAUtil.closeEntityManager();
-		
+
+		ControleActions.setCriarFolderFiles(false);
 	}
 	public boolean done() {
 		return done;
@@ -412,7 +406,7 @@ public class CriarFolderFiles extends ActionMoodle {
 
 	public BigInteger inserirFolder(Curso c, Licao l, BigInteger m){
 
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		EntityManager entManager = JPAUtil.getEntityManager();
 				
 		Folder pacote = new Folder();
@@ -455,15 +449,17 @@ public class CriarFolderFiles extends ActionMoodle {
 		Topico top = entManager.find(Topico.class, section);
 		top.setSequence(newSequence);
 
-		c.setSectioncache("NULL");
-		JPAUtil.closeEntityManager();
+		c.setSectioncache(" ");
+		entManager.merge(c);
+		
+		//JPAUtil.closeEntityManager();
 				
 		return contxt.getId();
 		
 	}
 	public BigInteger inserirFolder(Curso c, Questionario q, BigInteger m){
 
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		EntityManager entManager = JPAUtil.getEntityManager();
 			
 		Folder pacote = new Folder();
@@ -506,15 +502,17 @@ public class CriarFolderFiles extends ActionMoodle {
 		Topico top = entManager.find(Topico.class, section);
 		top.setSequence(newSequence);
 
-		c.setSectioncache("NULL");
-		JPAUtil.closeEntityManager();
+		c.setSectioncache(" ");
+		entManager.merge(c);
+
+		//JPAUtil.closeEntityManager();
 		return contxt.getId();
 		
 	}
 	
 	public BigInteger inserirFolder(Curso c, Tarefa t, BigInteger m){
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		EntityManager entManager = JPAUtil.getEntityManager();
 		
 		Folder pacote = new Folder();
@@ -557,18 +555,19 @@ public class CriarFolderFiles extends ActionMoodle {
 		Topico top = entManager.find(Topico.class, section);
 		top.setSequence(newSequence);
 
-		c.setSectioncache("NULL");
-		JPAUtil.closeEntityManager();
+		c.setSectioncache(" ");
+		entManager.merge(c);
+		//JPAUtil.closeEntityManager();
 		return contxt.getId();
 		
 	}
 	
 	public BigInteger buscaContextoid(BigInteger id_folder, BigInteger c) {
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		EntityManager entManager = JPAUtil.getEntityManager();
 		BigInteger idM = (BigInteger) entManager.createNativeQuery("SELECT id FROM mdl_course_modules WHERE instance = "+id_folder + " AND course =" + c).getSingleResult();
 		BigInteger idC = (BigInteger) entManager.createNativeQuery("SELECT id FROM mdl_context WHERE instanceid = "+idM + " AND contextlevel = 70").getSingleResult();
-		JPAUtil.closeEntityManager();
+		//JPAUtil.closeEntityManager();
 		return idC;
 	}
 	public static byte[] gerarHash(byte[] arquivo, String algoritmo) {
@@ -606,15 +605,35 @@ public class CriarFolderFiles extends ActionMoodle {
 	public Long enviaArquivo(String file, String hash) throws IOException{
 		File origem = new File(file);
 		char[] hash_caractere = hash.toCharArray();
-		File destino_inicio = new File("C:\\xampp\\moodledata\\filedir");
-		//primeiro diretorio
-		File destino_inter = new File(destino_inicio+"\\"+hash_caractere[0]+hash_caractere[1]);
-		destino_inter.mkdir();
-		//segundo diretorio
-		File destino_inter2 = new File(destino_inter+"\\"+hash_caractere[2]+hash_caractere[3]);
-		destino_inter2.mkdir(); 
-		//arquivo
-		File destino_final = new File(destino_inter2+"\\"+hash);
+		String osName = System.getProperty("os.name"); 
+		File destino_inicio = new File("");
+		File destino_inter = new File("");
+		File destino_inter2 = new File("");
+		File destino_final = new File("");
+		
+		if(osName.contains("Windows") || osName.equals("Windows")){
+			destino_inicio	= new File("C:\\xampp\\moodledata\\filedir");
+			//primeiro diretorio
+			destino_inter = new File(destino_inicio+"\\"+hash_caractere[0]+hash_caractere[1]);
+			destino_inter.mkdir();
+			//segundo diretorio
+			destino_inter2 = new File(destino_inter+"\\"+hash_caractere[2]+hash_caractere[3]);
+			destino_inter2.mkdir(); 
+			//arquivo
+			destino_final = new File(destino_inter2+"\\"+hash);
+		
+		}else if(osName.contains("Linux") || osName.equals("Linux")){
+			destino_inicio	= new File("/var/moodledata/filedir");
+			//primeiro diretorio
+			destino_inter = new File(destino_inicio+"/"+hash_caractere[0]+hash_caractere[1]);
+			destino_inter.mkdir();
+			//segundo diretorio
+			destino_inter2 = new File(destino_inter+"/"+hash_caractere[2]+hash_caractere[3]);
+			destino_inter2.mkdir(); 
+			//arquivo
+			destino_final = new File(destino_inter2+"/"+hash);
+		}
+		 
 		//Entrada
 		FileInputStream fis = new FileInputStream(origem);
 		//Saida
@@ -637,26 +656,26 @@ public class CriarFolderFiles extends ActionMoodle {
 	}
 	// retorna true se não existe itemid com esse itemid gerado pelo random
 	public boolean verificaItemid(BigInteger itemid) {
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		EntityManager entManager = JPAUtil.getEntityManager();
 		Query query = entManager.createQuery("SELECT files FROM Files files WHERE files.itemid= ?1");
 		query.setParameter(1, itemid);
 		List<Files> files_item = query.getResultList();
-		JPAUtil.closeEntityManager();
+		//JPAUtil.closeEntityManager();
 		return files_item.isEmpty();
 	}
 	public boolean verificaPath(String path){
-			JPAUtil.beginTransaction();
+			//JPAUtil.beginTransaction();
 			EntityManager entManager = JPAUtil.getEntityManager();
 			Query query = entManager.createQuery("SELECT files FROM Files files WHERE files.pathnamehash= ?1");
 			query.setParameter(1, path);
 			List<Files> files_item = query.getResultList();
-			JPAUtil.closeEntityManager();
+			//JPAUtil.closeEntityManager();
 			return files_item.isEmpty();
 	}
 	public void armazenaFiles(String hash, BigInteger contextoId,String component,String filearea, BigInteger itemid, String filename,BigInteger size_final, String mimetype, String source, String author, String license){
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		EntityManager entManager = JPAUtil.getEntityManager();
 		Files files = new Files();
 		files.setContenthash(hash);

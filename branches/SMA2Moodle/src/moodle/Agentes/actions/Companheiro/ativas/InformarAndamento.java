@@ -58,7 +58,7 @@ public class InformarAndamento extends ActionMoodle {
 		if(!ControleActions.isInformaAndamento())
 			return;
 		
-		System.out.println(ControleActions.isInformaAndamento()+" "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		

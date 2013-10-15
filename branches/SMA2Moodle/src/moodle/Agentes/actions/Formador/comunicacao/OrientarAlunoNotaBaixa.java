@@ -12,6 +12,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -47,12 +49,13 @@ public class OrientarAlunoNotaBaixa extends Action {
 	public void execute(Environment env, Object[] params) {
 		
 		MoodleEnv envir = (MoodleEnv) env;
-		
-		
-			
+
 		
 		
 			for(Map.Entry<Curso, List<Aluno>> results : alunosNotaBaixa.entrySet()){
+				
+				if(results.getValue().isEmpty())
+					continue;
 				
 				for(Aluno al : results.getValue()){
 					

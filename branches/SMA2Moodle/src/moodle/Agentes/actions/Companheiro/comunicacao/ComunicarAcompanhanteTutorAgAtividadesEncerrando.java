@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -15,7 +17,6 @@ import moodle.dados.Curso;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
 import dao.GerenciaCurso;
-
 import jade.core.AID;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
@@ -43,9 +44,11 @@ public class ComunicarAcompanhanteTutorAgAtividadesEncerrando extends Action{
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
+		
 		MoodleEnv envir = (MoodleEnv) env;
 		GenericAgent agent = (GenericAgent) myAgent;
 		
+		System.out.println(this.getName());
 		
 		Map<Aluno, List<Atividade>> atividadesEncerrando = envir.getAtividadesEncerrando();
 		
@@ -76,10 +79,10 @@ public class ComunicarAcompanhanteTutorAgAtividadesEncerrando extends Action{
 					todasAsAtividades.add(atividade);
 			}
 				
-		}
+	     }
 		
 		for (Aluno aluno : todosOsAlunos) {
-			
+			//JOptionPane.showMessageDialog(null,aluno.getCompleteName());
 			List<Atividade> atividadesSemParticipacao = new ArrayList<Atividade>();
 			
 			for(Atividade ats : todasAsAtividades){
@@ -88,28 +91,31 @@ public class ComunicarAcompanhanteTutorAgAtividadesEncerrando extends Action{
 				if(ats instanceof AtividadeNota){
 					AtividadeNota an = (AtividadeNota) ats;
 					
-					if(MoodleEnv.verificarData(an.getDataFinal(), 3))
-						if(!an.getAlunosComNotas().containsKey(aluno))
+					if(MoodleEnv.verificarData(an.getDataFinal(), 3)){
+						if(!an.getAlunosComNotas().containsKey(aluno)){
+						//	JOptionPane.showMessageDialog(null,an.getName());
 							atividadesSemParticipacao.add(an);
-							
+						}
+					}
 				}else{
 					
 					AtividadeParticipacao ap = (AtividadeParticipacao) ats;
 					
-					if(ap.isAvaliativo() && MoodleEnv.verificarData(ap.getDataFinal(), 3))
-						if(ap.getAlunosComNotas().containsKey(aluno))
+					if(ap.isAvaliativo() && MoodleEnv.verificarData(ap.getDataFinal(), 3)){
+						if(!ap.getAlunosComNotas().containsKey(aluno)){
+						//	JOptionPane.showMessageDialog(null,ap.getName());
 							atividadesSemParticipacao.add(ap);
-					
-				}
-					
+						}
 				
-			}
+					}
+				}
+				
+			 }
 			
 			if(!atividadesSemParticipacao.isEmpty())
 				envir.addAtividadeEncerrando(aluno, atividadesSemParticipacao);
 			
 		}
-		
 		try {
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 			msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);

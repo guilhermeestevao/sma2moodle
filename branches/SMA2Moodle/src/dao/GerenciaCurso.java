@@ -151,7 +151,7 @@ public class GerenciaCurso {
 	}
 	
 	
-public static void addLicaoCurso(Curso curso){
+	public static void addLicaoCurso(Curso curso){
 		
 		EntityManager manager = JPAUtil.getEntityManager();
 		
@@ -164,6 +164,34 @@ public static void addLicaoCurso(Curso curso){
 			curso.addLicao(licao);
 		}
 		
+	}
+	
+	public static void addQuestionarioCurso(Curso curso){
+		
+		EntityManager manager = JPAUtil.getEntityManager();
+		
+		Query query = manager.createNamedQuery("Questionario.findByCourse");
+		query.setParameter(1, curso.getId());
+
+		List<Questionario> questionario = query.getResultList();
+		
+		if(!questionario.isEmpty()){
+			curso.addQuestionario(questionario);
+		}	
+	}
+
+	public static void addTarefaCurso(Curso curso){
+		
+		EntityManager manager = JPAUtil.getEntityManager();
+		
+		Query query = manager.createNamedQuery("Tarefa.findByCourse");
+		query.setParameter(1, curso.getId());
+
+		List<Tarefa> tarefa = query.getResultList();
+		
+		if(!tarefa.isEmpty()){
+			curso.addTarefa(tarefa);
+		}	
 	}
 	
 	public static void addUrlCurso(Curso curso){

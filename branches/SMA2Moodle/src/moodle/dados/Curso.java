@@ -17,6 +17,8 @@ import javax.persistence.*;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.atividades.Licao;
+import moodle.dados.atividades.Questionario;
+import moodle.dados.atividades.Tarefa;
 import moodle.dados.grupos.Grupo;
 
 @Entity
@@ -56,6 +58,10 @@ public class Curso implements Serializable{
 	@Transient
 	private Collection<Licao> licoes;
 	@Transient
+	private Collection<Questionario> questionarios;
+	@Transient
+	private Collection<Tarefa> tarefas;
+	@Transient
 	private Collection<Url> url;
 	@Transient
 	private Collection<Folder> folder;
@@ -69,6 +75,8 @@ public class Curso implements Serializable{
 		notaGeralAlunos = new HashMap<Aluno, BigDecimal>();
 		cursosPreRequisito = new HashSet<Curso>();
 		licoes = new HashSet<Licao>();
+		questionarios = new HashSet<Questionario>();
+		tarefas = new HashSet<Tarefa>();
 		url = new HashSet<Url>();
 		folder = new HashSet<Folder>();
 	}
@@ -185,6 +193,28 @@ public class Curso implements Serializable{
 		return licoes;
 	}
 	
+	public void addQuestionario(Questionario questionario){
+		questionarios.add(questionario);
+	}
+	public void addQuestionario(Collection<Questionario> questionario){
+		questionarios.addAll(questionario);
+	}
+	
+	public Collection<Questionario> getQuestionarioCurso(){
+		return questionarios;
+	}
+	
+	public void addTarefa(Tarefa tarefa){
+		tarefas.add(tarefa);
+	}
+	public void addTarefa(Collection<Tarefa> tarefa){
+		tarefas.addAll(tarefa);
+	}
+	
+	public Collection<Tarefa> getTarefaCurso(){
+		return tarefas;
+	}
+	
 	public void addUrl(Url url){
 		this.url.add(url);
 	}
@@ -211,6 +241,12 @@ public class Curso implements Serializable{
 		this.category = category;
 	}
 	
+	
+	
+	public String getSectioncache() {
+		return sectioncache;
+	}
+
 	public BigInteger getCategory(){
 		return category;
 	}
