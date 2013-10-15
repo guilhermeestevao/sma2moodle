@@ -8,6 +8,7 @@ import java.util.List;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -59,13 +60,13 @@ public class ExibirDicasCalendario extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(22 * 1000L);
 
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+		
+		if(!ControleActions.isExibirDicasCalendario())
 			return;
-
+		
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -89,9 +90,9 @@ public class ExibirDicasCalendario extends ActionMoodle {
 					
 					
 					BigInteger useridto = al.getId();
-					String smallmessage = "Ol� "+ al.getCompleteName()+", esteja sempre atento ao calendario, pois ele informa todos os eventos e prazos do curso";
+					String smallmessage = "Prezado(a) "+ al.getCompleteName()+", esteja sempre atento ao calendario, pois ele informa todos os eventos e prazos do curso";
 					smallmessage += "Para saber o que vai acontencer sobre uma determinada data, basta passar o mouse sobre o dia desejado. ";
-					smallmessage += "Voc� tamb�m pode cadastar eventos de acordo com o ritimo de seus estudos clicando em NOVO EVENTO";
+					smallmessage += "Você também pode cadastar eventos de acordo com o ritimo de seus estudos clicando em NOVO EVENTO";
 					
 					smallmessage += "\n";
 					
@@ -122,6 +123,8 @@ public class ExibirDicasCalendario extends ActionMoodle {
 				}
 			}
 		}
+		
+		ControleActions.setExibirDicasCalendario(false);
 	}
 
 	@Override

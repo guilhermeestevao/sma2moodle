@@ -2,16 +2,21 @@ package moodle.dados.atividades;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.CascadeType;
+
 import java.util.HashSet;
 import java.util.Collection;
+
 import moodle.dados.Assunto;
+import moodle.dados.Material;
 
 @Entity
 @Table(name = "mdl_assign")
@@ -21,10 +26,12 @@ public class Tarefa extends AtividadeNota {
 	public BigDecimal grade;
 	public Long allowsubmissionsfromdate;
 	public Long duedate; //Data termino de submissao
-	@ManyToMany(cascade={CascadeType.PERSIST})
-	@JoinTable(name="ag_tarefa_assunto", joinColumns=@JoinColumn(name="id_tarefa"), 
-	inverseJoinColumns=@JoinColumn(name="id_assunto"))
-	private Collection<Assunto> assuntos = new HashSet<Assunto>();
+	@ManyToMany(fetch = FetchType.EAGER, cascade={CascadeType.PERSIST})
+	@JoinTable(name="ag_tarefa_material", joinColumns=@JoinColumn(name="id_tarefa"), 
+	inverseJoinColumns=@JoinColumn(name="id_material"))
+	private Collection<Material> materiais = new HashSet<Material>();
+	
+	
 	
 	public Tarefa(){}	
 	
@@ -52,15 +59,15 @@ public class Tarefa extends AtividadeNota {
 		return grade;
 	}
 	
-	public Collection<Assunto> getAssuntos(){
-		return assuntos;
+	public Collection<Material> getMateriais() {
+		return materiais;
 	}
-	
-	public void addAssunto(Collection<Assunto> assunto) {
-		assuntos.addAll(assunto);
+
+	public void addMateriais(Collection<Material> materiais) {
+		this.materiais.addAll(materiais);
 	}
-	public void addAssunto(Assunto assunto){
-		assuntos.add(assunto);
+	public void addMateriais(Material material) {
+		this.materiais.add(material);
 	}
 	
 }

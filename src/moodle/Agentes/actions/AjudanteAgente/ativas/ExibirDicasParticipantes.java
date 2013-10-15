@@ -5,11 +5,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
+
 
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -23,9 +24,6 @@ import jamder.behavioural.Condition;
 
 public class ExibirDicasParticipantes extends ActionMoodle {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8530674308196288375L;
 	private boolean done = false;
 	private boolean mantemAtivo;
@@ -50,7 +48,7 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 		for (Log log : logs) {
 			if (log.getModule().equals(module)
 					&& log.getAction().equals(action)) {
-				JOptionPane.showMessageDialog(null, a.getCompleteName());
+
 				return false;
 
 			}
@@ -61,13 +59,12 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(24 * 1000L);
-
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+		
+		if(!ControleActions.isExibirDicasPArticipantes())
 			return;
-
+		
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -87,10 +84,10 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 				if (podeEnviar) {
 				
 					BigInteger useridto = al.getId();
-					String smallmessage = "Ol� "+ al.getCompleteName()+ " para saber quem mais est�o matriculado no mesmo curso que voc�, ";
-					smallmessage += "ou mesmos quem seja o respomsavel pelo andamento do curso como tutores e professres, basta ir no menu de navega��o no canto direito da tela ";
-					smallmessage += "clique sobre o nome do curso depois clique em PARTICIPANTES,";
-					smallmessage += "voc� encontrar� uma lista com todos os integrantes do curso. Apartir disso voc� poder� entrar em cntato com qualquer um clicanco em ENVIAR MMENSAGEM, \n";
+					String smallmessage = "Olá "+ al.getCompleteName()+ " para conhecer seus colegas e quem é o tutor responsável pelo acompanhamento de sua turma ou o professor da disciplina";
+					smallmessage += ", basta ir no menu de navegação no canto direito da tela do moodle e clicar ";
+					smallmessage += "sobre o nome do curso, depois clique em PARTICIPANTES.";
+					smallmessage += "A partir da visualização de participantes, você poderá entrar em contato com qualquer um deles clicando em ENVIAR MENSAGEM.\n";
 
 					
 					smallmessage += "\n";
@@ -120,5 +117,6 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 				}
 			}
 		}
+		ControleActions.setExibirDicasPArticipantes(false);
 	}
 }

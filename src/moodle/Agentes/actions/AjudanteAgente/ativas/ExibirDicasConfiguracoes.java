@@ -8,6 +8,7 @@ import java.util.List;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -60,13 +61,12 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
-		block(23 * 1000L);
-
-		mantemAtivo = ((MoodleEnv) env).getMantemAgentesAtivos();
-
-		if (!mantemAtivo)
+		
+		if(!ControleActions.isExibirDicasConfiguracao())
 			return;
-
+		
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -88,9 +88,9 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 				
 				
 					BigInteger useridto = al.getId();
-					String smallmessage = "Ol� " + al.getCompleteName()+ " voc� pode fazer altera��es de seu perfil ";
-					smallmessage += "clicando no menu CONFIGURA��ES. Nesse menu � possivel alterar sua senha, informa��es de contato, ";
-					smallmessage += "informa��es pessoais, etc. \n";
+					String smallmessage = "Olá " + al.getCompleteName()+ " você pode fazer alterações de seu perfil ";
+					smallmessage += "clicando no menu CONFIGURAÇÕES. Nesse menu é possivel alterar sua senha, informações de contato, ";
+					smallmessage += "informações pessoais, etc. \n";
 					
 					smallmessage += "\n";
 					
@@ -122,5 +122,6 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 			}
 		}
 		
+		ControleActions.setExibirDicasConfiguracao(false);
 	}
 }

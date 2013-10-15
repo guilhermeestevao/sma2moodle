@@ -64,7 +64,9 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		if(!ControleActions.isNotificaCoordenadorDeTutores())
 			return;
 		
-		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
+
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		boolean podeEnviar = false;

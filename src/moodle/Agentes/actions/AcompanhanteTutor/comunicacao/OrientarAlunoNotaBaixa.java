@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -55,17 +57,21 @@ public class OrientarAlunoNotaBaixa extends Action {
 				
 				if(results.getKey().getTutores().isEmpty())
 					continue;
-	
+				
+				if(results.getValue().isEmpty())
+					continue;
+			
 				List<Tutor> tutores = results.getKey().getTutores();
 				
 				for(Tutor tutor : tutores){
-				
 				StringBuilder smallmessage = new StringBuilder();
 				smallmessage.append("Prezado(a) "+tutor.getCompleteName()+" ''\n Os seguintes alunos, estão com notas baixas \n\n");
 				
 				smallmessage.append(results.getKey().getFullName() + ":\n\n");
 				
-				BigInteger useridto = new BigInteger(tutor.getId().toString());			
+				BigInteger useridto = new BigInteger(tutor.getId().toString());		
+				
+				
 				
 				for(Aluno al : results.getValue()){
 					smallmessage.append(al.getCompleteName() + "\n");

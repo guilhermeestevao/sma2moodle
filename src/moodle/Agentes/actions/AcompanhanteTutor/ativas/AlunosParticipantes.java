@@ -55,7 +55,8 @@ public class AlunosParticipantes extends ActionMoodle {
 		if(!ControleActions.isAlunosParticipantes())
 			return;
 
-		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -83,7 +84,7 @@ public class AlunosParticipantes extends ActionMoodle {
 
 				String smallmessage = "Prezado(a) " + tutor.getCompleteName()+ ". \n";
 
-				smallmessage += "Na disciplina " + curso.getFullName()+ ", existem os seguintes f�runs: \n\n";
+				smallmessage += "Na disciplina " + curso.getFullName()+ ", existem os seguintes fóruns: \n\n";
 
 				for (AtividadeParticipacao atividade : curso
 						.getAtividadesParticipacao()) {
@@ -134,7 +135,7 @@ public class AlunosParticipantes extends ActionMoodle {
 							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), tutor.getId(), curso.getId(),atual,smallmessage);
 						}
 					String fullmessage = smallmessage;
-					fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para voc� em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="
+					fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail é uma copia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="
 							+ useridto
 							+ "&id= "
 							+ useridfrom

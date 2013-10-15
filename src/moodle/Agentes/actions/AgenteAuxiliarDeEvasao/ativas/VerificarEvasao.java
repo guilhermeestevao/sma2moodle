@@ -85,7 +85,7 @@ public class VerificarEvasao extends ActionMoodle{
 					Date hoje = new Date();
 						
 					if(hoje.getMonth() != data.getMonth() && (hoje.getDate() -data.getDate() <= 0) ){
-								JOptionPane.showMessageDialog(null,"CHEGOU");
+	
 								//envia email
 								String assunto = "A definir";
                                 String mensagem = "Olá aluno "+a.getCompleteName()+", seu ultimo acesso foi em"+sd.format(data) +"....";

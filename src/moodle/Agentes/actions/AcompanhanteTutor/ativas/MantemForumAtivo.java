@@ -11,6 +11,7 @@ import java.util.List;
 
 
 
+
 import javax.swing.JOptionPane;
 
 import org.joda.time.DateTime;
@@ -58,7 +59,8 @@ public class MantemForumAtivo extends ActionMoodle{
 		if(!ControleActions.isMantemForumAtivo())
 			return;
 			
-		System.out.println(myAgent.getLocalName()+" -- "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");

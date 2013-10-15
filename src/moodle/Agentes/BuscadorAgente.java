@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 
-import moodle.Agentes.actions.AjudanteAgente.comunicacao.CriarFolderFiles;
-import moodle.Agentes.actions.AjudanteAgente.comunicacao.CriarUrl;
-import moodle.Agentes.actions.AjudanteAgente.comunicacao.VerificarEvasao;
+
+
+import moodle.Agentes.actions.BuscadorAgente.ativas.CriarFolderFiles;
+import moodle.Agentes.actions.BuscadorAgente.ativas.CriarUrl;
 //import moodle.Agentes.actions.BuscadorAgente.ExibirPessoasRelacionadasAc;
 import jamder.agents.*;
 
@@ -31,8 +32,8 @@ public class BuscadorAgente extends MASMLAgent {
    Action criarUrl = new CriarUrl("criarUrl",null,null);
    //addAction("criarUrl", criarUrl);
    
-   Action criarFolderFiles = new CriarFolderFiles("criarFolderFiles ",null,null);
-   //addAction("criarFolderFiles ", criarFolderFiles);
+   Action criarFolderFiles = new CriarFolderFiles("criarFolderFiles",null,null);
+   addAction("criarFolderFiles ", criarFolderFiles);
    
    
    

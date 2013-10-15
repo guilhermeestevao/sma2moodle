@@ -7,7 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;;
 
 @Entity
 @Table(name = "ag_material")
@@ -20,6 +22,9 @@ public class Material implements Serializable{
 	private String link;
 	private String caminho;
 	private String tipo;
+	@OneToOne
+	@JoinColumn(name ="id_assunto")
+	private Assunto assunto;
 	
 	public Material(){
 		
@@ -64,5 +69,12 @@ public class Material implements Serializable{
 		this.tipo = tipo;
 	}
 
+	public Assunto getAssunto() {
+		return assunto;
+	}
+
+	public void setAssunto(Assunto assunto) {
+		this.assunto = assunto;
+	}
 	
 }

@@ -59,7 +59,7 @@ public class ComunicarPedagogicoAgNotasBaixas extends Action{
 			msg.addReceiver(new AID("PedagogicoAg", AID.ISLOCALNAME));
 			msg.setConversationId("AlunosNotaBaixa");
 			msg.setContentObject((Serializable)alunosNotaBaixa);
-			myAgent.addBehaviour(new InitiatorFormadorAgNotasBaixas(myAgent, msg));
+			myAgent.addBehaviour(new InitiatorPedagogicoAgNotasBaixas(myAgent, msg));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

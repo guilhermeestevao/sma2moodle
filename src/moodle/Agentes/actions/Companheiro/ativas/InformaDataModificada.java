@@ -44,6 +44,7 @@ public class InformaDataModificada extends ActionMoodle{
 		if(!ControleActions.isInformaDataModificada())
 			return;
 		
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		MoodleEnv envir = (MoodleEnv) env;
 

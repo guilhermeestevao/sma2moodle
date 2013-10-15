@@ -63,15 +63,11 @@ public class CriaChat extends ActionMoodle {
 	}
 
 	public void execute(Environment env, Object[] params) {
-
-
-
-		
 		
 		if(!ControleActions.isCriaChat())
 			return;
 
-		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		
 		boolean podeEnviar = false;
@@ -111,7 +107,7 @@ public class CriaChat extends ActionMoodle {
 						Chat chat = new Chat();
 						chat.setName("Chat para tirar dúvidas - "+questionario.getName());
 						chat.setCourse(c.getId());
-						chat.setIntro("Chat criado automoticamente para que possam ser tidadas dúvidas antes da proxima Avalia��o");
+						chat.setIntro("Chat criado automoticamente para que possam ser tidadas dúvidas antes da proxima Avaliação");
 						long criadoEm = getTimeStamp(new Date());
 						chat.setTimemodified(criadoEm);
 						// Falta criar ainda a data para o chat

@@ -1,5 +1,7 @@
 package moodle.Agentes.actions;
 
+import javassist.tools.framedump;
+
 public class ControleActions {
 	
 	
@@ -23,9 +25,22 @@ public class ControleActions {
 	//Agente ompanheiro de professores
 	private static boolean informarNotasAtrasadas = false;
 	
+	//Agente formador e grupos
+	private static boolean formargrupos = false;
+	
 	//agente pedagogico 
 	private static boolean informaAtividadeDisciplina = false;
 	private static boolean informaPreRequisito = false;
+	
+	//Agente ajudante 
+	private static boolean exibirDicasCalendario = false;
+	private static boolean exibirDicasConfiguracao = false;
+	private static boolean exibirDicasForum = false;
+	private static boolean exibirDicasPArticipantes = false;
+	
+	//Agente  Buscar
+	private static boolean criarUrl = false;
+	private static boolean criarFolderFiles = false;
 	
 	
 	public static boolean isCriaChat() {
@@ -119,6 +134,7 @@ public class ControleActions {
 	public static boolean isInformaAtividadeDisciplina() {
 		return informaAtividadeDisciplina;
 	}
+	
 	public static void setInformaAtividadeDisciplina(boolean informaAtividadeDisciplina) {
 		ControleActions.informaAtividadeDisciplina = informaAtividadeDisciplina;
 	}
@@ -139,6 +155,63 @@ public class ControleActions {
 	public static void setInformaDataModificada(boolean informaDataModificada) {
 		ControleActions.informaDataModificada = informaDataModificada;
 	}
+	
+	public static boolean isFormargrupos() {
+		return formargrupos;
+	}
+
+	public static void setFormargrupos(boolean formargrupos) {
+		ControleActions.formargrupos = formargrupos;
+	}
+
+	public static boolean isExibirDicasCalendario() {
+		return exibirDicasCalendario;
+	}
+
+	public static void setExibirDicasCalendario(boolean exibirDicasCalendario) {
+		ControleActions.exibirDicasCalendario = exibirDicasCalendario;
+	}
+
+	public static boolean isExibirDicasConfiguracao() {
+		return exibirDicasConfiguracao;
+	}
+
+	public static void setExibirDicasConfiguracao(boolean exibirDicasConfiguracao) {
+		ControleActions.exibirDicasConfiguracao = exibirDicasConfiguracao;
+	}
+
+	public static boolean isExibirDicasForum() {
+		return exibirDicasForum;
+	}
+
+	public static void setExibirDicasForum(boolean exibirDicasForum) {
+		ControleActions.exibirDicasForum = exibirDicasForum;
+	}
+
+	public static boolean isExibirDicasPArticipantes() {
+		return exibirDicasPArticipantes;
+	}
+
+	public static void setExibirDicasPArticipantes(boolean exibirDicasPArticipantes) {
+		ControleActions.exibirDicasPArticipantes = exibirDicasPArticipantes;
+	}
+
+	
+	public static boolean isCriarUrl() {
+		return criarUrl;
+	}
+
+	public static void setCriarUrl(boolean criarUrl) {
+		ControleActions.criarUrl = criarUrl;
+	}
+
+	public static boolean isCriarFolderFiles() {
+		return criarFolderFiles;
+	}
+
+	public static void setCriarFolderFiles(boolean criarFolderFiles) {
+		ControleActions.criarFolderFiles = criarFolderFiles;
+	}
 
 	public static void liberarActions(){
 		//Action companheiro de aprendizagem 
@@ -158,10 +231,23 @@ public class ControleActions {
 		
 		//Agente ompanheiro de professores
 		informarNotasAtrasadas = true;
+	
+		//Formador de grupos
+		formargrupos = true;
 		
 		//agente pedagogico 
 		informaAtividadeDisciplina = true;
 		informaPreRequisito = true;
+
+		//Agente ajudante
+		exibirDicasCalendario = true;
+		exibirDicasConfiguracao = true;
+		exibirDicasForum = true;
+		exibirDicasPArticipantes = true;
+		
+		//Agente Buscador
+		criarUrl = true;
+		criarFolderFiles = true;
 		
 	}
 	
@@ -171,15 +257,22 @@ public class ControleActions {
 		(mostraNovaDisciplinaAluno = false) &&
 		(pesquisaData = false) && 
 		(informaDataModificada = false) && 
-		(alunosParticipantes = true) && 
-		(informaNovaDisciplinaTutor = true) &&
-		(mantemForumAtivo = true) &&
-		(manteTutorAtivo = true) &&
-		(notificaCoordenadorDeTutores = true) &&
-		(tutoresPArticipantes = true)  &&
-		(informarNotasAtrasadas = true) &&
-		(informaAtividadeDisciplina = true) &&
-		(informaPreRequisito = true)){
+		(alunosParticipantes = false) && 
+		(informaNovaDisciplinaTutor = false) &&
+		(mantemForumAtivo = false) &&
+		(manteTutorAtivo = false) &&
+		(notificaCoordenadorDeTutores = false) &&
+		(tutoresPArticipantes = false)  &&
+		(informarNotasAtrasadas = false) &&
+		(informaAtividadeDisciplina = false) &&
+		(informaPreRequisito = false) &&
+		(formargrupos = false) &&
+		(exibirDicasCalendario = false) &&
+		(exibirDicasConfiguracao = false) &&
+		(exibirDicasForum = false) &&
+		(exibirDicasPArticipantes = false) && 
+		(criarUrl = false) &&
+		(criarFolderFiles = false)){
 			return true;
 		}else{
 			return false;

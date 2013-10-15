@@ -4,6 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -51,9 +53,7 @@ public class InformarAtividadesEncerrando extends Action {
 			
 			for(Tutor tutor : curso.getTutores()){
 			
-			// Lembrar de add o nome do curso
-			//Lembrar de avisar ao guilherme para consertar problema de
-			//enviar aluno que nao tem atividades encerrando
+		
 			
 			StringBuilder smallmessage = new StringBuilder();
 			smallmessage.append("Prezado(s),+"+tutor.getCompleteName()+". \n\n");
@@ -63,6 +63,9 @@ public class InformarAtividadesEncerrando extends Action {
 			for(Map.Entry<Aluno, List<Atividade>> results : atividades.entrySet()){
 				
 				if(!curso.getAlunos().contains(results.getKey()))
+					continue;
+				
+				if(results.getValue().isEmpty())
 					continue;
 				
 				smallmessage.append("\n\nAluno: " + results.getKey().getCompleteName() + "\n");

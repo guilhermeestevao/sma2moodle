@@ -45,7 +45,7 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		if (!ControleActions.isInformaAtividadeDisciplina())
 			return;
 
-		System.out.println(myAgent.getLocalName() + " -- " + this.getClass());
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 

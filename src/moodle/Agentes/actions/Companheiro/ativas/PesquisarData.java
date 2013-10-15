@@ -54,9 +54,8 @@ public class PesquisarData extends ActionMoodle {
 		
 		if(!ControleActions.isPesquisaData())
 			return;
-		
-		System.out.println(ControleActions.isPesquisaData()+" "+this.getClass());
-		
+	
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		boolean podeEnviar = false;
 		

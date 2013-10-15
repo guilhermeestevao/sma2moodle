@@ -19,6 +19,7 @@ import java.util.Set;
 
 import moodle.Agentes.FormadorAgente;
 import moodle.Agentes.actions.ActionMoodle;
+import moodle.Agentes.actions.ControleActions;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -46,16 +47,14 @@ public class FormarGrupos extends ActionMoodle {
 	@Override
 	public void execute(Environment env, Object[] params) {
 		
-		block(50 * 1000L);
+		if(!ControleActions.isFormargrupos())
+			return;
+		
+		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		MoodleEnv environment = (MoodleEnv)env;
 		
-		mantemAtivo = environment.getMantemAgentesAtivos();
-		
-		if(!mantemAtivo)
-			return;
-		
-		
+
 		
 		GerenciaCurso manager = environment.getGerenciaCurso();
 		
@@ -68,11 +67,11 @@ public class FormarGrupos extends ActionMoodle {
 		for(Curso curso : cursos){
 				
 			Map<Aluno, BigDecimal> alunosMap = new TreeMap<Aluno, BigDecimal>(new NotaComparator(curso.getNotaGeralAlunos()));
-			System.out.println("Curso");
+	
 			Set<Grupo> grupos = (Set<Grupo>) curso.getGrupos();
 			
 			for(Aluno al : curso.getNotaGeralAlunos().keySet()){
-				System.out.println(al.getCompleteName());
+		
 				alunosMap.put(al, curso.getNotaGeralAlunos().get(al));
 			}
 			
@@ -185,7 +184,7 @@ public class FormarGrupos extends ActionMoodle {
 		}
 		
 		
-		
+		ControleActions.setFormargrupos(false);
 	}
 	
 	@Override

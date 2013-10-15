@@ -26,18 +26,16 @@ public class ControladorActions extends ThreadsServicos {
 
 	@Override
 	public void run() {
-
-			
-			try {
-		
+	
 				while(mantemAtualizando){
 				
 				Map<Curso, List<Aluno>> alunosNotaBaixaTemp = environment.getAlunosNotaBaixaProcessado();
 				Map<Aluno, List<Atividade>> atividadesEncerrandoTemp = environment.getAtividadesEncerrandoProcessado();
 				
-				
-				
+							
 				if(!alunosNotaBaixaTemp.entrySet().equals(alunosNotaBaixa.entrySet())){
+					
+					
 					alunosNotaBaixaTemp.entrySet().removeAll(alunosNotaBaixa.entrySet());
 					alunosNotaBaixa.putAll(alunosNotaBaixaTemp);
 					
@@ -45,6 +43,7 @@ public class ControladorActions extends ThreadsServicos {
 					GenericAgent ag = environment.getAgent("CompanheiroAg");
 					
 					if(ag != null){
+						System.out.println("Aqui");
 						ag.addBehaviour("comunicarFormadorAgNotasBaixas");
 						ag.addBehaviour("comunicarAcompanhanteTutorAgNotasBaixas");
 						ag.addBehaviour("comunicarPedagogicoAgNotasBaixas");
@@ -66,17 +65,12 @@ public class ControladorActions extends ThreadsServicos {
 				
 				}
 				
-				
-				
-				Thread.sleep(4000);
-				
+
 			
 				}
 		
-			} catch (InterruptedException e) {
-				
-				e.printStackTrace();
-			}
+	
+
 				
 	}
 

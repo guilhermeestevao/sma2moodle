@@ -45,7 +45,7 @@ public class InformarPreRequisitos extends ActionMoodle {
 		if(!ControleActions.isInformaPreRequisito())
 			return;
 		
-		System.out.println(ControleActions.isCriaChat()+" "+this.getClass());
+		System.out.println(myAgent.getLocalName()+ " - "+this.getName());
 		
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
