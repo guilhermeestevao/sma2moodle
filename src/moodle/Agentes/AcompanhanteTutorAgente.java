@@ -47,7 +47,7 @@ public class AcompanhanteTutorAgente extends ModelAgent{
 		addAction("informarNovaDisciplina", informarNovaDisciplina);
 		
 		Action notificaCoordenadorDeTutores = new NotificaCoordenadorDeTutores("notificaCoordenadorDeTutores", null, null);
-		addAction("notificaCoordenadorDeTutores", notificaCoordenadorDeTutores);
+		//addAction("notificaCoordenadorDeTutores", notificaCoordenadorDeTutores);
 		
 		
 		

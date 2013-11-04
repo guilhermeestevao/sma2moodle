@@ -5,9 +5,8 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-
-import javax.swing.JOptionPane;
 
 import dao.GerenciaCurso;
 import moodle.Agentes.AgenteUtil;
@@ -36,6 +35,9 @@ public class InformarAndamento extends ActionMoodle {
 	private boolean done = false;
 	private boolean mantemAtivo;
 	List<Atividade> alunoSemNota;
+	private GregorianCalendar d_atual = new GregorianCalendar();
+	private GregorianCalendar d_inicio = new GregorianCalendar();
+	private GregorianCalendar d_final = new GregorianCalendar();
 	
 	public InformarAndamento(String name){
 		super(name);
@@ -61,7 +63,7 @@ public class InformarAndamento extends ActionMoodle {
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = envir.getGerenciaCurso();
-		
+		d_atual.setTime(new Date());
 		BigInteger useridfrom = new BigInteger("2");
 		
 		
@@ -86,8 +88,9 @@ public class InformarAndamento extends ActionMoodle {
 				
 					for(AtividadeNota at : curso.getAtividadesNota()){
 						
-						if(at.getAlunosComNotas().containsKey(aluno)){
-						
+						d_final.setTime(at.getDataFinal());
+						if(at.getAlunosComNotas().containsKey(aluno) && d_atual.before(d_final)){
+							
 							smallmessage += "Atividade " + at.getName() + ": \n";
 							smallmessage += "Sua nota: " + at.getAlunosComNotas().get(aluno) + " / Nota máxima: " + at.getNotaMaxima() + "\n\n";
 						
@@ -106,9 +109,9 @@ public class InformarAndamento extends ActionMoodle {
 					for(AtividadeParticipacao at : curso.getAtividadesParticipacao()){
 						
 						if(at.isAvaliativo()){
-							
-							if(at.getAlunosComNotas().containsKey(aluno)){
-								
+							d_final.setTime(at.getDataFinal());
+							if(at.getAlunosComNotas().containsKey(aluno) && d_atual.before(d_final)){
+									
 								smallmessage += "Atividade " + at.getName() + ": \n";
 								smallmessage += "Sua nota: " + at.getAlunosComNotas().get(aluno) + " / Nota máxima: " + at.getNotaMaxima() + "\n\n";
 							
