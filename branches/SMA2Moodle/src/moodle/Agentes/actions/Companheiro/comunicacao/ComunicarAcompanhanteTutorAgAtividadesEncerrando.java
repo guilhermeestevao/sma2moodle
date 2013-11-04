@@ -48,7 +48,6 @@ public class ComunicarAcompanhanteTutorAgAtividadesEncerrando extends Action{
 		MoodleEnv envir = (MoodleEnv) env;
 		GenericAgent agent = (GenericAgent) myAgent;
 		
-		System.out.println(this.getName());
 		
 		Map<Aluno, List<Atividade>> atividadesEncerrando = envir.getAtividadesEncerrando();
 		
