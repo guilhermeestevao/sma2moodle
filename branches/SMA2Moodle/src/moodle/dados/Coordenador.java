@@ -10,7 +10,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name= "mdl_coordenador")
+@Table(name= "ag_coordenador")
 @NamedQuery(name="Coordenador.findByCourse", query="SELECT coordenador From Coordenador coordenador WHERE curso = ?1 ")
 public class Coordenador implements Serializable {
 	
