@@ -37,6 +37,7 @@ import java.util.Random;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
 import dao.GerenciaCurso;
 import dao.JPAUtil;
@@ -295,7 +296,8 @@ public class CriarFolderFiles extends ActionMoodle {
 				    		Tarefa tarefa = (Tarefa) atividade;
 				    		d_Inicio.setTime(tarefa.getDataInicio());
 							d_Final.setTime(tarefa.getDataFinal());
-				    		if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
+							if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
+				    			
 								Query query = entManager.createQuery("SELECT folder FROM Folder folder WHERE folder.name= ?1");			
 								String nome_p = "Pacote de Materiais - Tarefa "+tarefa.getName();
 								query.setParameter(1, nome_p);
@@ -303,7 +305,7 @@ public class CriarFolderFiles extends ActionMoodle {
 								
 								BigInteger contextoId = new BigInteger("0");
 								if(folder.isEmpty()){
-								   contextoId = inserirFolder(c,tarefa,new BigInteger("1"));
+								   contextoId = inserirFolder(c,tarefa,new BigInteger("21"));
 								}else{
 									for (Folder f : folder) {								 
 										contextoId = buscaContextoid(f.getId(),c.getId());
@@ -311,7 +313,7 @@ public class CriarFolderFiles extends ActionMoodle {
 								 }
 							 
 									 for(Material material : tarefa.getMateriais()){
-										 
+										 JOptionPane.showMessageDialog(null,material.getNome());
 										 	String hash = new String();
 											Long ta = new Long(0);
 											try {
@@ -421,7 +423,7 @@ public class CriarFolderFiles extends ActionMoodle {
 
 		ModuloCurso mc = new ModuloCurso();
 		mc.setCourse(c.getId());
-		BigInteger moduloid = new BigInteger("8");
+		BigInteger moduloid = new BigInteger("6");
 		mc.setModule(moduloid);
 		mc.setInstance(pacote.getId());
 		BigInteger section = (BigInteger) entManager.createNativeQuery("SELECT section FROM mdl_course_modules WHERE course =" +c.getId()+" AND instance=" +l.getId()+ " AND module="+m).getSingleResult();
@@ -474,7 +476,7 @@ public class CriarFolderFiles extends ActionMoodle {
 
 		ModuloCurso mc = new ModuloCurso();
 		mc.setCourse(c.getId());
-		BigInteger moduloid = new BigInteger("8");
+		BigInteger moduloid = new BigInteger("6");
 		mc.setModule(moduloid);
 		mc.setInstance(pacote.getId());
 		BigInteger section = (BigInteger) entManager.createNativeQuery("SELECT section FROM mdl_course_modules WHERE course =" +c.getId()+" AND instance=" +q.getId()+ " AND module="+m).getSingleResult();
@@ -524,16 +526,18 @@ public class CriarFolderFiles extends ActionMoodle {
 		pacote.setRevison(revision);
 		pacote.setTimemodified(new Date().getTime());
 		entManager.persist(pacote);
+		
 
 		ModuloCurso mc = new ModuloCurso();
 		mc.setCourse(c.getId());
-		BigInteger moduloid = new BigInteger("8");
+		BigInteger moduloid = new BigInteger("6");
 		mc.setModule(moduloid);
 		mc.setInstance(pacote.getId());
 		BigInteger section = (BigInteger) entManager.createNativeQuery("SELECT section FROM mdl_course_modules WHERE course =" +c.getId()+" AND instance=" +t.getId()+ " AND module="+m).getSingleResult();
 		mc.setSection(section);
 		mc.setAdded(new Date().getTime());
 		entManager.persist(mc);
+	
 
 		Contexto contxt = new Contexto();
 		BigInteger ctxtLevel = new BigInteger("70");
@@ -542,6 +546,7 @@ public class CriarFolderFiles extends ActionMoodle {
 		BigInteger idC = (BigInteger) entManager.createNativeQuery("SELECT id FROM mdl_context WHERE instanceid = " +c.getId()+" AND contextlevel = 50").getSingleResult();
 		contxt.setPath("/1/3/"+idC+"/");
 		entManager.persist(contxt);
+	
 		
 		BigInteger idContexto = contxt.getId();
 		String newPath = contxt.getPath() + contxt.getId();
@@ -558,8 +563,9 @@ public class CriarFolderFiles extends ActionMoodle {
 		c.setSectioncache(" ");
 		entManager.merge(c);
 		//JPAUtil.closeEntityManager();
-		return contxt.getId();
 		
+		return contxt.getId();
+
 	}
 	
 	public BigInteger buscaContextoid(BigInteger id_folder, BigInteger c) {

@@ -12,7 +12,7 @@ import moodle.dados.atividades.Licao;
 import moodle.dados.grupos.Grupo;
 
 @Entity
-@Table(name="mdl_Folder")
+@Table(name="mdl_folder")
 @NamedQuery(name="FolderByCurso", query="SELECT folder FROM Folder folder WHERE course= ?1")
 public class Folder implements Serializable{
 	@Id@GeneratedValue
