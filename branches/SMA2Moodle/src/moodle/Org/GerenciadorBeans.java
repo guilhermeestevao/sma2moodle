@@ -73,6 +73,10 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 						System.out.println("*** \nCurso: " + c.getId() + " -> "
 								+ c.getFullName() + "\n");
+						
+						for(Tutor tutor : c.getTutores()){
+							System.out.println(tutor.getCompleteName());
+						}
 
 					}
 
