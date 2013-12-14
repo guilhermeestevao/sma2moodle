@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JOptionPane;
 
+import Util.SalvarLog;
 import dao.GerenciaCurso;
 import jamder.Environment;
 import jamder.Organization;
@@ -71,7 +72,7 @@ public class MoodleEnv extends Environment {
 		
 		GenericAgent CompanheiroAg = new CompanheiroAgente("CompanheiroAg", this, null);
 	    AgentRole CompanheiroAgRole = new ModelAgentRole("CompanheiroAgRole", MoodleOrg, CompanheiroAg); 
-	    addAgent("CompanheiroAg", CompanheiroAg); 
+	  //  addAgent("CompanheiroAg", CompanheiroAg); 
 		
 	    GenericAgent BuscadorAg= new BuscadorAgente("BuscadorAg", this, null);
 	    AgentRole BuscadorAgRole = new ModelAgentRole("BuscadorAgRole", MoodleOrg, BuscadorAg); 
@@ -79,15 +80,15 @@ public class MoodleEnv extends Environment {
 	    
 		GenericAgent FormadorAg = new FormadorAgente("FormadorAg", this, null);
 	    AgentRole FormadorAgRole = new ProactiveAgentRole("FormadorAgRole", MoodleOrg, FormadorAg); 
-	    addAgent("FormadorAg", FormadorAg);
+	    //addAgent("FormadorAg", FormadorAg);
 		
 	    GenericAgent AcompanhanteTutorAg = new AcompanhanteTutorAgente("AcompanhanteTutorAg", this, null);
 	    AgentRole AcompanhanteTutorAgRole = new ModelAgentRole("AcompanhanteTutorAgRole", MoodleOrg, AcompanhanteTutorAg); 
-	    addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
+	    //addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
 	    
 		GenericAgent PedagogicoAg = new PedagogicoAgente("PedagogicoAg", this, null);
 	    AgentRole PedagogicoAgRole = new ProactiveAgentRole("PedagogicoAgRole", MoodleOrg, PedagogicoAg); 
-	    addAgent("PedagogicoAg", PedagogicoAg);   
+	    //addAgent("PedagogicoAg", PedagogicoAg);   
 	    
 		GenericAgent AjudanteAg = new AjudanteAgente("AjudanteAg", this, null);
 	    AgentRole AjudanteAgRole = new AgentRole("AjudanteAgRole", MoodleOrg, AjudanteAg); 
@@ -470,7 +471,7 @@ public class MoodleEnv extends Environment {
 	public static void main(String args[]) {
 		final MoodleEnv env = new MoodleEnv("MoodleEnv", "127.0.0.1", "8888");
 		System.out.println("Executou");
-		
+		SalvarLog.salvarArquivo("Executou");
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			
 			public void run(){	
