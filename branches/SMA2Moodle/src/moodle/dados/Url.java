@@ -11,7 +11,7 @@ import javax.persistence.*;
 @NamedQuery(name="UrlByCurso", query="SELECT url FROM Url url WHERE course= ?1")
 public class Url implements Serializable{
 
-	@Id@GeneratedValue
+	@Id
 	private BigInteger id;
 	private BigInteger course;
 	private String name;
