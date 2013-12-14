@@ -15,7 +15,10 @@ import java.util.HashMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.swing.JOptionPane;
 
+import Util.SalvarLog;
 import moodle.dados.Assunto;
 import moodle.dados.Curso;
 import moodle.dados.Url;
@@ -66,6 +69,7 @@ public class CriarUrl extends ActionMoodle{
 			return;
 
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 		licaoCurso = ((MoodleEnv) env).getLicaoCursoProcessado();
@@ -88,7 +92,7 @@ public class CriarUrl extends ActionMoodle{
 
 
 					if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
-						BigInteger m_l = new BigInteger("13");
+						BigInteger m_l = new BigInteger("11");
 						inserirUrl(c,l,m_l);
 					}
 				}
@@ -101,7 +105,7 @@ public class CriarUrl extends ActionMoodle{
 					d_Final.setTime(q.getDataFinal());
 					
 						if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
-							BigInteger m_q= new BigInteger("16");
+							BigInteger m_q= new BigInteger("13");
 							inserirUrl(c,q,m_q);
 						}
 			    	
@@ -117,7 +121,7 @@ public class CriarUrl extends ActionMoodle{
 					d_Final.setTime(t.getDataFinal());
 					
 						if(d_Atual.after(d_Inicio) && d_Atual.before(d_Final)){
-							BigInteger m_q= new BigInteger("1");
+							BigInteger m_q= new BigInteger("21");
 							inserirUrl(c,t,m_q);
 						}
 			    	
@@ -165,7 +169,7 @@ public class CriarUrl extends ActionMoodle{
 				
 				ModuloCurso mc = new ModuloCurso();
 				mc.setCourse(c.getId());
-				BigInteger moduloid = new BigInteger("20");
+				BigInteger moduloid = new BigInteger("17");
 				mc.setModule(moduloid);
 				mc.setInstance(url.getId());
 				BigInteger section = (BigInteger) entManager.createNativeQuery("SELECT section FROM mdl_course_modules WHERE course =" +c.getId()+" AND instance=" +qst.getId()+ " AND module="+m).getSingleResult();												
@@ -194,11 +198,7 @@ public class CriarUrl extends ActionMoodle{
 				top.setSequence(newSequence);
 
 				c.setSectioncache(" ");
-				entManager.merge(c);
-				
-				
-				
-				
+				entManager.merge(c);	
 		  }
 		JPAUtil.closeEntityManager();
 	}
@@ -210,7 +210,6 @@ public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 	EntityManager entManager = JPAUtil.getEntityManager();
 	
 			for(Material mate : trf.getMateriais()){
-				
 				
 				if(mate.getLink().isEmpty()){
 					continue;
@@ -224,16 +223,42 @@ public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 			    	continue;
 			    }
 			    
-				Url url = new Url();
+				Query queryUrl = entManager.createQuery("SELECT url FROM Url url");
+			    List<Url> resultUrl = queryUrl.getResultList();
+				
+				BigInteger maiorUrl = new BigInteger("0");
+				for(Url u : resultUrl){
+					BigInteger v = u.getId();
+					maiorUrl = v.max(maiorUrl);
+				}
+				
+				maiorUrl = maiorUrl.add(new BigInteger("1"));
+				
+				Url url = new Url();	
+				url.setId(maiorUrl);
 				url.setCourse(c.getId());
 				url.setName(mate.getNome()+" - "+trf.getName());
 				url.setExternalurl(mate.getLink());
 				url.setTimemodified(new Date().getTime());
 				entManager.persist(url);
 				
+				
+				Query queryModulo = entManager.createQuery("SELECT moduloCurso FROM ModuloCurso moduloCurso");
+				List<ModuloCurso> resultModulo = queryModulo.getResultList();
+				
+				BigInteger maiorModulo = new BigInteger("0");
+				for(ModuloCurso mod : resultModulo){
+					BigInteger v = mod.getId();
+					maiorModulo = v.max(maiorModulo);
+				}
+				
+				maiorModulo = maiorModulo.add(new BigInteger("1"));		
+				
+				
 				ModuloCurso mc = new ModuloCurso();
+				mc.setId(maiorModulo);
 				mc.setCourse(c.getId());
-				BigInteger moduloid = new BigInteger("20");
+				BigInteger moduloid = new BigInteger("17");
 				mc.setModule(moduloid);
 				mc.setInstance(url.getId());
 				BigInteger section = (BigInteger) entManager.createNativeQuery("SELECT section FROM mdl_course_modules WHERE course =" +c.getId()+" AND instance=" +trf.getId()+ " AND module="+m).getSingleResult();												
@@ -241,7 +266,20 @@ public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 				mc.setAdded(new Date().getTime());
 				entManager.persist(mc);
 				
+				Query queryContexto = entManager.createQuery("SELECT contexto FROM Contexto contexto");
+				List<Contexto> resultContexto = queryContexto.getResultList();
+				
+				BigInteger maiorContexto = new BigInteger("0");
+				for(Contexto cont : resultContexto){
+					BigInteger v = cont.getId();
+					maiorContexto = v.max(maiorContexto);
+				}
+				
+				maiorContexto = maiorContexto.add(new BigInteger("1"));
+				
+				
 				Contexto contxt = new Contexto();
+				contxt.setId(maiorContexto);
 				BigInteger ctxtLevel = new BigInteger("70");
 				contxt.setContextlevel(ctxtLevel);
 				contxt.setInstanceid(mc.getId());
@@ -271,7 +309,7 @@ public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 	
 public void inserirUrl(Curso c, Licao l, BigInteger m){
 
-	JPAUtil.beginTransaction();
+	//JPAUtil.beginTransaction();
 	EntityManager entManager = JPAUtil.getEntityManager();
 
 		for(Material mate: l.getMateriais()){
@@ -297,7 +335,7 @@ public void inserirUrl(Curso c, Licao l, BigInteger m){
 				
 				ModuloCurso mc = new ModuloCurso();
 				mc.setCourse(c.getId());
-				BigInteger moduloid = new BigInteger("20");
+				BigInteger moduloid = new BigInteger("17");
 				mc.setModule(moduloid);
 				mc.setInstance(url.getId());
 				BigInteger section = (BigInteger) entManager.createNativeQuery("SELECT section FROM mdl_course_modules WHERE course =" +c.getId()+" AND instance=" +l.getId()+ " AND module="+m).getSingleResult();												
@@ -330,7 +368,7 @@ public void inserirUrl(Curso c, Licao l, BigInteger m){
 
 				
 			}
-		JPAUtil.closeEntityManager();
+		//JPAUtil.closeEntityManager();
 	}
 
 }
