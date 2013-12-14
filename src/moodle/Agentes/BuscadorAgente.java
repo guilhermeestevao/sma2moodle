@@ -30,10 +30,10 @@ public class BuscadorAgente extends MASMLAgent {
    //addAction("exibirPessoasRelacionadasAc", exibirPessoasRelacionadasAc);
 
    Action criarUrl = new CriarUrl("criarUrl",null,null);
-   //addAction("criarUrl", criarUrl);
+   addAction("criarUrl", criarUrl);
    
    Action criarFolderFiles = new CriarFolderFiles("criarFolderFiles",null,null);
-   addAction("criarFolderFiles ", criarFolderFiles);
+   //addAction("criarFolderFiles ", criarFolderFiles);
    
    
    
