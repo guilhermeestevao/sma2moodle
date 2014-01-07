@@ -1,0 +1,6 @@
+
+cursos de um professor pelo ID do professor
+
+select * from mdl_course mc, mdl_user mu, mdl_role_assignments mr WHERE mu.id = mr.userid and mr.roleid = 3 AND mu.id=$id_professor
+
+

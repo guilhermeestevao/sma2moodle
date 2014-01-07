@@ -1,0 +1,160 @@
+body{
+	background-color:#fcfcfc;
+	font-family:Tahoma;
+}
+
+.topo{
+	margin-left:-8px;
+	margin-right:-8px;
+	background-image:url(images/hgradient);
+	padding:5px;
+	border:1px solid #cccccc;
+
+}
+
+.topo li{
+	display:inline;
+}
+
+.topo li a{
+	text-decoration:none;
+	padding:5px;
+}
+
+.topo li a:hover{
+	text-decoration:underline;
+	color:#ff0000;
+}
+
+.esquerda{
+	float:left;
+	background-color:#fdfdfd;		
+	padding-top:10px;
+	width:100%;
+	text-align:left;	
+	padding-left:8px;
+	border:1px solid #cccccc;
+	height:auto;
+	padding-bottom:10px;
+	list-style-type:none;
+}
+
+.esquerda li{
+	padding:2px;
+	font-size:15px;
+	font-family:Tahoma;
+}
+
+.esquerda li a{
+	color:#555555;
+	text-decoration:none;
+	font-family:Tahoma;
+}
+
+.esquerda li a:hover{
+	color:#ff0000;
+	text-decoration:underline;
+}
+
+.titulo{
+	background-image:url(images/hgradient);
+	font-size:16px;
+	height:auto;
+	width:100%;
+	padding-right:8px;
+	padding-top:5px;
+	padding-bottom:5px;
+	margin-bottom:-16px;
+	border:1px solid #cccccc;
+
+}
+
+.titulo dt{
+	text-align:left;
+	text-decoration:bold;
+	font-family:Ubuntu;
+}
+
+.titulo_topo{
+	font-size:25px;
+	text-decoration:bold;
+	font-family:Tahoma;
+}
+
+
+.direita{
+	float:left;
+	height:auto;
+	background-color:#fdfdfd;		
+	padding-top:10px;
+	width:100%;
+	text-align:left;	
+	padding-left:8px;
+	border:1px solid #cccccc;
+	padding-bottom:10px;
+	list-style-type:none;
+}
+
+.direita li{
+	padding:2px;
+	font-size:15px;
+	font-family:Tahoma;
+}
+
+.direita li a{
+	color:#555555;
+	text-decoration:none;
+	font-family:Tahoma;
+}
+
+.direita li a:hover{
+	color:#ff0000;
+	text-decoration:underline;
+}
+
+.container_menu{
+	display:none;
+	width:10%;
+	position:relative;
+	float:left;
+}
+
+.container_opcoes{
+	display:none;
+	width:10%;
+	position:relative;
+	float:right;
+	padding-right:10px;
+}
+
+.container_centro{
+	width:76%;
+	position:relative;
+	float:center;
+	border:1px solid #cccccc;
+	height:auto;
+	margin-bottom: 1em;
+}
+
+.div_centro{
+	text-align:justify;
+	width:90%;
+	align:center;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+.container_total{
+	width:100%;
+}
+
+.user_info{
+	position:absolute;	
+	right:5px;
+	top:5px;
+	font-family:Tahoma;
+}
+
+.user_info a{	
+	font-family:Tahoma;
+}
