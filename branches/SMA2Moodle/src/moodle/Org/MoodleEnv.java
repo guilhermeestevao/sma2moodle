@@ -46,7 +46,7 @@ import moodle.dados.atividades.Licao;
 import moodle.Agentes.AgenteAuxiliarDeEvasao;
 
 public class MoodleEnv extends Environment {
-	
+	//alterado 
 	private GerenciaCurso gerenciadorCurso;
 	private ExecutorService executorThread;
 	private GerenciadorBeans gerenciadorBeans;
@@ -72,11 +72,11 @@ public class MoodleEnv extends Environment {
 		
 		GenericAgent CompanheiroAg = new CompanheiroAgente("CompanheiroAg", this, null);
 	    AgentRole CompanheiroAgRole = new ModelAgentRole("CompanheiroAgRole", MoodleOrg, CompanheiroAg); 
-	  //  addAgent("CompanheiroAg", CompanheiroAg); 
+	    //addAgent("CompanheiroAg", CompanheiroAg); 
 		
 	    GenericAgent BuscadorAg= new BuscadorAgente("BuscadorAg", this, null);
 	    AgentRole BuscadorAgRole = new ModelAgentRole("BuscadorAgRole", MoodleOrg, BuscadorAg); 
-	    addAgent("BuscadorAg", BuscadorAg); 
+	    //addAgent("BuscadorAg", BuscadorAg); 
 	    
 		GenericAgent FormadorAg = new FormadorAgente("FormadorAg", this, null);
 	    AgentRole FormadorAgRole = new ProactiveAgentRole("FormadorAgRole", MoodleOrg, FormadorAg); 
