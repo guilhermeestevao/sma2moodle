@@ -60,7 +60,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		List<Curso> cursos =  manager.getCursos();
 		
 		for (Curso curso : cursos) {
-			JOptionPane.showMessageDialog(null,curso.getFullName());
+			
 			for(Atividade atividade : curso.getAtividadesNota()){
 				
 				Date data = new Date();

@@ -17,6 +17,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.PedagogicoAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -97,8 +98,10 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 				msg.setFullmessage(fullmessage.toString());
 				msg.setTimecreated(time);
 				
-				((MoodleEnv)env).addMensagem(msg);
-
+				
+				ControleEnvio.enviarViaMoodle(msg, env);
+				ControleEnvio.enviarViaEmail(msg);
+				
 				
 			}
 			
