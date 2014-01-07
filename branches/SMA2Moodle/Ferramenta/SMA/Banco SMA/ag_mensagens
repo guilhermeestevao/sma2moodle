@@ -1,0 +1,115 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.1.10
+-- Dumped by pg_dump version 9.1.10
+-- Started on 2013-11-24 17:31:51 BRT
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 806 (class 1259 OID 196569)
+-- Dependencies: 3589 3590 6
+-- Name: ag_mensagens; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ag_mensagens (
+    id integer NOT NULL,
+    mensagem character varying(10000) DEFAULT NULL::character varying,
+    destinatario character varying(255) DEFAULT NULL::character varying,
+    f_envio integer
+);
+
+
+ALTER TABLE public.ag_mensagens OWNER TO postgres;
+
+--
+-- TOC entry 805 (class 1259 OID 196567)
+-- Dependencies: 806 6
+-- Name: ag_mensagens_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE ag_mensagens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ag_mensagens_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3701 (class 0 OID 0)
+-- Dependencies: 805
+-- Name: ag_mensagens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE ag_mensagens_id_seq OWNED BY ag_mensagens.id;
+
+
+--
+-- TOC entry 3588 (class 2604 OID 196572)
+-- Dependencies: 805 806 806
+-- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ag_mensagens ALTER COLUMN id SET DEFAULT nextval('ag_mensagens_id_seq'::regclass);
+
+
+--
+-- TOC entry 3696 (class 0 OID 196569)
+-- Dependencies: 806 3697
+-- Data for Name: ag_mensagens; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ag_mensagens (id, mensagem, destinatario, f_envio) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3702 (class 0 OID 0)
+-- Dependencies: 805
+-- Name: ag_mensagens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('ag_mensagens_id_seq', 1, false);
+
+
+--
+-- TOC entry 3592 (class 2606 OID 196579)
+-- Dependencies: 806 806 3698
+-- Name: ag_mensagens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ag_mensagens
+    ADD CONSTRAINT ag_mensagens_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3593 (class 2606 OID 196580)
+-- Dependencies: 804 806 3698
+-- Name: ag_mensagens_f_envio_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ag_mensagens
+    ADD CONSTRAINT ag_mensagens_f_envio_fkey FOREIGN KEY (f_envio) REFERENCES ag_formas_de_envio(id);
+
+
+-- Completed on 2013-11-24 17:31:51 BRT
+
+--
+-- PostgreSQL database dump complete
+--
+

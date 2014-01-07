@@ -1,0 +1,69 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.1.10
+-- Dumped by pg_dump version 9.1.10
+-- Started on 2013-11-24 11:52:08 BRT
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 792 (class 1259 OID 165043)
+-- Dependencies: 6
+-- Name: ag_actions; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ag_actions (
+    id integer,
+    nome character varying
+);
+
+
+ALTER TABLE public.ag_actions OWNER TO postgres;
+
+--
+-- TOC entry 3675 (class 0 OID 165043)
+-- Dependencies: 792 3676
+-- Data for Name: ag_actions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ag_actions (id, nome) FROM stdin;
+1	alunosParticipantes
+2	informarNovaDisciplina
+3	mantemForumAtivo
+4	mantemTutorAtivo
+5	tutoresParticipantes
+6	exibirDicasCalendario
+7	exibirDicasConfiguracoes
+8	exibirDicasForuns
+9	exibirDicasParticipantes
+10	exibirDicasRelatorioDeNotas
+11	exibirPessoasRelacionadasAc
+12	criaChat
+13	informarAndamento
+14	mostraNovaDisciplina
+15	pesquisarData
+16	formarGrupos
+17	informarAtividadesDisciplina
+18	informarPreRequisitos
+19	informarNotasAtrasadas
+\.
+
+
+-- Completed on 2013-11-24 11:52:09 BRT
+
+--
+-- PostgreSQL database dump complete
+--
+

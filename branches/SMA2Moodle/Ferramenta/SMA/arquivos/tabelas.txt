@@ -1,0 +1,69 @@
+desc ag_assunto;
++-------+--------------+------+-----+---------+----------------+
+| Field | Type         | Null | Key | Default | Extra          |
++-------+--------------+------+-----+---------+----------------+
+| id    | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nome  | varchar(255) | YES  |     | NULL    |                |
++-------+--------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc ag_assunto_material;
++-------------+---------+------+-----+---------+-------+
+| Field       | Type    | Null | Key | Default | Extra |
++-------------+---------+------+-----+---------+-------+
+| id_assunto  | int(11) | NO   | PRI | NULL    |       |
+| id_material | int(11) | NO   | PRI | NULL    |       |
++-------------+---------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc ag_material;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int(11)      | NO   | PRI | NULL    | auto_increment |
+| nome    | varchar(100) | YES  |     | NULL    |                |
+| link    | varchar(100) | YES  |     | NULL    |                |
+| caminho | varchar(500) | YES  |     | NULL    |                |
+| tipo    | varchar(100) | YES  |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> desc ag_questionario_assunto;
++-----------------+------------+------+-----+---------+-------+
+| Field           | Type       | Null | Key | Default | Extra |
++-----------------+------------+------+-----+---------+-------+
+| id_questionario | bigint(20) | NO   | PRI | NULL    |       |
+| id_assunto      | int(11)    | NO   | PRI | NULL    |       |
++-----------------+------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc ag_tarefa_assunto
+    -> /;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '/' at line 2
+mysql> desc ag_tarefa_assunto ;
++------------+------------+------+-----+---------+-------+
+| Field      | Type       | Null | Key | Default | Extra |
++------------+------------+------+-----+---------+-------+
+| id_tarefa  | bigint(20) | NO   | PRI | NULL    |       |
+| id_assunto | int(11)    | NO   | PRI | NULL    |       |
++------------+------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> desc f_envio;
++-------+---------------+------+-----+---------+----------------+
+| Field | Type          | Null | Key | Default | Extra          |
++-------+---------------+------+-----+---------+----------------+
+| id    | int(11)       | NO   | PRI | NULL    | auto_increment |
+| forma | varchar(1000) | YES  |     | NULL    |                |
++-------+---------------+------+-----+---------+----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc licao_assunto;
++------------+------------+------+-----+---------+-------+
+| Field      | Type       | Null | Key | Default | Extra |
++------------+------------+------+-----+---------+-------+
+| id_licao   | bigint(20) | NO   | PRI | NULL    |       |
+| id_assunto | int(11)    | NO   | PRI | NULL    |       |
++------------+------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
