@@ -52,9 +52,7 @@ public class InformarAndamento extends ActionMoodle {
 	
 	@Override
 	public void execute(Environment env, Object[] params) {
-		
-
-		
+				
 		MoodleEnv envir = (MoodleEnv) env;
 		
 		if(!ControleActions.isInformaAndamento())
@@ -85,7 +83,7 @@ public class InformarAndamento extends ActionMoodle {
 				String smallmessage = "Prezado(a)" + aluno.getCompleteName() + ", \n";
 				smallmessage += "Na disciplina " + curso.getFullName() + " ,  seu atual desempenho é: \n\n";
 				
-				
+
 					for(AtividadeNota at : curso.getAtividadesNota()){
 						
 						d_final.setTime(at.getDataFinal());
@@ -142,8 +140,6 @@ public class InformarAndamento extends ActionMoodle {
 						}
 					
 					}
-					
-						
 				
 				if(!atividadesAlunoSemNota.isEmpty()){
 				

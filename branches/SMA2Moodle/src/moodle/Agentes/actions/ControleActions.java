@@ -27,6 +27,7 @@ public class ControleActions {
 	
 	//Agente formador e grupos
 	private static boolean formargrupos = false;
+	private static boolean classificandoAlunos;
 	
 	//agente pedagogico 
 	private static boolean informaAtividadeDisciplina = false;
@@ -212,6 +213,15 @@ public class ControleActions {
 	public static void setCriarFolderFiles(boolean criarFolderFiles) {
 		ControleActions.criarFolderFiles = criarFolderFiles;
 	}
+	
+
+	public static boolean isClassificandoAlunos() {
+		return classificandoAlunos;
+	}
+
+	public static void setClassificandoAlunos(boolean classificandoAlunos) {
+		ControleActions.classificandoAlunos = classificandoAlunos;
+	}
 
 	public static void liberarActions(){
 		//Action companheiro de aprendizagem 
@@ -234,6 +244,7 @@ public class ControleActions {
 	
 		//Formador de grupos
 		formargrupos = true;
+		classificandoAlunos = true;
 		
 		//agente pedagogico 
 		informaAtividadeDisciplina = true;
@@ -266,7 +277,8 @@ public class ControleActions {
 		(informarNotasAtrasadas = false) &&
 		(informaAtividadeDisciplina = false) &&
 		(informaPreRequisito = false) &&
-		(formargrupos = false) &&
+		(formargrupos = false)&&
+		(classificandoAlunos = false) &&
 		(exibirDicasCalendario = false) &&
 		(exibirDicasConfiguracao = false) &&
 		(exibirDicasForum = false) &&

@@ -7,21 +7,14 @@ import jamder.Environment;
 import jamder.roles.AgentRole;
 import jamder.structural.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ietf.jgss.MessageProp;
 
+
+import moodle.Agentes.actions.Formador.ativas.ClassificandoAlunos;
 import moodle.Agentes.actions.Formador.ativas.FormarGrupos;
-import moodle.Agentes.actions.Formador.comunicacao.OrientarAlunoNotaBaixa;
 import moodle.Agentes.actions.Formador.comunicacao.ResponderAgentes;
-import moodle.dados.Aluno;
-
 import jamder.agents.*;
 
 public class FormadorAgente extends UtilityAgent {
@@ -36,9 +29,15 @@ public class FormadorAgente extends UtilityAgent {
     
     addBelief("crencasFormaGrupos.pl", new Belief("crencasFormaGrupos.pl", "String", ""));
     
+    Action classificandoAlunos = new ClassificandoAlunos("classificandoAlunos");
+    addAction("classificandoAlunos", classificandoAlunos);
     
     Action formarGrupos = new FormarGrupos("formarGrupos");
     addAction("formarGrupos", formarGrupos);
+    
+  
+    
+    
   
   }
   
