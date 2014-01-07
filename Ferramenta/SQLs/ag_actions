@@ -1,0 +1,100 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.1.11
+-- Dumped by pg_dump version 9.1.11
+-- Started on 2014-01-07 09:35:08 BRT
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 774 (class 1259 OID 165043)
+-- Dependencies: 6
+-- Name: ag_actions; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ag_actions (
+    id integer NOT NULL,
+    nome character varying,
+    agente bigint,
+    descricao text
+);
+
+
+ALTER TABLE public.ag_actions OWNER TO postgres;
+
+--
+-- TOC entry 3706 (class 0 OID 165043)
+-- Dependencies: 774 3707
+-- Data for Name: ag_actions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ag_actions (id, nome, agente, descricao) FROM stdin;
+1	alunosParticipantes	1	\N
+2	informarNovaDisciplina	1	\N
+4	mantemTutorAtivo	1	\N
+5	tutoresParticipantes	1	\N
+6	exibirDicasCalendario	2	\N
+7	exibirDicasConfiguracoes	2	\N
+8	exibirDicasForuns	2	\N
+9	exibirDicasParticipantes	2	\N
+10	exibirDicasRelatorioDeNotas	2	\N
+11	exibirPessoasRelacionadasAc	2	\N
+12	criaChat	4	\N
+13	informarAndamento	4	\N
+14	mostraNovaDisciplina	4	\N
+15	pesquisarData	4	\N
+17	informarAtividadesDisciplina	7	\N
+18	informarPreRequisitos	7	\N
+16	formarGrupos	6	\N
+19	informarNotasAtrasadas	8	\N
+3	mantemForumAtivo	1	descrição
+\.
+
+
+--
+-- TOC entry 3603 (class 2606 OID 213464)
+-- Dependencies: 774 774 3708
+-- Name: primary; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ag_actions
+    ADD CONSTRAINT "primary" PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3601 (class 1259 OID 213476)
+-- Dependencies: 774 3708
+-- Name: fki_key; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX fki_key ON ag_actions USING btree (agente);
+
+
+--
+-- TOC entry 3604 (class 2606 OID 213471)
+-- Dependencies: 773 774 3708
+-- Name: key; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ag_actions
+    ADD CONSTRAINT key FOREIGN KEY (agente) REFERENCES ag_agentes(id);
+
+
+-- Completed on 2014-01-07 09:35:09 BRT
+
+--
+-- PostgreSQL database dump complete
+--
+
