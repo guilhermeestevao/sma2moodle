@@ -482,7 +482,7 @@ public class GerenciaCurso {
 		
 		EntityManager manager = JPAUtil.getEntityManager();
 		try{
-			Query query = manager.createNativeQuery("SELECT userid FROM mdl_role_assignments WHERE roleid=3 and contextid = (SELECT id FROM mdl_context WHERE contextlevel=50 and instanceid = ?1)");
+			Query query = manager.createNativeQuery("SELECT userid FROM mdl_role_assignments WHERE roleid=10 and contextid = (SELECT id FROM mdl_context WHERE contextlevel=50 and instanceid = ?1)");
 			query.setParameter(1, c.getId());
 			
 			List<BigInteger> idsTutores = query.getResultList();
