@@ -9,7 +9,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle.Control;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.swing.JOptionPane;
+
+import Util.SalvarLog;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -21,6 +27,7 @@ import moodle.dados.Curso;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -32,18 +39,20 @@ public class PesquisarData extends ActionMoodle {
 	private static final long serialVersionUID = 620707710910838950L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 	
 	
 	
-	public PesquisarData(String name) {
+	public PesquisarData(String name, BigInteger id) {
 		super(name);
 		idAction = 15;
-		
+		idAgente = id;
 	}
 	
-	public PesquisarData(String name, Condition pre_condition, Condition pos_condition) {
+	public PesquisarData(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 15;
+		idAgente = id;
 	}
 	
 	public void execute(Environment env, Object[] params){
@@ -56,6 +65,7 @@ public class PesquisarData extends ActionMoodle {
 			return;
 	
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		boolean podeEnviar = false;
 		
@@ -65,6 +75,7 @@ public class PesquisarData extends ActionMoodle {
 		
 		BigInteger useridfrom = new BigInteger("2");
 		
+		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
@@ -77,9 +88,16 @@ public class PesquisarData extends ActionMoodle {
 				
 				BigInteger useridto = aluno.getId();
 				
-				String smallmessage = "Prezado(a) " + aluno.getCompleteName() + ", \n";
-				smallmessage += "Na disciplina " + curso.getFullName() + "  há algumas atividades pendentes, são elas: \n";
+				EntityManager entManager = JPAUtil.getEntityManager();
 				
+				Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+				BigInteger ac = new BigInteger(""+this.getId_action());
+				ss.setParameter(1, this.getIdAgente());
+				ss.setParameter(2, ac);
+				
+				String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+				smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
+				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 				
 				for(AtividadeNota at : curso.getAtividadesNota()){
 					
@@ -90,16 +108,22 @@ public class PesquisarData extends ActionMoodle {
 					if(at.getAlunosComNotas().containsKey(aluno))
 						continue;
 					
+					String ativ = retornaMensagem(ss.getResultList(), "atividades");
+					ativ = ativ.replaceAll("<nome da atividade>", at.getName());
+					ativ = ativ.replaceAll("<dia que encerra a atividade>", dateFormat.format(at.getDataFinal()));
 					
 					
 					podeEnviar = true;
 					dateFormat.applyPattern("dd/MM/yyyy");
-					smallmessage += at.getName() + " - Finaliza em: "  + dateFormat.format(at.getDataFinal());
+					//smallmessage += at.getName() + " - Finaliza em: "  + dateFormat.format(at.getDataFinal());
 					dateFormat.applyPattern("H:mm");
+					
 					if(calculaDias(at.getDataFinal())==0){
-						smallmessage += " às " + dateFormat.format(at.getDataFinal())+".";
+						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+".");	
+						smallmessage+=ativ;
 					}else{
-						smallmessage += " às " + dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n";
+						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n");
+						smallmessage += ativ;
 					}
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
@@ -122,12 +146,19 @@ public class PesquisarData extends ActionMoodle {
 					
 					podeEnviar = true;
 					dateFormat.applyPattern("dd/MM/yyyy");
-					smallmessage += at.getName() + " - Finaliza em: " + dateFormat.format(at.getDataFinal());
+					
+					String ativ = retornaMensagem(ss.getResultList(), "atividades");
+					ativ = ativ.replaceAll("<nome da atividade>", at.getName());
+					ativ = ativ.replaceAll("<dia que encerra a atividade>", dateFormat.format(at.getDataFinal()));
+					
+					
 					dateFormat.applyPattern("H:mm");
 					if(calculaDias(at.getDataFinal())==0){
-						smallmessage += " às " + dateFormat.format(at.getDataFinal())+".";
+						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+".");	
+						smallmessage += ativ;
 					}else{
-						smallmessage += " às " + dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n";
+						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n");
+						smallmessage += ativ;
 					}
 					
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
@@ -140,6 +171,8 @@ public class PesquisarData extends ActionMoodle {
 					
 				}
 				
+				String fim = retornaMensagem(ss.getResultList(), "fim");
+				smallmessage+=fim;
 				
 				if(podeEnviar){
 					//Timestamp atual = new Timestamp(System.currentTimeMillis());
@@ -172,11 +205,10 @@ public class PesquisarData extends ActionMoodle {
 		
 				}
 				
-				
 			}
 		}
 		
-	
+		JPAUtil.closeEntityManager();
 		ControleActions.setPesquisaData(false);
 		
 	}
@@ -227,4 +259,22 @@ public class PesquisarData extends ActionMoodle {
 		
 	}
 
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
 }

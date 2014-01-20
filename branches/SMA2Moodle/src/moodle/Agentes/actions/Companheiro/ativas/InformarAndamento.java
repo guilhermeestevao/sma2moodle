@@ -8,7 +8,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.swing.JOptionPane;
+
+import Util.SalvarLog;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -19,7 +25,9 @@ import moodle.dados.Atividade;
 import moodle.dados.Curso;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
+import moodle.dados.atividades.Licao;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -38,16 +46,19 @@ public class InformarAndamento extends ActionMoodle {
 	private GregorianCalendar d_atual = new GregorianCalendar();
 	private GregorianCalendar d_inicio = new GregorianCalendar();
 	private GregorianCalendar d_final = new GregorianCalendar();
+	private BigInteger idAgente;
 	
-	public InformarAndamento(String name){
+	public InformarAndamento(String name, BigInteger id){
 		super(name);
 		idAction = 13;
+		idAgente = id;
 	}
 	
 	public InformarAndamento(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 13;
+		idAgente = id;
 	}
 	
 	@Override
@@ -59,12 +70,13 @@ public class InformarAndamento extends ActionMoodle {
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		d_atual.setTime(new Date());
 		BigInteger useridfrom = new BigInteger("2");
 		
-		
+		JPAUtil.beginTransaction();
 		List<Atividade> atividadesAlunoSemNota = new ArrayList<Atividade>();
 			
 		
@@ -80,17 +92,32 @@ public class InformarAndamento extends ActionMoodle {
 				
 				BigInteger useridto = aluno.getId();
 				
-				String smallmessage = "Prezado(a)" + aluno.getCompleteName() + ", \n";
-				smallmessage += "Na disciplina " + curso.getFullName() + " ,  seu atual desempenho é: \n\n";
 				
-
+				EntityManager entManager = JPAUtil.getEntityManager();
+				
+				String smallmessage = "";//(String) entManager.createNativeQuery("SELECT tipo FROM ag_mensagens WHERE agente = " +this.getIdAgente()+" AND action = "+this.getId_action()).getSingleResult();
+				
+				Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+				BigInteger ac = new BigInteger(""+this.getId_action());
+				ss.setParameter(1, this.getIdAgente());
+				ss.setParameter(2, ac);
+				
+				List<MensagemCustomizada> mensagens = ss.getResultList();
+				smallmessage = retornaMensagem(mensagens, "introducao");
+	
+				smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
+				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+				smallmessage+="\n\n";
+				
 					for(AtividadeNota at : curso.getAtividadesNota()){
 						
 						d_final.setTime(at.getDataFinal());
 						if(at.getAlunosComNotas().containsKey(aluno) && d_atual.before(d_final)){
-							
-							smallmessage += "Atividade " + at.getName() + ": \n";
-							smallmessage += "Sua nota: " + at.getAlunosComNotas().get(aluno) + " / Nota máxima: " + at.getNotaMaxima() + "\n\n";
+							String ativ = retornaMensagem(mensagens, "atividades");
+							ativ = ativ.replaceAll("<nome da atividade>", at.getName());
+							ativ = ativ.replaceAll("<nota>", ""+at.getAlunosComNotas().get(aluno));
+							ativ+="\n";
+							smallmessage+=ativ;
 						
 						}else{
 							
@@ -109,10 +136,11 @@ public class InformarAndamento extends ActionMoodle {
 						if(at.isAvaliativo()){
 							d_final.setTime(at.getDataFinal());
 							if(at.getAlunosComNotas().containsKey(aluno) && d_atual.before(d_final)){
-									
-								smallmessage += "Atividade " + at.getName() + ": \n";
-								smallmessage += "Sua nota: " + at.getAlunosComNotas().get(aluno) + " / Nota máxima: " + at.getNotaMaxima() + "\n\n";
-							
+								String ativ = retornaMensagem(mensagens, "atividades");
+								ativ = ativ.replaceAll("<nome da atividade>", at.getName());
+								ativ = ativ.replaceAll("<nota>", ""+at.getAlunosComNotas().get(aluno));
+								ativ+="\n";
+								smallmessage+=ativ;
 							}else{
 								Date dataAtual = new Date();
 								
@@ -129,29 +157,37 @@ public class InformarAndamento extends ActionMoodle {
 					
 					
 					if(nota != null){
-					
-						smallmessage += "\n Sua média atual é:: " + nota.toString();
-						
+						smallmessage+="\n";
+						String media =retornaMensagem(mensagens, "media");
+						media = media.replaceAll("<média>", nota.toString());
+						smallmessage+=media;
+						smallmessage+="\n\n";
 						if(nota.intValue() < 70){
-							smallmessage += "\n Procure estudar mais, peça ajuda aos colegas e ao tutor e busque se envolver mais nas atividades";
-							
+							String mediar = retornaMensagem(mensagens, "media ruim");
+							smallmessage += mediar;	
+							smallmessage+="\n\n";
 						}else{
-							smallmessage += "\n Parabéns! Continue estudando e buscando evoluir em seus estudos. \n";
+							String mediab =retornaMensagem(mensagens, "media boa");
+							smallmessage += mediab;	
+							smallmessage+="\n\n";
 						}
 					
 					}
 				
 				if(!atividadesAlunoSemNota.isEmpty()){
-				
-					smallmessage += "\n\nFaltam notas suas nas seguintes atividades:\n";
+					String falta =retornaMensagem(mensagens, "falta nota");
+					smallmessage +=falta;
+					smallmessage+="\n\n";
 					
 					for(Atividade at : atividadesAlunoSemNota){
-						
-						smallmessage +=" - " + at.getName() + "\n";
+						String atv =retornaMensagem(mensagens, "atividade");
+						atv = atv.replaceAll("<nome da atividade> ", at.getName());
+						atv+="\n";
+						smallmessage+=atv;
 					}
 
 				}
-								
+				JPAUtil.closeEntityManager();				
 				
 				if(nota == null && atividadesAlunoSemNota.isEmpty()){
 					//smallmessage += "\n\n Sem atividades no curso até o momento.";
@@ -195,6 +231,25 @@ public class InformarAndamento extends ActionMoodle {
 	@Override
 	public boolean done() {
 		return done;
+	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
 	}
 
 }

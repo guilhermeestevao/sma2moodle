@@ -10,6 +10,10 @@ import java.util.List;
 
 import java.util.ResourceBundle.Control;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import Util.SalvarLog;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -18,7 +22,9 @@ import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -33,15 +39,18 @@ public class MostraNovaDisciplina extends ActionMoodle{
 	private static final long serialVersionUID = -8692038967852542326L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 
-	public MostraNovaDisciplina(String name, Condition pre_condition, Condition pos_condition) {
+	public MostraNovaDisciplina(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 14;
+		idAgente = id;
 	}
 
-	public MostraNovaDisciplina(String name) {
+	public MostraNovaDisciplina(String name, BigInteger id) {
 		super(name);
 		idAction = 14;
+		idAgente = id;
 	}
 	
 	@Override
@@ -52,6 +61,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 			return;
 				
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
@@ -72,7 +82,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 		if (!novosCursos.isEmpty()) {
 			podeEnviar = true;
-
+			JPAUtil.beginTransaction();
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 			for(Curso c : manager.getCursos()){
@@ -84,17 +94,21 @@ public class MostraNovaDisciplina extends ActionMoodle{
 					
 					for (Aluno al : c.getAlunos()) {
 						
+						EntityManager entManager = JPAUtil.getEntityManager();
 						try {
-							BigInteger useridto = al.getId();
-
-							String smallmessage = "Prezado(a)  " + al.getCompleteName() + ". \n";
-
-							smallmessage += " Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
-			
-							smallmessage += " chamada " + cn.getFullName() + ".";
 							
-							smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n ";
-
+							Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+							BigInteger ac = new BigInteger(""+this.getId_action());
+							ss.setParameter(1, this.getIdAgente());
+							ss.setParameter(2, ac);
+							
+							
+							BigInteger useridto = al.getId();
+							String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+							smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
+							smallmessage = smallmessage.replaceAll("<nome da disciplina>", cn.getFullName());
+							smallmessage = smallmessage.replaceAll("<data da criação da disciplina>", formato.format(c.getDataCriacao()));
+			
 								if (podeEnviar) {
 						
 									smallmessage += "\n";
@@ -130,6 +144,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 				
 				
 			}
+			JPAUtil.closeEntityManager();
 		}
 		
 		ControleActions.setMostraNovaDisciplinaAluno(false);
@@ -142,6 +157,25 @@ public class MostraNovaDisciplina extends ActionMoodle{
 		long dif = dataEntrada - dataAtual;
 		int dias = (int) (dif / 86400000);
 		return dias;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
 	}
 
 }

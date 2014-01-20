@@ -13,7 +13,9 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.swing.JOptionPane;
 
+import Util.SalvarLog;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -31,6 +33,7 @@ import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.Chat;
 import moodle.dados.atividades.Questionario;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
 import dao.JPAUtil;
 import jade.core.AID;
@@ -47,18 +50,21 @@ public class CriaChat extends ActionMoodle {
 	private static final long serialVersionUID = 5905221591128832559L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 
-	public CriaChat(String name) {
+	public CriaChat(String name, BigInteger id) {
 		super(name);
 
-		idAction = 12;
+		idAction = 24;
+		idAgente = id;
 	}
 
 	public CriaChat(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 
 		idAction = 12;
+		idAgente = id;
 		
 	}
 
@@ -68,7 +74,7 @@ public class CriaChat extends ActionMoodle {
 			return;
 
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
-		
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		boolean podeEnviar = false;
 
@@ -154,13 +160,21 @@ public class CriaChat extends ActionMoodle {
 							
 							if(podeEnviar){
 							
-								
+								JPAUtil.beginTransaction();
+								EntityManager entManager2 = JPAUtil.getEntityManager();
 								BigInteger useridfrom = new BigInteger("2");
 								BigInteger useridto = aluno.getId();
-								String smallmessage = "Prezado(a) " + aluno.getCompleteName() + ", \n";
-								smallmessage+="Por conta da aproximação de uma atividade avaliativa, foi marcado um chat na seguinte data e hora:"+dateFormat.format(chat.getChattime())+". \n\n";
-								smallmessage+="Aproveite para tirar possíveis dúvidas com o tutor e seus colegas \ns";
 								
+								Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+								BigInteger ac = new BigInteger(""+this.getId_action());
+								ss.setParameter(1, this.getIdAgente());
+								ss.setParameter(2, ac);
+								
+								String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+								smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
+								smallmessage = smallmessage.replaceAll("<data do chat>", dateFormat.format(chat.getChattime()));
+								
+								JPAUtil.closeEntityManager();
 								
 								smallmessage += "\n"; 	
 								
@@ -239,5 +253,24 @@ public class CriaChat extends ActionMoodle {
 		long hoje = new Date().getTime();
 		long proximo = hoje + 86400000;
 		return new Date(proximo);
+	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
 	}
 }
