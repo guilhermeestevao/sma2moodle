@@ -5,6 +5,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import Util.SalvarLog;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -14,7 +18,9 @@ import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import moodle.dados.Log;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -28,16 +34,19 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 	private static final long serialVersionUID = 4235799585488236120L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 
 	public ExibirDicasConfiguracoes(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 7;
+		idAgente = id;
 	}
 
-	public ExibirDicasConfiguracoes(String name) {
+	public ExibirDicasConfiguracoes(String name, BigInteger id) {
 		super(name);
 		idAction = 7;
+		idAgente = id;
 	}
 
 	private boolean isUpdate(Aluno a) {
@@ -66,11 +75,14 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
 
+		JPAUtil.beginTransaction();
+		
 		boolean podeEnviar = false;
 
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
@@ -85,12 +97,20 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 				
 				if (podeEnviar) {
 					
-				
-				
+					EntityManager entManager = JPAUtil.getEntityManager();
+					
+					Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+					BigInteger ac = new BigInteger(""+this.getId_action());
+					ss.setParameter(1, this.getIdAgente());
+					ss.setParameter(2, ac);
+					
+					String smallmessage = retornaMensagem(ss.getResultList(),"mensagem inteira");
+					smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
+					
 					BigInteger useridto = al.getId();
-					String smallmessage = "Olá " + al.getCompleteName()+ " você pode fazer alterações de seu perfil ";
-					smallmessage += "clicando no menu CONFIGURAÇÕES. Nesse menu é possivel alterar sua senha, informações de contato, ";
-					smallmessage += "informações pessoais, etc. \n";
+					//String smallmessage = "Olá " + al.getCompleteName()+ " você pode fazer alterações de seu perfil ";
+					//smallmessage += "clicando no menu CONFIGURAÇÕES. Nesse menu é possivel alterar sua senha, informações de contato, ";
+					//smallmessage += "informações pessoais, etc. \n";
 					
 					smallmessage += "\n";
 					
@@ -123,5 +143,24 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 		}
 		
 		ControleActions.setExibirDicasConfiguracao(false);
+	}
+	
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
 	}
 }
