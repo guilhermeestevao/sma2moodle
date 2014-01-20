@@ -1,4 +1,4 @@
-package moodle.Agentes.actions.AcompanhanteTutor.ativas;
+ package moodle.Agentes.actions.AcompanhanteTutor.ativas;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -12,12 +12,22 @@ import java.util.List;
 
 
 
+
+
+
+
+
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import Util.SalvarLog;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
@@ -28,6 +38,7 @@ import moodle.dados.Tutor;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.atividades.Forum;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -39,17 +50,18 @@ public class MantemForumAtivo extends ActionMoodle{
 	private static final long serialVersionUID = -668154302162160035L;
 	private boolean done = false;
 	private boolean mantemAtivo;
-
-	public MantemForumAtivo(String name) {
+	private BigInteger idAgente;
+	
+	public MantemForumAtivo(String name, BigInteger id) {
 		super(name);
-		
 		idAction = 3;
+		idAgente = id;
 	}
 	
-	public MantemForumAtivo(String name, Condition pre_condition, Condition pos_condition) {
+	public MantemForumAtivo(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
-	
 		idAction = 3;
+		idAgente = id;
 	}
 
 	@Override
@@ -60,12 +72,15 @@ public class MantemForumAtivo extends ActionMoodle{
 			return;
 			
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
 		
 		boolean podeEnviar = false;
+		
+		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		 
@@ -84,11 +99,22 @@ public class MantemForumAtivo extends ActionMoodle{
 			try{
 			BigInteger useridto = tutor.getId();
 			
+			EntityManager entManager = JPAUtil.getEntityManager();
+			
 			podeEnviar = false;
 		
-			String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
+			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+			BigInteger ac = new BigInteger(""+this.getId_action());
+			ss.setParameter(1, this.getIdAgente());
+			ss.setParameter(2, ac);
 			
-			smallmessage+="Na disciplina "+curso.getFullName()+", existe(m) o(s) seguinte(s) fórum(s): \n\n";
+			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
+			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+			
+			//String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
+			
+			//smallmessage+="Na disciplina "+curso.getFullName()+", existe(m) o(s) seguinte(s) fórum(s): \n\n";
 			
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
@@ -106,7 +132,10 @@ public class MantemForumAtivo extends ActionMoodle{
 							//Caso tenha passado mais de dois dias � liberado o envio da mensagem
 							if(forum.isAvaliativo() && diasDoUltimoPost >= 0){
 								podeEnviar = true;
-								smallmessage+=forum.getName()+"\n";
+								smallmessage+= retornaMensagem(ss.getResultList(), "foruns");
+								smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
+							
+								//smallmessage+=forum.getName()+"\n";
 							}
 							
 						}
@@ -114,7 +143,8 @@ public class MantemForumAtivo extends ActionMoodle{
 		
 			}
 			
-			smallmessage +="\nnão foram encontradas publicações dos alunos nos últimos dias. Motive os alunos para que continuem participando desses fóruns, pois são avaliativos.";
+			smallmessage+= retornaMensagem(ss.getResultList(), "fim");
+			//smallmessage +="\nnão foram encontradas publicações dos alunos nos últimos dias. Motive os alunos para que continuem participando desses fóruns, pois são avaliativos.";
 		
 			if(podeEnviar){
 				
@@ -156,6 +186,24 @@ public class MantemForumAtivo extends ActionMoodle{
 		ControleActions.setMantemForumAtivo(false);
 	}
 	
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
 	
 	public boolean done(){
 		return done;

@@ -7,6 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import Util.SalvarLog;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
@@ -15,7 +19,9 @@ import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -27,16 +33,19 @@ public class InformarNovaDisciplina extends ActionMoodle {
 	private static final long serialVersionUID = 7818579743279287872L;
 	private boolean done = false;
 	private boolean mantemAtivo;
-
+	private BigInteger idAgente;
+	
 	public InformarNovaDisciplina(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition,BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 2;
+		idAgente = id;
 	}
 
-	public InformarNovaDisciplina(String name) {
+	public InformarNovaDisciplina(String name, BigInteger id) {
 		super(name);
 		idAction = 2;
+		idAgente = id;
 	}
 
 	@Override
@@ -46,7 +55,7 @@ public class InformarNovaDisciplina extends ActionMoodle {
 			return;
 
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
-
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -57,6 +66,8 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		List<Curso> novosCursos = new ArrayList<Curso>();
 		List<Tutor> tutores = new ArrayList<Tutor>();
 
+		JPAUtil.beginTransaction();
+		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 
 		for (Curso curso : cursos) {
@@ -83,13 +94,27 @@ public class InformarNovaDisciplina extends ActionMoodle {
 							try {
 								BigInteger useridto = t.getId();
 
-								String smallmessage = "Prezado(a) "+ t.getLastName() + ". \n";
+								EntityManager entManager = JPAUtil.getEntityManager();
+								
+								Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+								BigInteger ac = new BigInteger(""+this.getId_action());
+								ss.setParameter(1, this.getIdAgente());
+								ss.setParameter(2, ac);
+								
+								String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+								smallmessage = smallmessage.replaceAll("<nome do tutor>", t.getCompleteName());
+								smallmessage = smallmessage.replaceAll("<data de criação>", formato.format(c.getDataCriacao()));
+								smallmessage = smallmessage.replaceAll("<nome da disciplina>", c.getFullName());
+									
+								
+								
+							//	String smallmessage = "Prezado(a) "+ t.getLastName() + ". \n";
 
-								smallmessage += "Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
+								//smallmessage += "Em "+ formato.format(c.getDataCriacao())+ " foi criado uma nova disciplina";
 
-								smallmessage += " chamada " + c.getFullName()+ ".";
+							//	smallmessage += " chamada " + c.getFullName()+ ".";
 
-								smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
+							//	smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
 
 								smallmessage += "\n";
 								if (podeEnviar) {
@@ -152,4 +177,23 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		return dias;
 	}
 
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
+	
 }
