@@ -9,9 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
+import Util.SalvarLog;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -23,6 +27,7 @@ import moodle.dados.Curso;
 import moodle.dados.atividades.AtividadeNota;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Action;
 import jamder.behavioural.Condition;
@@ -31,9 +36,11 @@ public class InformaDataModificada extends ActionMoodle{
 	
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
+	
 	Map<Curso, Set<Atividade>> MapaAtividadesDoAgente = new HashMap<Curso, Set<Atividade>>();
 	
-	public InformaDataModificada(String name, Condition pre_condition, Condition pos_condition) {
+	public InformaDataModificada(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 21;
 	}
@@ -45,6 +52,7 @@ public class InformaDataModificada extends ActionMoodle{
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		MoodleEnv envir = (MoodleEnv) env;
 
@@ -153,12 +161,22 @@ public class InformaDataModificada extends ActionMoodle{
 	
 	public void enviarMensgem(Environment env, Set<Aluno> alunos, Atividade at1, Atividade at2, BigInteger idCurso){
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+		
+		JPAUtil.beginTransaction();
+		
 		for (Aluno aluno : alunos) {
-			  String smallmessage = "Prezado " + aluno.getCompleteName() + ", \n";
-			  smallmessage+="A atividade "+at1.getName() + " teve sua data final alterada de: " + formato.format(at1.getDataFinal())+" \n";
-			  smallmessage+="para "+formato.format(at2.getDataFinal()); 
-			  
-			  
+			EntityManager entManager = JPAUtil.getEntityManager();  
+			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+			BigInteger ac = new BigInteger(""+this.getId_action());
+			ss.setParameter(1, this.getIdAgente());
+			ss.setParameter(2, ac);
+			
+			String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+			smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
+			smallmessage = smallmessage.replaceAll("<nome da atividade>", at1.getName());
+			smallmessage = smallmessage.replaceAll("<data>", formato.format(at1.getDataFinal()));
+			smallmessage = smallmessage.replaceAll("<nova data>", formato.format(at2.getDataFinal()));
+	
 				CompanheiroAgente comp = (CompanheiroAgente)myAgent;
 				if(verificaMens(idCurso, aluno.getId(), smallmessage))
 					continue;
@@ -181,5 +199,24 @@ public class InformaDataModificada extends ActionMoodle{
 				msg.setTimecreated(time);
 				((MoodleEnv)env).addMensagem(msg);
 		}
+	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
 	}
 }
