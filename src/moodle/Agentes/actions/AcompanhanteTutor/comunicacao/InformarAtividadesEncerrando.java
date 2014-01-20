@@ -12,6 +12,7 @@ import moodle.dados.Atividade;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Action;
 import jamder.behavioural.Condition;
@@ -20,16 +21,17 @@ public class InformarAtividadesEncerrando extends Action {
 
 	private boolean done = false;
 	private Map<Aluno,List<Atividade>> atividadesEncerrando;
+	private BigInteger idAgente;
 	
-	public InformarAtividadesEncerrando(String name) {
+	public InformarAtividadesEncerrando(String name, BigInteger id) {
 		super(name);
-		
+		idAgente = id;
 	}
 	
 	public InformarAtividadesEncerrando(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
-		
+		idAgente = id;
 	}
 	
 	public InformarAtividadesEncerrando(String name, Map<Aluno, List<Atividade>> als) {
@@ -112,6 +114,25 @@ public class InformarAtividadesEncerrando extends Action {
 		
 		
 		done = true;
+	}
+	
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
 	}
 	
 	@Override
