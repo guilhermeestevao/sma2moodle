@@ -13,6 +13,10 @@ import java.util.List;
 
 import java.util.ResourceBundle.Control;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import Util.SalvarLog;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.PedagogicoAgente;
 import moodle.Agentes.actions.ActionMoodle;
@@ -23,7 +27,9 @@ import moodle.dados.Aluno;
 import moodle.dados.Atividade;
 import moodle.dados.Curso;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 
 public class InformarAtividadesDisciplina extends ActionMoodle {
 	
@@ -33,16 +39,19 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 	private static final long serialVersionUID = 1226074260407782797L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 	
-	public InformarAtividadesDisciplina(String name){
+	public InformarAtividadesDisciplina(String name, BigInteger id){
 		super(name);
 		idAction = 17;
+		idAgente = id;
 	}
 	
 	public InformarAtividadesDisciplina(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 17;
+		idAgente = id;
 	}
 	
 	@Override
@@ -54,8 +63,11 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		
 		
 		System.out.println(myAgent.getLocalName()+ " - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+ " - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
+		
+		JPAUtil.beginTransaction();
 		
 		BigInteger useridfrom = new BigInteger("2");
 		
@@ -63,13 +75,22 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		
 		for(Curso curso : cursos){
 			
+			EntityManager entManager = JPAUtil.getEntityManager(); 
+			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+			BigInteger ac = new BigInteger(""+this.getId_action());
+			ss.setParameter(1, this.getIdAgente());
+			ss.setParameter(2, ac);
 			
-			String smallmessage = new String();
-			smallmessage+="Prezado(a) Aluno, \n\n";
-			smallmessage+="As atividades da disciplina " + curso.getFullName() + " s�o: \n";
+			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+			smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
+			
+			//String smallmessage = new String();
+			//smallmessage+="Prezado(a) Aluno, \n\n";
+			//smallmessage+="As atividades da disciplina " + curso.getFullName() + " s�o: \n";
 			
 			for(Atividade at : curso.getAllAtividades()){
-				smallmessage+="- " + at.getName() + "\n";
+				smallmessage +=retornaMensagem(ss.getResultList(), "atividades");
+				smallmessage = smallmessage.replaceAll("<nome da atividade>", at.getName());
 			}
 			
 			for(Aluno al : curso.getAlunos()){
@@ -110,6 +131,26 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		
 		ControleActions.setInformaAtividadeDisciplina(false);
 	}
+	
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
+	
 	
 	@Override
 	public boolean done() {
