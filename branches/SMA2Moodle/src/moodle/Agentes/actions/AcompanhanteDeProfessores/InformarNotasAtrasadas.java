@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import Util.SalvarLog;
 import moodle.Agentes.AcompanhanteDeProfessores;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
@@ -20,7 +23,9 @@ import moodle.dados.Atividade;
 import moodle.dados.Curso;
 import moodle.dados.Professor;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -32,15 +37,18 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 	private static final long serialVersionUID = 8599080239312931795L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 	
-	public InformarNotasAtrasadas(String name) {
+	public InformarNotasAtrasadas(String name, BigInteger id) {
 		super(name);
 		idAction = 19;
+		idAgente = id;
 	}
 
-	public InformarNotasAtrasadas(String name, Condition pre_condition, Condition pos_condition) {
+	public InformarNotasAtrasadas(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 19;
+		idAgente = id;
 	}
 
 	@Override
@@ -51,9 +59,12 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
+		JPAUtil.beginTransaction();
+		
 		boolean podeEnviar = false;
 
 		
@@ -81,12 +92,24 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						BigInteger useridto = professor.getId();
 						BigInteger useridfrom = new BigInteger("2");
 						
+						EntityManager entManager = JPAUtil.getEntityManager(); 
+						
+						Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+						BigInteger ac = new BigInteger(""+this.getId_action());
+						ss.setParameter(1, this.getIdAgente());
+						ss.setParameter(2, ac);
+						
+						String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+						smallmessage = smallmessage.replaceAll("<nome do professor>", professor.getLastName());
+						smallmessage = smallmessage.replaceAll("<nome da atividade>", atividade.getName());
+						smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
 						
 						
-						String smallmessage = "Prezado(a) "+professor.getLastName() +", \n";
-						smallmessage+="Já fazem duas semanas que a atividade "+atividade.getName()+" da disciplina "+curso.getFullName()+" teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas.\n";
-						smallmessage+="Favor postar as notas dos alunos o quanto antes. \n";
-						smallmessage +="\n";
+						
+						//String smallmessage = "Prezado(a) "+professor.getLastName() +", \n";
+						//smallmessage+="Já fazem duas semanas que a atividade "+atividade.getName()+" da disciplina "+curso.getFullName()+" teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas.\n";
+						//smallmessage+="Favor postar as notas dos alunos o quanto antes. \n";
+						//smallmessage +="\n";
 						
 						AcompanhanteDeProfessores comp = (AcompanhanteDeProfessores)myAgent;
 						if(verificaMens(curso.getId(), useridto, smallmessage))
@@ -120,4 +143,24 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		}
 		ControleActions.setInformarNotasAtrasadas(false);
 	}
+	
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
+	
 }
