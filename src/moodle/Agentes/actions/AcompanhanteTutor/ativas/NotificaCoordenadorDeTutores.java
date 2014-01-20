@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
+import Util.SalvarLog;
 import dao.GerenciaCurso;
 import dao.JPAUtil;
 import moodle.Agentes.AcompanhanteTutorAgente;
@@ -28,6 +29,7 @@ import moodle.dados.Coordenador;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Action;
 import jamder.behavioural.Condition;
@@ -42,15 +44,18 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 	private String senha = "";
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 
-	public NotificaCoordenadorDeTutores(String name) {
+	public NotificaCoordenadorDeTutores(String name, BigInteger id) {
 		super(name);
 		idAction =22;
+		idAgente = id;
 	}
 
-	public NotificaCoordenadorDeTutores(String name, Condition pre_condition, Condition pos_condition) {
+	public NotificaCoordenadorDeTutores(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction =22;
+		idAgente = id;
 	}
 
 	/*
@@ -66,6 +71,7 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		
 
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
@@ -97,8 +103,19 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 							
 				if(podeEnviar){
 					
-					String assunto = "A definir";
-					String mensagem = " Sr(a) Coordenador(a) de tutores \nFoi detectado que o(s) tutore(s) "+t.getCompleteName()+" não estão desempenhando suas atividades a contento em relação a participação nos fóruns. Favor entrar em contato com este(s) para fazer o acompanhamento e incentivá-los a uma melhor participação. ";
+					Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+					BigInteger ac = new BigInteger(""+this.getId_action());
+					ss.setParameter(1, this.getIdAgente());
+					ss.setParameter(2, ac);
+					
+					String assunto = retornaMensagem(ss.getResultList(), "assunto");
+					assunto = assunto.replaceAll("<assunto>", "A definir");
+					String mensagem = retornaMensagem(ss.getResultList(), "mensagem inteira");
+					mensagem = mensagem.replaceAll(" <lista de tutores>", t.getCompleteName());
+					
+					
+					//String assunto = "A definir";
+					//String mensagem = " Sr(a) Coordenador(a) de tutores \nFoi detectado que o(s) tutore(s) "+t.getCompleteName()+" não estão desempenhando suas atividades a contento em relação a participação nos fóruns. Favor entrar em contato com este(s) para fazer o acompanhamento e incentivá-los a uma melhor participação. ";
 					String destinatario = coordenador.getEmail();
 					
 					AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
@@ -150,5 +167,22 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		}
 
 	}
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
 
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
 }

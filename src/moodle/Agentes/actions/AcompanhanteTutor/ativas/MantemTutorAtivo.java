@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import Util.SalvarLog;
 import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
@@ -21,7 +24,9 @@ import moodle.dados.Tutor;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.atividades.Forum;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 
@@ -33,17 +38,18 @@ public class MantemTutorAtivo extends ActionMoodle{
 	private static final long serialVersionUID = 8858135525199547292L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 	
-	public MantemTutorAtivo(String name) {
+	public MantemTutorAtivo(String name, BigInteger id) {
 		super(name);
-		
 		idAction = 3;
+		idAgente = id;
 	}
 	
-	public MantemTutorAtivo(String name, Condition pre_condition, Condition pos_condition) {
+	public MantemTutorAtivo(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
-		
 		idAction = 3;
+		idAgente = id;
 	}
 
 	@Override
@@ -53,6 +59,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
@@ -60,6 +67,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 		
 		boolean podeEnviar = false;
 		
+		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
@@ -76,9 +84,20 @@ public class MantemTutorAtivo extends ActionMoodle{
 			
 			podeEnviar = false;
 			
-			String smallmessage = "Prezado(a) "+tutor.getLastName() +", \n";
+			EntityManager entManager = JPAUtil.getEntityManager();
 			
-			smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes fóruns onde ocorreram publicações pelos alunos e não foi constatada a sua participação nos últimos dias: \n\n\n";
+			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+			BigInteger ac = new BigInteger(""+this.getId_action());
+			ss.setParameter(1, this.getIdAgente());
+			ss.setParameter(2, ac);
+			
+			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
+			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+
+//			String smallmessage = "Prezado(a) "+tutor.getLastName() +", \n";
+			
+	//		smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes fóruns onde ocorreram publicações pelos alunos e não foi constatada a sua participação nos últimos dias: \n\n\n";
 			
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
@@ -107,8 +126,9 @@ public class MantemTutorAtivo extends ActionMoodle{
 									if(diasPassadosPartTutor > diaPassadosUltimoPost && (diasPassadosPartTutor - diaPassadosUltimoPost) >3){
 										podeEnviar = true;
 										tutor.setContAdveretencias(tutor.getContAdveretencias()+1);
-										
-										smallmessage+=forum.getName();
+										smallmessage+= retornaMensagem(ss.getResultList(), "foruns");
+										smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
+										//smallmessage+=forum.getName();
 									}
 								}
 							
@@ -117,8 +137,8 @@ public class MantemTutorAtivo extends ActionMoodle{
 						}
 				}
 			}
-			
-			smallmessage +="\n Analise as postagens dos alunos, realizando comentários, sugestões ou criticas.";
+			smallmessage+= retornaMensagem(ss.getResultList(), "fim");
+		//	smallmessage +="\n Analise as postagens dos alunos, realizando comentários, sugestões ou criticas.";
 			if(podeEnviar){
 				//Timestamp atual = new Timestamp(System.currentTimeMillis());
 				//AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
@@ -156,7 +176,25 @@ public class MantemTutorAtivo extends ActionMoodle{
 		ControleActions.setManteTutorAtivo(false);
 	}
 	
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
 
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
+	
 	public boolean done(){
 		return done;
 	}

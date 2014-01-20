@@ -5,7 +5,12 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import Util.SalvarLog;
 import dao.GerenciaCurso;
+import dao.JPAUtil;
 import jamder.Environment;
 import jamder.behavioural.Condition;
 import moodle.Agentes.AcompanhanteTutorAgente;
@@ -18,6 +23,7 @@ import moodle.dados.Tutor;
 import moodle.dados.atividades.AtividadeParticipacao;
 import moodle.dados.atividades.Forum;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 
 //CODIFICA��O
 
@@ -29,15 +35,18 @@ public class TutoresParticipantes extends ActionMoodle{
 	private static final long serialVersionUID = 8042947606582526164L;
 	private boolean done = false;
 	private boolean mantemAtivo;
+	private BigInteger idAgente;
 	
-	public TutoresParticipantes(String name) {
+	public TutoresParticipantes(String name, BigInteger id) {
 		super(name);
 		idAction = 5;
+		idAgente = id;
 	}
 
-	public TutoresParticipantes(String name, Condition pre_condition, Condition pos_condition) {
+	public TutoresParticipantes(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 5;
+		idAgente = id;
 	}
 	
 	@Override
@@ -48,13 +57,15 @@ public class TutoresParticipantes extends ActionMoodle{
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
-		
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
 		
 		boolean podeEnviar = false;
+		
+		JPAUtil.beginTransaction();
 		
 		List<Forum> forunsSemTotor = new ArrayList<Forum>();
 		
@@ -78,9 +89,20 @@ public class TutoresParticipantes extends ActionMoodle{
 			
 			forunsSemTotor.clear();
 			
-			String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
+			EntityManager entManager = JPAUtil.getEntityManager();
 			
-			smallmessage+="Na disciplina "+curso.getFullName()+",  existe(m) o(s) seguinte(s) fórum(s) onde sua participação não foi identificada: \n  \n\n";
+			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+			BigInteger ac = new BigInteger(""+this.getId_action());
+			ss.setParameter(1, this.getIdAgente());
+			ss.setParameter(2, ac);
+			
+			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
+			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+			
+			//String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
+			
+			//smallmessage+="Na disciplina "+curso.getFullName()+",  existe(m) o(s) seguinte(s) fórum(s) onde sua participação não foi identificada: \n  \n\n";
 			
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
@@ -91,15 +113,15 @@ public class TutoresParticipantes extends ActionMoodle{
 						if(!forum.isTutorParticipa()){
 					
 							podeEnviar = true;
-	
-							smallmessage += "> " +forum.getName()+"\n";
-							
+							smallmessage += retornaMensagem(ss.getResultList(), "foruns");
+							smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
+							//smallmessage += "> " +forum.getName()+"\n";
 						}
 				}
 		
 			}
-	
-			smallmessage +="\n  É necessário que você participe para motivar a interação entre os alunos \n";
+			smallmessage += retornaMensagem(ss.getResultList(), "fim");
+			//smallmessage +="\n  É necessário que você participe para motivar a interação entre os alunos \n";
 
 				smallmessage +="\n";
 				
@@ -146,4 +168,22 @@ public class TutoresParticipantes extends ActionMoodle{
 		return done;
 	}
 
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getTipo().equals(tipo)){	
+				ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
 }
