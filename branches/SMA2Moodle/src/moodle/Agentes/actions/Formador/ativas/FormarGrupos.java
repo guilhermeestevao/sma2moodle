@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import Util.SalvarLog;
 import moodle.Agentes.FormadorAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
@@ -51,6 +52,7 @@ public class FormarGrupos extends ActionMoodle {
 			return;
 		
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		MoodleEnv environment = (MoodleEnv)env;
 		
@@ -172,7 +174,9 @@ public class FormarGrupos extends ActionMoodle {
 				environment.getGrupos().add(grupo);
 				
 				System.out.println("GRUPO ADICIONADO");
+				SalvarLog.salvarArquivo("GRUPO ADICIONADO");
 				System.out.println("********************");
+				SalvarLog.salvarArquivo("********************");
 			
 			}
 			
