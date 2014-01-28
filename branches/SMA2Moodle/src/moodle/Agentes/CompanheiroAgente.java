@@ -7,10 +7,12 @@ import jamder.Environment;
 import jamder.roles.AgentRole;
 import jamder.structural.*;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import Util.SalvarLog;
 import moodle.Agentes.actions.Companheiro.ativas.CriaChat;
 import moodle.Agentes.actions.Companheiro.ativas.InformaDataModificada;
 import moodle.Agentes.actions.Companheiro.ativas.InformarAndamento;
@@ -26,6 +28,7 @@ import jamder.agents.*;
 public class CompanheiroAgente extends ModelAgent {
 	
 	private int idAgente;
+	
 	
    //Constructor 
    public CompanheiroAgente (String name, Environment env, AgentRole agRole) {
@@ -60,20 +63,21 @@ public class CompanheiroAgente extends ModelAgent {
       */
      
      
-     Action informarAndamento = new InformarAndamento("informarAndamento", null, null);
+     Action informarAndamento = new InformarAndamento("informarAndamento", null, null, new BigInteger(""+idAgente));
+     
      addAction("informarAndamento", informarAndamento);
      
-     Action pesquisarDatas = new PesquisarData("pesquisarDatas", null, null);
+     Action pesquisarDatas = new PesquisarData("pesquisarDatas", null, null, new BigInteger(""+idAgente));
      addAction("pesquisarDatas", pesquisarDatas);
      
-     Action criaChat = new CriaChat("criaChat", null, null);
-     addAction("criaChat", criaChat);
+     Action criaChat = new CriaChat("criaChat", null, null, new BigInteger(""+idAgente));
+     //addAction("criaChat", criaChat);
      
-     Action mostraNovaDisciplina = new MostraNovaDisciplina("mostraNovaDisciplina", null, null);
-     addAction("mostraNovaDisciplina", mostraNovaDisciplina);
+     Action mostraNovaDisciplina = new MostraNovaDisciplina("mostraNovaDisciplina", null, null, new BigInteger(""+idAgente));
+     //addAction("mostraNovaDisciplina", mostraNovaDisciplina);
      
-     Action informaDatamodificada = new InformaDataModificada("informaDataModificada", null, null);
-     addAction("informaDataModificada", informaDatamodificada);
+     Action informaDatamodificada = new InformaDataModificada("informaDataModificada", null, null, new BigInteger(""+idAgente));
+     //addAction("informaDataModificada", informaDatamodificada);
  
      
      
@@ -108,10 +112,12 @@ public class CompanheiroAgente extends ModelAgent {
 	   Action action = getAction(nomeAction);
 	   try{
 		   System.out.println("Action "+nomeAction+" add em "+this.getLocalName());
+		   SalvarLog.salvarArquivo("Action "+nomeAction+" add em "+this.getLocalName());
 		   addBehaviour(action);
 		   
 	   }catch(NullPointerException e){
 		   System.out.println("ACTION É NULL - COMPANHEIROAGENTE -"+nomeAction);
+		   SalvarLog.salvarArquivo("ACTION É NULL - COMPANHEIROAGENTE -"+nomeAction);
 	   }
 	   
    }

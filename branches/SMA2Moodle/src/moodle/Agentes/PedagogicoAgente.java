@@ -6,6 +6,8 @@ import jamder.behavioural.*;
 import jamder.Environment;
 import jamder.roles.AgentRole;
 import jamder.structural.*;
+
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -30,10 +32,10 @@ public class PedagogicoAgente extends GoalAgent {
      
      
        
-     Action informarPreRequisito = new InformarPreRequisitos("informarPreRequisito", null, null);
+     Action informarPreRequisito = new InformarPreRequisitos("informarPreRequisito", null, null, new BigInteger(""+idAgente));
      addAction("informarPreRequisito", informarPreRequisito);
      
-     Action informarAtividadesDisciplina = new InformarAtividadesDisciplina("informarAtividadesDisciplina", null, null);
+     Action informarAtividadesDisciplina = new InformarAtividadesDisciplina("informarAtividadesDisciplina", null, null, new BigInteger(""+idAgente));
      addAction("informarAtividadesDisciplina", informarAtividadesDisciplina);
      
    }
