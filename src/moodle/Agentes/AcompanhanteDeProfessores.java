@@ -1,5 +1,6 @@
 package moodle.Agentes;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 import moodle.Agentes.actions.AcompanhanteDeProfessores.InformarNotasAtrasadas;
@@ -16,7 +17,7 @@ public class AcompanhanteDeProfessores extends ModelAgent{
 	public AcompanhanteDeProfessores(String name, Environment environment, AgentRole agentRole) {
 		super(name, environment, agentRole);
 		
-		Action informarNotasAtrasadas = new InformarNotasAtrasadas("informarNotasAtrasadas", null, null);
+		Action informarNotasAtrasadas = new InformarNotasAtrasadas("informarNotasAtrasadas", null, null, new BigInteger(""+idAgente));
 		addAction("informarNotasAtrasadas", informarNotasAtrasadas);
 		
 		setIdAgente(1);

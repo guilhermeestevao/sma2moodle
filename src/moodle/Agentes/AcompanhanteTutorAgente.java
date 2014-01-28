@@ -1,5 +1,6 @@
 package moodle.Agentes;
 
+import java.math.BigInteger;
 import java.util.Map;
 
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.AlunosParticipantes;
@@ -31,22 +32,22 @@ public class AcompanhanteTutorAgente extends ModelAgent{
 		setIdAgente(1);
 				
 		
-		Action alunosParticipantes = new AlunosParticipantes("alunosParticipantes", null, null);
+		Action alunosParticipantes = new AlunosParticipantes("alunosParticipantes", null, null, new BigInteger(""+idAgente));
 		addAction("alunosParticipantes", alunosParticipantes);
 		
-		Action mantemForumAtivo = new MantemForumAtivo("mantemForumAtivo", null, null);
+		Action mantemForumAtivo = new MantemForumAtivo("mantemForumAtivo", null, null, new BigInteger(""+idAgente));
 		addAction("mantemForumAtivo", mantemForumAtivo);
 		
-		Action mantemTutorAtivo = new MantemTutorAtivo("mantemTutorAtivo", null, null);
+		Action mantemTutorAtivo = new MantemTutorAtivo("mantemTutorAtivo", null, null, new BigInteger(""+idAgente));
 	 	addAction("mantemTutorAtivo", mantemTutorAtivo);
 		
-		Action tutoresParticipantes = new TutoresParticipantes("tutoresParticipantes", null, null);
+		Action tutoresParticipantes = new TutoresParticipantes("tutoresParticipantes", null, null, new BigInteger(""+idAgente));
 		addAction("tutoresParticipantes", tutoresParticipantes);
 		
-		Action informarNovaDisciplina = new InformarNovaDisciplina("informarNovaDisciplina", null, null);
+		Action informarNovaDisciplina = new InformarNovaDisciplina("informarNovaDisciplina", null, null, new BigInteger(""+idAgente));
 		addAction("informarNovaDisciplina", informarNovaDisciplina);
 		
-		Action notificaCoordenadorDeTutores = new NotificaCoordenadorDeTutores("notificaCoordenadorDeTutores", null, null);
+		Action notificaCoordenadorDeTutores = new NotificaCoordenadorDeTutores("notificaCoordenadorDeTutores", null, null, new BigInteger(""+idAgente));
 		//addAction("notificaCoordenadorDeTutores", notificaCoordenadorDeTutores);
 		
 		

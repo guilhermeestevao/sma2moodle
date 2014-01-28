@@ -3,6 +3,7 @@ package moodle.Agentes;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 
+import Util.SalvarLog;
 import moodle.dados.controleag.ActionAgente;
 import dao.ActionAgenteDAO;
 import dao.ActionAgenteJpaDAO;
@@ -35,7 +36,9 @@ public static void addActionAgente(int idAction, int idAgente, BigInteger idAlun
 			actAg.rollback();
 			e.printStackTrace();
 			System.out.println("Mensagem: " + e.getMessage());
+			SalvarLog.salvarArquivo("Mensagem: " + e.getMessage());
 			System.out.println("Causa: " + e.getCause());
+			SalvarLog.salvarArquivo("Causa: " + e.getCause());
 		}
 	}
 }

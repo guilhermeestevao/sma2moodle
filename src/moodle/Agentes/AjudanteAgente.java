@@ -2,6 +2,8 @@ package moodle.Agentes;
 
 import jamder.Environment;
 import jamder.roles.AgentRole;
+
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,11 +24,11 @@ public class AjudanteAgente extends ReflexAgent {
    
    setIdAgente(2);
    
-   Action exibirDicasForuns = new ExibirDicasForuns("exibirDicasForuns", null, null);
+   Action exibirDicasForuns = new ExibirDicasForuns("exibirDicasForuns", null, null, new BigInteger(""+idAgente));
    addAction("exibirDicasForuns", exibirDicasForuns);
-   Action exibirDicasCalendario = new ExibirDicasCalendario("exibirDicasCalendario", null, null);
+   Action exibirDicasCalendario = new ExibirDicasCalendario("exibirDicasCalendario", null, null, new BigInteger(""+idAgente));
    addAction("exibirDicasCalendario", exibirDicasCalendario);
-   Action exibirDicasConfiguracoes = new ExibirDicasConfiguracoes("exibirDicasConfiguracoes", null, null);
+   Action exibirDicasConfiguracoes = new ExibirDicasConfiguracoes("exibirDicasConfiguracoes", null, null, new BigInteger(""+idAgente));
    addAction("exibirDicasConfiguracoes", exibirDicasConfiguracoes);
    Action exibirDicasParticipantes = new ExibirDicasParticipantes("exibirDicasParticipantes", null, null);
    addAction("exibirDicasParticipantes", exibirDicasParticipantes);
