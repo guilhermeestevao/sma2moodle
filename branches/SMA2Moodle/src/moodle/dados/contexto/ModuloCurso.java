@@ -1,17 +1,21 @@
 package moodle.dados.contexto;
 
 import java.math.BigInteger;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="mdl_course_modules")
 public class ModuloCurso {
 	
+	
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
-	@GeneratedValue
 	private BigInteger id;
 	private BigInteger course;
 	private BigInteger module;

@@ -5,13 +5,17 @@ import java.math.BigInteger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="mdl_context")
 public class Contexto {
-	@Id @GeneratedValue
+	 
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id
 	private BigInteger id;
 	private BigInteger contextlevel;
 	private BigInteger instanceid;
