@@ -43,7 +43,6 @@ public class ControladorActions extends ThreadsServicos {
 					GenericAgent ag = environment.getAgent("CompanheiroAg");
 					
 					if(ag != null){
-						System.out.println("Aqui");
 						ag.addBehaviour("comunicarFormadorAgNotasBaixas");
 						ag.addBehaviour("comunicarAcompanhanteTutorAgNotasBaixas");
 						ag.addBehaviour("comunicarPedagogicoAgNotasBaixas");
