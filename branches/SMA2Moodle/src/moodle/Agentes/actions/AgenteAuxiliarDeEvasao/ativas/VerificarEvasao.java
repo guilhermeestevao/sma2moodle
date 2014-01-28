@@ -36,13 +36,13 @@ public class VerificarEvasao extends ActionMoodle{
 	private String senha = "";
 	public VerificarEvasao(String name) {
 		super(name);
-		idAction = 20;// atribuir ao idAction o id da action no banco
+		idAction = 21;// atribuir ao idAction o id da action no banco
 	}
 
 	public VerificarEvasao(String name, Condition pre_condition,
 		Condition pos_condition) {
 		super(name, pre_condition, pos_condition);
-		idAction = 20;// atribuir ao idAction o id da action no banco
+		idAction = 21;// atribuir ao idAction o id da action no banco
 	}
 	
 	@Override

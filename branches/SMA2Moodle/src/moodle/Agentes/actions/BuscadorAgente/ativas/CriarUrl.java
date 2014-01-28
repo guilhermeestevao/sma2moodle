@@ -54,12 +54,12 @@ public class CriarUrl extends ActionMoodle{
 	
 	public CriarUrl(String name) {
 		super(name);
-		idAction = 20;// atribuir ao idAction o id da action no banco
+		idAction = 23;// atribuir ao idAction o id da action no banco
 	}
 	
 	public CriarUrl(String name, Condition pre_condition, Condition pos_condition) {
 		super(name, pre_condition, pos_condition);
-		idAction = 20;// atribuir ao idAction o id da action no banco
+		idAction = 23;// atribuir ao idAction o id da action no banco
 	}
 	
 	@Override
