@@ -75,7 +75,6 @@ public class GerenciaCurso {
 		
 		curso.addAtividadeParticipacao(atividades);
 		
-		
 		return atividades;
 	}
 	
