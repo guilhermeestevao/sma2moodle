@@ -87,6 +87,7 @@ public class CriarFolderFiles extends ActionMoodle {
 		JPAUtil.beginTransaction();
 		synchronized (cursos) {
 			for(Curso c: cursos){
+				;
 				
 				EntityManager entManager = JPAUtil.getEntityManager();
 				

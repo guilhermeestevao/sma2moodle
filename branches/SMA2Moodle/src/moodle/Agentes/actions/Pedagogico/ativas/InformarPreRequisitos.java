@@ -15,6 +15,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.PedagogicoAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -59,6 +60,8 @@ public class InformarPreRequisitos extends ActionMoodle {
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
+		/*
+		
 		JPAUtil.beginTransaction();
 		
 		BigInteger useridfrom = new BigInteger("2");
@@ -66,6 +69,9 @@ public class InformarPreRequisitos extends ActionMoodle {
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for(Curso curso : cursos){
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 			
 			if(curso.getCursosPreRequisito().isEmpty())
 				continue;
@@ -129,13 +135,17 @@ public class InformarPreRequisitos extends ActionMoodle {
 				msg.setFullmessage(fullmessage.toString());
 				msg.setTimecreated(time);
 				
-				((MoodleEnv)env).addMensagem(msg);
+				//((MoodleEnv)env).addMensagem(msg);
 
+				ControleEnvio.enviar(msg, env, idAction);
+				
 				
 			}
 			
 			
 		}
+		
+		*/
 		
 			ControleActions.setInformaPreRequisito(false);
 	}

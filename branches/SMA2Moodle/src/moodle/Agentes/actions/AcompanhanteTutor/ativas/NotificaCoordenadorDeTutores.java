@@ -83,12 +83,17 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		Query q = entManager.createNativeQuery(sql);
 		login = (String)q.getSingleResult();	
 		senha = "#Gesma2@Moodle4&Sma$";
+		
+		/*
 		JPAUtil.closeEntityManager();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for (Curso c : cursos) {
 
+			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
 			try {
 
 				List<Tutor> tutores = c.getTutores();
@@ -162,10 +167,12 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 			}
 			
 			
-			ControleActions.setNotificaCoordenadorDeTutores(false);
+			
 
 		}
-
+		
+		*/
+		ControleActions.setNotificaCoordenadorDeTutores(false);
 	}
 	public BigInteger getIdAgente() {
 		return idAgente;

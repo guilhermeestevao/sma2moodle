@@ -66,7 +66,7 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		SalvarLog.salvarArquivo(myAgent.getLocalName()+ " - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
-		
+		/*
 		JPAUtil.beginTransaction();
 		
 		BigInteger useridfrom = new BigInteger("2");
@@ -74,6 +74,9 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for(Curso curso : cursos){
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 			
 			EntityManager entManager = JPAUtil.getEntityManager(); 
 			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
@@ -120,8 +123,9 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 				msg.setTimecreated(time);
 				
 				
-				ControleEnvio.enviarViaMoodle(msg, env);
-				ControleEnvio.enviarViaEmail(msg);
+
+				ControleEnvio.enviar(msg, env, idAction);
+				
 				
 				
 			}
@@ -130,6 +134,7 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		}
 		
 		ControleActions.setInformaAtividadeDisciplina(false);
+		*/
 	}
 	
 	public BigInteger getIdAgente() {

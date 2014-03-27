@@ -20,6 +20,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -74,12 +75,17 @@ public class PesquisarData extends ActionMoodle {
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
-		
+		/*
 		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for(Curso curso : cursos){
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+	
+			System.out.println(">"+curso.getFullName());
 			
 			for(Aluno aluno : curso.getAlunos()){
 				
@@ -201,14 +207,17 @@ public class PesquisarData extends ActionMoodle {
 					msg.setFullmessage(fullmessage);
 					msg.setTimecreated(time);
 					
-					envir.addMensagem(msg);
-		
+					//envir.addMensagem(msg);
+
+					ControleEnvio.enviar(msg, env, idAction);
+					
 				}
 				
 			}
 		}
 		
 		JPAUtil.closeEntityManager();
+		*/
 		ControleActions.setPesquisaData(false);
 		
 	}

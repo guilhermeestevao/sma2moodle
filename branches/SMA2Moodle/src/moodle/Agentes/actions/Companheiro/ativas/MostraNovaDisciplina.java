@@ -18,6 +18,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -73,6 +74,11 @@ public class MostraNovaDisciplina extends ActionMoodle{
 		List<Curso> novosCursos = new ArrayList<Curso>();
 		List<Aluno> alunos = new ArrayList<Aluno>();
 		for (Curso curso : manager.getCursos()) {
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
+			System.out.println(">"+curso.getFullName());
 		
 			dias = difDias(curso.getDataCriacao());
 
@@ -82,11 +88,13 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 		if (!novosCursos.isEmpty()) {
 			podeEnviar = true;
+			/*
 			JPAUtil.beginTransaction();
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 			for(Curso c : manager.getCursos()){
 				
+			
 				
 				for (Curso cn : novosCursos) {
 					//Se os dois cursos estiverem na mesma categoria
@@ -130,7 +138,10 @@ public class MostraNovaDisciplina extends ActionMoodle{
 								msg.setFullmessage(fullmessage);
 								msg.setTimecreated(time);
 
-								((MoodleEnv) env).addMensagem(msg);
+								//((MoodleEnv) env).addMensagem(msg);
+
+								ControleEnvio.enviar(msg, env, idAction);
+								
 							}
 
 						} catch (NullPointerException e) {
@@ -139,12 +150,14 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 					}
 				}
+			
 				}
 				
 				
 				
 			}
 			JPAUtil.closeEntityManager();
+			*/
 		}
 		
 		ControleActions.setMostraNovaDisciplinaAluno(false);

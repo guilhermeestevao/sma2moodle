@@ -20,6 +20,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -43,6 +44,7 @@ public class InformaDataModificada extends ActionMoodle{
 	public InformaDataModificada(String name, Condition pre_condition, Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAction = 21;
+		this.idAgente = id;
 	}
 	
 	@Override
@@ -66,6 +68,12 @@ public class InformaDataModificada extends ActionMoodle{
 		boolean podeEnviar = false;
 
 		for(Curso c : manager.getCursos()){
+			
+			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+				
+			System.out.println(">"+c.getFullName());
+			
 			
 			Set<Atividade> atividadesDoAmbiente = c.getAllAtividades();
 			
@@ -162,6 +170,7 @@ public class InformaDataModificada extends ActionMoodle{
 	public void enviarMensgem(Environment env, Set<Aluno> alunos, Atividade at1, Atividade at2, BigInteger idCurso){
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		
+		/*
 		JPAUtil.beginTransaction();
 		
 		for (Aluno aluno : alunos) {
@@ -197,8 +206,12 @@ public class InformaDataModificada extends ActionMoodle{
 				msg.setSmallmessage(smallmessage);
 				msg.setFullmessage(fullmessage);
 				msg.setTimecreated(time);
-				((MoodleEnv)env).addMensagem(msg);
+				//((MoodleEnv)env).addMensagem(msg);
+
+				ControleEnvio.enviar(msg, env, idAction);
+			
 		}
+			*/
 	}
 
 	public BigInteger getIdAgente() {

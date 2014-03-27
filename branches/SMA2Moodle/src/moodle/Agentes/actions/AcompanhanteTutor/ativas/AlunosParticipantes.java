@@ -18,6 +18,7 @@ import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -70,6 +71,8 @@ public class AlunosParticipantes extends ActionMoodle {
 
 		BigInteger useridfrom = new BigInteger("2");
 
+		/*
+		
 		JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
@@ -78,6 +81,11 @@ public class AlunosParticipantes extends ActionMoodle {
 		
 		for (Curso curso : cursos) {
 
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
+			System.out.println(">"+curso.getFullName());
+			
 			List<Tutor> tutores = curso.getTutores();
 			
 			
@@ -145,7 +153,9 @@ public class AlunosParticipantes extends ActionMoodle {
 			//	smallmessage += "\nnão possue(m) nenhuma participação no(s) respectivo(s) fórum(ns) ou não receberam suas devidas notas referentes a postagens realizadas. \n";
 				//smallmessage += "É necessário que você incentive e acompanhe a participação desse(s) aluno(s) nos respectivos fórum(s).";
 
-						
+				
+				JPAUtil.closeEntityManager();
+				
 					if (podeEnviar) {
 						//Timestamp atual = new Timestamp(System.currentTimeMillis());
 						//AcompanhanteTutorAgente comp = (AcompanhanteTutorAgente)myAgent;
@@ -175,16 +185,20 @@ public class AlunosParticipantes extends ActionMoodle {
 					msg.setFullmessage(fullmessage);
 					msg.setTimecreated(time);
 
-					((MoodleEnv) env).addMensagem(msg);
-				}
+					//((MoodleEnv) env).addMensagem(msg);
 
+					ControleEnvio.enviar(msg, env, idAction);
+					
+				}
+				
 			} catch (NullPointerException e) {
 				ControleActions.setAlunosParticipantes(false);
 			}
 			
 		}
-		}
 		
+		}
+		*/
 		ControleActions.setAlunosParticipantes(false);
 
 	}

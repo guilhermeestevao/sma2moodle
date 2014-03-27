@@ -18,6 +18,7 @@ import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -67,11 +68,16 @@ public class MantemTutorAtivo extends ActionMoodle{
 		
 		boolean podeEnviar = false;
 		
+		/*
+		
 		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for(Curso curso : cursos){
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 			
 			List<Tutor> tutores = curso.getTutores();
 			
@@ -166,13 +172,17 @@ public class MantemTutorAtivo extends ActionMoodle{
 				msg.setFullmessage(fullmessage);
 				msg.setTimecreated(time);
 				
-				((MoodleEnv)env).addMensagem(msg);
+				//((MoodleEnv)env).addMensagem(msg);
+
+				ControleEnvio.enviar(msg, env, idAction);
+				
 			}
 			}catch(NullPointerException e){
 				ControleActions.setManteTutorAtivo(false);
 			}
 		}
 		}
+		*/
 		ControleActions.setManteTutorAtivo(false);
 	}
 	

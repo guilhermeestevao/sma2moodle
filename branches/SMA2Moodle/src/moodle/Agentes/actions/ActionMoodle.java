@@ -18,6 +18,7 @@ public class ActionMoodle extends Action {
 	private static final long serialVersionUID = -7851712932131646172L;
 	protected int idAction;
 	
+	
 	public ActionMoodle(String name) {
 		super(name);
 		// TODO Auto-generated constructor stub
