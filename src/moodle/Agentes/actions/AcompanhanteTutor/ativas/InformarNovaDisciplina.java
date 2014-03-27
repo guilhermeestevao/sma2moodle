@@ -15,6 +15,7 @@ import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -65,13 +66,16 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		int dias;
 		List<Curso> novosCursos = new ArrayList<Curso>();
 		List<Tutor> tutores = new ArrayList<Tutor>();
-
+		/*
 		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 
 		for (Curso curso : cursos) {
 
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
 			dias = difDias(curso.getDataCriacao());
 
 			if (dias == 0)
@@ -152,7 +156,10 @@ public class InformarNovaDisciplina extends ActionMoodle {
 									msg.setFullmessage(fullmessage);
 									msg.setTimecreated(time);
 
-									((MoodleEnv) env).addMensagem(msg);
+									//((MoodleEnv) env).addMensagem(msg);
+
+									ControleEnvio.enviar(msg, env, idAction);
+									
 								}
 
 							} catch (NullPointerException e) {
@@ -165,7 +172,7 @@ public class InformarNovaDisciplina extends ActionMoodle {
 				}
 			}
 		}
-
+		*/
 		ControleActions.setInformaAtividadeDisciplina(false);
 	}
 

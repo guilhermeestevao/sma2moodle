@@ -13,6 +13,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -79,6 +80,7 @@ public class ExibirDicasCalendario extends ActionMoodle {
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
+		/*
 		JPAUtil.beginTransaction();
 		BigInteger useridfrom = new BigInteger("2");
 
@@ -88,6 +90,9 @@ public class ExibirDicasCalendario extends ActionMoodle {
 
 
 		for (Curso c : cursos) {
+			
+			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 
 			for (Aluno al : c.getAlunos()) {
 
@@ -138,11 +143,14 @@ public class ExibirDicasCalendario extends ActionMoodle {
 					msg.setFullmessage(fullmessage);
 					msg.setTimecreated(time);
 
-					((MoodleEnv) env).addMensagem(msg);
+					//((MoodleEnv) env).addMensagem(msg);
+
+					ControleEnvio.enviar(msg, env, idAction);
+					
 				}
 			}
 		}
-		
+		*/
 		ControleActions.setExibirDicasCalendario(false);
 	}
 

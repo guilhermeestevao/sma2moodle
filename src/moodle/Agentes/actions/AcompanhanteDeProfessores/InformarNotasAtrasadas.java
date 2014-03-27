@@ -18,6 +18,7 @@ import moodle.Agentes.AcompanhanteDeProfessores;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Atividade;
 import moodle.dados.Curso;
@@ -63,6 +64,8 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
+		/*
+		
 		JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
@@ -71,6 +74,11 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		List<Curso> cursos =  manager.getCursos();
 		
 		for (Curso curso : cursos) {
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+				
+			System.out.println(curso.getFullName());
 			
 			for(Atividade atividade : curso.getAtividadesNota()){
 				
@@ -131,7 +139,10 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						msg.setFullmessage(fullmessage);
 						msg.setTimecreated(time);
 						
-						((MoodleEnv)env).addMensagem(msg);
+						//((MoodleEnv)env).addMensagem(msg);
+						
+						ControleEnvio.enviar(msg, env, idAction);
+						
 						
 					}catch(NullPointerException e){
 						ControleActions.setInformarNotasAtrasadas(false);
@@ -141,6 +152,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 			}
 			
 		}
+		*/
 		ControleActions.setInformarNotasAtrasadas(false);
 	}
 	

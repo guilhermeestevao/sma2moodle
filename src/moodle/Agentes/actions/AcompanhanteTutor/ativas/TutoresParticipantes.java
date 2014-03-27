@@ -17,6 +17,7 @@ import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -64,6 +65,7 @@ public class TutoresParticipantes extends ActionMoodle{
 		BigInteger useridfrom = new BigInteger("2");
 		
 		boolean podeEnviar = false;
+		/*
 		
 		JPAUtil.beginTransaction();
 		
@@ -72,6 +74,9 @@ public class TutoresParticipantes extends ActionMoodle{
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for(Curso curso : cursos){
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 			
 			List<Tutor> tutores = curso.getTutores();
 			
@@ -153,7 +158,10 @@ public class TutoresParticipantes extends ActionMoodle{
 				msg.setFullmessage(fullmessage);
 				msg.setTimecreated(time);
 				
-				((MoodleEnv)env).addMensagem(msg);
+				//((MoodleEnv)env).addMensagem(msg);
+				
+				ControleEnvio.enviar(msg, env, idAction);
+				
 			}
 			
 			}catch(NullPointerException e){
@@ -161,7 +169,9 @@ public class TutoresParticipantes extends ActionMoodle{
 			}
 			}
 		}
+
 		ControleActions.setTutoresPArticipantes(false);
+		*/
 	}
 	
 	public boolean done(){

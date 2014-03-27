@@ -11,6 +11,7 @@ import java.util.List;
 
 
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -19,6 +20,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -40,9 +42,10 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 	private BigInteger idAgente;
 	
 	public ExibirDicasParticipantes(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger idAgente) {
 		super(name, pre_condition, pos_condition);
 		idAction = 9;
+		this.idAgente = idAgente;
 	}
 
 	public ExibirDicasParticipantes(String name) {
@@ -80,7 +83,9 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
-
+		
+		/*
+		
 		JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
@@ -89,6 +94,9 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 		
 
 		for (Curso c : cursos) {
+			
+			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 
 			for (Aluno al : c.getAlunos()) {
 
@@ -138,10 +146,14 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 					msg.setSmallmessage(smallmessage);
 					msg.setFullmessage(fullmessage);
 					msg.setTimecreated(time);
-					((MoodleEnv) env).addMensagem(msg);
+					//((MoodleEnv) env).addMensagem(msg);
+
+					ControleEnvio.enviar(msg, env, idAction);
+					
 				}
 			}
 		}
+		*/
 		ControleActions.setExibirDicasPArticipantes(false);
 	}
 	

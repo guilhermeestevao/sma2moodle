@@ -19,6 +19,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -75,7 +76,7 @@ public class InformarAndamento extends ActionMoodle {
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		d_atual.setTime(new Date());
 		BigInteger useridfrom = new BigInteger("2");
-		
+		/*
 		JPAUtil.beginTransaction();
 		List<Atividade> atividadesAlunoSemNota = new ArrayList<Atividade>();
 			
@@ -84,7 +85,10 @@ public class InformarAndamento extends ActionMoodle {
 		
 		for(Curso curso : cursos){
 			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 			
+			System.out.println(">"+curso.getFullName());
 			
 			for(Aluno aluno : curso.getAlunos()){
 				
@@ -188,7 +192,7 @@ public class InformarAndamento extends ActionMoodle {
 
 				}
 				JPAUtil.closeEntityManager();				
-				
+			
 				if(nota == null && atividadesAlunoSemNota.isEmpty()){
 					//smallmessage += "\n\n Sem atividades no curso até o momento.";
 					continue;
@@ -217,13 +221,15 @@ public class InformarAndamento extends ActionMoodle {
 				msg.setFullmessage(fullmessage);
 				msg.setTimecreated(time);
 				
-				((MoodleEnv)env).addMensagem(msg);
-				
+				//((MoodleEnv)env).addMensagem(msg);
+
+				ControleEnvio.enviar(msg, env, idAction);
+					
 				
 			}
 	
 		}
-		
+		*/	
 		ControleActions.setInformaAndamento(false);
 		
 	}

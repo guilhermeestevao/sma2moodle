@@ -20,6 +20,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.CompanheiroAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Agentes.actions.Companheiro.comunicacao.InitiatorAcompanhanteTutorAgChatCriado;
 import moodle.Org.Dao;
 import moodle.Org.MoodleEnv;
@@ -86,6 +87,11 @@ public class CriaChat extends ActionMoodle {
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
 		for (Curso c : cursos) {
+			
+			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
+			System.out.println(">"+c.getFullName());
 
 			for (AtividadeNota an : c.getAtividadesNota()) {
 
@@ -159,7 +165,7 @@ public class CriaChat extends ActionMoodle {
 						for(Aluno aluno : c.getAlunos()){
 							
 							if(podeEnviar){
-							
+							/*
 								JPAUtil.beginTransaction();
 								EntityManager entManager2 = JPAUtil.getEntityManager();
 								BigInteger useridfrom = new BigInteger("2");
@@ -175,8 +181,9 @@ public class CriaChat extends ActionMoodle {
 								smallmessage = smallmessage.replaceAll("<data do chat>", dateFormat.format(chat.getChattime()));
 								
 								JPAUtil.closeEntityManager();
+								smallmessage += "\n";
 								
-								smallmessage += "\n"; 	
+								 	
 								
 								
 								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
@@ -198,8 +205,9 @@ public class CriaChat extends ActionMoodle {
 								msg.setFullmessage(fullmessage);
 								msg.setTimecreated(time);
 								
-								((MoodleEnv)env).addMensagem(msg);
-								
+								//((MoodleEnv)env).addMensagem(msg);
+								ControleEnvio.enviar(msg, env, idAction);
+								*/
 							}
 							
 						}

@@ -18,6 +18,7 @@ import java.util.List;
 
 
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
@@ -32,6 +33,7 @@ import moodle.Agentes.AcompanhanteTutorAgente;
 import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
@@ -80,12 +82,17 @@ public class MantemForumAtivo extends ActionMoodle{
 		
 		boolean podeEnviar = false;
 		
+		/*
+		
 		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		 
 		
 		for(Curso curso : cursos){
+			
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
 			
 			List<Tutor> tutores = curso.getTutores();
 			for(Tutor tutor : tutores){
@@ -175,14 +182,19 @@ public class MantemForumAtivo extends ActionMoodle{
 				msg.setFullmessage(fullmessage);
 				msg.setTimecreated(time);
 				
-				((MoodleEnv)env).addMensagem(msg);
+				//((MoodleEnv)env).addMensagem(msg);
+
+				ControleEnvio.enviar(msg, env, idAction);
+				
 			}
 			}catch(NullPointerException e){
+				JPAUtil.closeEntityManager();
 				ControleActions.setMantemForumAtivo(false);
 			}
 			
 		}
 		}
+		*/
 		ControleActions.setMantemForumAtivo(false);
 	}
 	

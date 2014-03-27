@@ -13,6 +13,7 @@ import moodle.Agentes.AgenteUtil;
 import moodle.Agentes.AjudanteAgente;
 import moodle.Agentes.actions.ActionMoodle;
 import moodle.Agentes.actions.ControleActions;
+import moodle.Agentes.actions.ControleEnvio;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
@@ -79,6 +80,7 @@ public class ExibirDicasForuns extends ActionMoodle {
 
 		BigInteger useridfrom = new BigInteger("2");
 		
+		/*
 		JPAUtil.beginTransaction();
 
 		boolean podeEnviar = false;
@@ -87,6 +89,9 @@ public class ExibirDicasForuns extends ActionMoodle {
 		
 		for (Curso c : cursos) {
 
+			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
 			for (Aluno al : c.getAlunos()) {
 
 				
@@ -139,11 +144,15 @@ public class ExibirDicasForuns extends ActionMoodle {
 					msg.setFullmessage(fullmessage);
 					msg.setTimecreated(time);
 
-					((MoodleEnv) env).addMensagem(msg);
+					//((MoodleEnv) env).addMensagem(msg);
+
+					ControleEnvio.enviar(msg, env, idAction);
+					
 				}
 			}
 
 		}
+		*/
 		ControleActions.setExibirDicasForum(false);
 
 	}
