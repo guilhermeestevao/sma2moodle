@@ -30,7 +30,7 @@ public class AjudanteAgente extends ReflexAgent {
    addAction("exibirDicasCalendario", exibirDicasCalendario);
    Action exibirDicasConfiguracoes = new ExibirDicasConfiguracoes("exibirDicasConfiguracoes", null, null, new BigInteger(""+idAgente));
    addAction("exibirDicasConfiguracoes", exibirDicasConfiguracoes);
-   Action exibirDicasParticipantes = new ExibirDicasParticipantes("exibirDicasParticipantes", null, null);
+   Action exibirDicasParticipantes = new ExibirDicasParticipantes("exibirDicasParticipantes", null, null,  new BigInteger(""+idAgente));
    addAction("exibirDicasParticipantes", exibirDicasParticipantes);
    
  
