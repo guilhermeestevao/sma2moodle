@@ -65,6 +65,8 @@ public class Curso implements Serializable{
 	private Collection<Url> url;
 	@Transient
 	private Collection<Folder> folder;
+	@Transient
+	private Collection<BigInteger> IdsAgentes;
 	
 	public Curso(){
 		alunos = new HashSet<Aluno>();
@@ -79,6 +81,7 @@ public class Curso implements Serializable{
 		tarefas = new HashSet<Tarefa>();
 		url = new HashSet<Url>();
 		folder = new HashSet<Folder>();
+		IdsAgentes = new ArrayList<BigInteger>();
 	}
 	
 	public void setSectioncache(String sectioncache) {
@@ -254,6 +257,14 @@ public class Curso implements Serializable{
 	public Date getDataCriacao(){
 		long milisec = 1000;
 		return new Date(timecreated*milisec); 
+	}
+	
+	public void definirAgentesAtivos(List<BigInteger> ids){
+		IdsAgentes.addAll(ids);
+	}
+	
+	public Collection<BigInteger> getAgentesAtivosNoCursos(){
+		return IdsAgentes;
 	}
 	
 	@Override

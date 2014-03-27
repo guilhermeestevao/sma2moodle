@@ -21,6 +21,7 @@ public abstract class Pessoa implements Serializable{
 	private String lastName;
 	private String email;
 	private String city;
+	private String phone1;
 	
 	public BigInteger getId() {
 		return id;
@@ -40,6 +41,10 @@ public abstract class Pessoa implements Serializable{
 	
 	public String getCity(){
 		return city;
+	}
+	
+	public String getTelefone(){
+		return "55"+phone1;
 	}
 	
 	public String getCompleteName(){
