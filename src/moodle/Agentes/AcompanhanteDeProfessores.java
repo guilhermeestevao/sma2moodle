@@ -17,6 +17,7 @@ public class AcompanhanteDeProfessores extends ModelAgent{
 	public AcompanhanteDeProfessores(String name, Environment environment, AgentRole agentRole) {
 		super(name, environment, agentRole);
 		
+
 		Action informarNotasAtrasadas = new InformarNotasAtrasadas("informarNotasAtrasadas", null, null, new BigInteger(""+idAgente));
 		addAction("informarNotasAtrasadas", informarNotasAtrasadas);
 		
@@ -29,9 +30,7 @@ public class AcompanhanteDeProfessores extends ModelAgent{
 		super.setup();
 		
 		Map<String, Action> actions = this.getAllActions();
-		
 		if(!actions.isEmpty()){
-		
 			for(Map.Entry<String, Action> results : actions.entrySet()){
 				addBehaviour(results.getValue());
 			}
