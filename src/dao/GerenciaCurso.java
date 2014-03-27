@@ -93,6 +93,19 @@ public class GerenciaCurso {
 		return atividades;
 	}
 	
+	public static void defineAgentesPorCurso(Curso curso){
+		try{
+			EntityManager manager = JPAUtil.getEntityManager();
+			Query query = manager.createNativeQuery("SELECT id_agente FROM ag_agente_curso WHERE id_curso = ?1");
+			query.setParameter(1, curso.getId());
+			List<BigInteger> agIds = query.getResultList();
+			curso.definirAgentesAtivos(agIds);
+		}catch (NoResultException e){
+			System.out.println("Nenhum agente ativo para esse curso!");
+		}finally{
+			
+		}
+	}
 	
 	public static void addAlunosCurso(Curso curso){
 
