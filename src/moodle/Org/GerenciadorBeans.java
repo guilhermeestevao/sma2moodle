@@ -47,7 +47,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 					for (Curso c : listaCursos) {
 						System.out.println("Atualizando ambiente...");
-						
+						GerenciaCurso.defineAgentesPorCurso(c);
 						GerenciaCurso.addTutorCurso(c);
 						GerenciaCurso.addTutoresCurso(c);
 						GerenciaCurso.addAlunosCurso(c);
@@ -74,9 +74,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 						System.out.println("*** \nCurso: " + c.getId() + " -> "
 								+ c.getFullName() + "\n");
 						
-						for(Tutor tutor : c.getTutores()){
-							System.out.println(tutor.getCompleteName());
-						}
+					
 
 					}
 
