@@ -84,7 +84,7 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		login = (String)q.getSingleResult();	
 		senha = "#Gesma2@Moodle4&Sma$";
 		
-		/*
+		
 		JPAUtil.closeEntityManager();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
@@ -165,15 +165,25 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 			} catch (NullPointerException e) {
 				ControleActions.setNotificaCoordenadorDeTutores(false);
 			}
-			
-			
-			
+
 
 		}
 		
-		*/
+		
 		ControleActions.setNotificaCoordenadorDeTutores(false);
 	}
+	
+	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
+		String ativ="";
+		
+		for(int i=0;i<mensagens.size();i++){	
+			if(mensagens.get(i).getDestinatario().equals(tipo)){	
+				//ativ = mensagens.get(i).getMensagem();
+			}
+		}
+		return ativ;
+	}
+	
 	public BigInteger getIdAgente() {
 		return idAgente;
 	}
@@ -182,14 +192,4 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		this.idAgente = idAgente;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 }

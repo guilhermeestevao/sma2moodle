@@ -66,8 +66,8 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		SalvarLog.salvarArquivo(myAgent.getLocalName()+ " - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
-		/*
-		JPAUtil.beginTransaction();
+		
+		//JPAUtil.beginTransaction();
 		
 		BigInteger useridfrom = new BigInteger("2");
 		
@@ -84,23 +84,25 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 			ss.setParameter(1, this.getIdAgente());
 			ss.setParameter(2, ac);
 			
-			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
-			smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
+			MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+			 String smallmessage = mensC.getMensagem();
+			 smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 			
 			//String smallmessage = new String();
 			//smallmessage+="Prezado(a) Aluno, \n\n";
 			//smallmessage+="As atividades da disciplina " + curso.getFullName() + " s�o: \n";
-			
+			String atividades="";
 			for(Atividade at : curso.getAllAtividades()){
-				smallmessage +=retornaMensagem(ss.getResultList(), "atividades");
-				smallmessage = smallmessage.replaceAll("<nome da atividade>", at.getName());
+				atividades+=at.getName()+"\n";
+				
 			}
+			smallmessage = smallmessage.replaceAll("<nome da atividade>", atividades);
 			
 			for(Aluno al : curso.getAlunos()){
-
-				
+				String mensEnviar = smallmessage;
+				mensEnviar = mensEnviar.replaceAll("<nome do aluno>", al.getCompleteName());
 				PedagogicoAgente comp = (PedagogicoAgente)myAgent;
-				if(verificaMens(curso.getId(), al.getId(), smallmessage))
+				if(verificaMens(curso.getId(), al.getId(), mensEnviar))
 					continue;
 				else{
 					Timestamp atual = new Timestamp(System.currentTimeMillis());
@@ -109,7 +111,7 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 				
 				BigInteger useridto = al.getId();
 				
-				StringBuilder fullmessage = new StringBuilder(smallmessage);
+				StringBuilder fullmessage = new StringBuilder(mensEnviar);
 				fullmessage.append("\n--------------------------------------------------------------------- \nEste e-mail é a cópia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder.");
 				
 				Long time = System.currentTimeMillis();
@@ -118,14 +120,11 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 				msg.setSubject("Nova mensagem do Administrador");
 				msg.setUseridfrom(useridfrom);
 				msg.setUseridto(useridto);
-				msg.setSmallmessage(smallmessage.toString());
+				msg.setSmallmessage(mensEnviar.toString());
 				msg.setFullmessage(fullmessage.toString());
 				msg.setTimecreated(time);
 				
-				
-
 				ControleEnvio.enviar(msg, env, idAction);
-				
 				
 				
 			}
@@ -134,7 +133,7 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 		}
 		
 		ControleActions.setInformaAtividadeDisciplina(false);
-		*/
+		
 	}
 	
 	public BigInteger getIdAgente() {
@@ -144,18 +143,7 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
 	}
-	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
-	
+
 	
 	@Override
 	public boolean done() {

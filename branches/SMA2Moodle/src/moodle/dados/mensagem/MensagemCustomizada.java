@@ -19,10 +19,6 @@ public class MensagemCustomizada {
 	private int id;
 	private String mensagem;
 	private String destinatario;
-	private String tipo;
-	@OneToOne
-	@JoinColumn(name ="f_envio")
-	private FormaEnvio f_envio;
 	private BigInteger agente;
 	private BigInteger action;
 
@@ -46,12 +42,7 @@ public class MensagemCustomizada {
 	public void setDestinatario(String destinatario) {
 		this.destinatario = destinatario;
 	}
-	public FormaEnvio getF_envio() {
-		return f_envio;
-	}
-	public void setF_envio(FormaEnvio f_envio) {
-		this.f_envio = f_envio;
-	}
+	
 	public BigInteger getAgente() {
 		return agente;
 	}
@@ -63,12 +54,6 @@ public class MensagemCustomizada {
 	}
 	public void setAction(BigInteger action) {
 		this.action = action;
-	}
-	public String getTipo() {
-		return tipo;
-	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
 	}
 	
 }

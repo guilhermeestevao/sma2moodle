@@ -68,8 +68,6 @@ public class MantemTutorAtivo extends ActionMoodle{
 		
 		boolean podeEnviar = false;
 		
-		/*
-		
 		JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
@@ -97,7 +95,8 @@ public class MantemTutorAtivo extends ActionMoodle{
 			ss.setParameter(1, this.getIdAgente());
 			ss.setParameter(2, ac);
 			
-			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+			MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+			String smallmessage = mensC.getMensagem();
 			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
 			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 
@@ -105,6 +104,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 			
 	//		smallmessage+="Na disciplina "+curso.getFullName()+", existem os seguintes fóruns onde ocorreram publicações pelos alunos e não foi constatada a sua participação nos últimos dias: \n\n\n";
 			
+			String foruns="";
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
 				if(atividade instanceof Forum){
@@ -132,8 +132,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 									if(diasPassadosPartTutor > diaPassadosUltimoPost && (diasPassadosPartTutor - diaPassadosUltimoPost) >3){
 										podeEnviar = true;
 										tutor.setContAdveretencias(tutor.getContAdveretencias()+1);
-										smallmessage+= retornaMensagem(ss.getResultList(), "foruns");
-										smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
+										foruns+=forum.getName()+"\n";
 										//smallmessage+=forum.getName();
 									}
 								}
@@ -143,7 +142,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 						}
 				}
 			}
-			smallmessage+= retornaMensagem(ss.getResultList(), "fim");
+			smallmessage = smallmessage.replaceAll("<nome forum>", foruns);
 		//	smallmessage +="\n Analise as postagens dos alunos, realizando comentários, sugestões ou criticas.";
 			if(podeEnviar){
 				//Timestamp atual = new Timestamp(System.currentTimeMillis());
@@ -182,7 +181,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 			}
 		}
 		}
-		*/
+		
 		ControleActions.setManteTutorAtivo(false);
 	}
 	
@@ -193,17 +192,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
 	}
-	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
+
 	
 	public boolean done(){
 		return done;

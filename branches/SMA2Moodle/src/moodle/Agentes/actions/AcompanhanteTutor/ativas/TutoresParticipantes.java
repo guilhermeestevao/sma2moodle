@@ -65,9 +65,9 @@ public class TutoresParticipantes extends ActionMoodle{
 		BigInteger useridfrom = new BigInteger("2");
 		
 		boolean podeEnviar = false;
-		/*
 		
-		JPAUtil.beginTransaction();
+		
+		//JPAUtil.beginTransaction();
 		
 		List<Forum> forunsSemTotor = new ArrayList<Forum>();
 		
@@ -101,14 +101,15 @@ public class TutoresParticipantes extends ActionMoodle{
 			ss.setParameter(1, this.getIdAgente());
 			ss.setParameter(2, ac);
 			
-			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+			MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+			String smallmessage = mensC.getMensagem();
 			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
 			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 			
 			//String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
 			
 			//smallmessage+="Na disciplina "+curso.getFullName()+",  existe(m) o(s) seguinte(s) fórum(s) onde sua participação não foi identificada: \n  \n\n";
-			
+			String foruns="";
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
 				if(atividade instanceof Forum){
@@ -118,14 +119,13 @@ public class TutoresParticipantes extends ActionMoodle{
 						if(!forum.isTutorParticipa()){
 					
 							podeEnviar = true;
-							smallmessage += retornaMensagem(ss.getResultList(), "foruns");
-							smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
+							foruns+=forum.getName()+"\n";
 							//smallmessage += "> " +forum.getName()+"\n";
 						}
 				}
 		
 			}
-			smallmessage += retornaMensagem(ss.getResultList(), "fim");
+			smallmessage = smallmessage.replaceAll("<nome do fórum>", foruns);
 			//smallmessage +="\n  É necessário que você participe para motivar a interação entre os alunos \n";
 
 				smallmessage +="\n";
@@ -165,13 +165,15 @@ public class TutoresParticipantes extends ActionMoodle{
 			}
 			
 			}catch(NullPointerException e){
+			//	JPAUtil.closeEntityManager();
 				ControleActions.setTutoresPArticipantes(false);
 			}
 			}
 		}
 
+		//JPAUtil.closeEntityManager();
 		ControleActions.setTutoresPArticipantes(false);
-		*/
+		
 	}
 	
 	public boolean done(){
@@ -185,15 +187,5 @@ public class TutoresParticipantes extends ActionMoodle{
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
 	}
-	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
+
 }

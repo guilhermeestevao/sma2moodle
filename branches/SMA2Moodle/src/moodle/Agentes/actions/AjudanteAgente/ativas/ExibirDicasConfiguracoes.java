@@ -82,7 +82,7 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 
 		BigInteger useridfrom = new BigInteger("2");
 		
-		/*
+		
 		JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
@@ -109,7 +109,8 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 					ss.setParameter(1, this.getIdAgente());
 					ss.setParameter(2, ac);
 					
-					String smallmessage = retornaMensagem(ss.getResultList(),"mensagem inteira");
+					MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+					String smallmessage = mensC.getMensagem();
 					smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
 					
 					BigInteger useridto = al.getId();
@@ -149,7 +150,7 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 				}
 			}
 		}
-		*/
+		
 		ControleActions.setExibirDicasConfiguracao(false);
 	}
 	
@@ -160,15 +161,5 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
 	}
-	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
+
 }

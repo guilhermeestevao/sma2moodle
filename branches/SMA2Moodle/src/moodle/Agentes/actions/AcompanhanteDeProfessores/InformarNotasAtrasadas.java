@@ -64,7 +64,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
-		/*
+		
 		
 		JPAUtil.beginTransaction();
 		
@@ -107,10 +107,11 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						ss.setParameter(1, this.getIdAgente());
 						ss.setParameter(2, ac);
 						
-						String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
-						smallmessage = smallmessage.replaceAll("<nome do professor>", professor.getLastName());
-						smallmessage = smallmessage.replaceAll("<nome da atividade>", atividade.getName());
-						smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
+						MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+						String smallmessage = mensC.getMensagem();
+						smallmessage = smallmessage.replaceAll("<nome professor>", professor.getLastName());
+						smallmessage = smallmessage.replaceAll("<nome atividade>", atividade.getName());
+						smallmessage = smallmessage.replaceAll("<nome curso>", curso.getFullName());
 						
 						
 						
@@ -151,8 +152,9 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 				}
 			}
 			
+			
 		}
-		*/
+		
 		ControleActions.setInformarNotasAtrasadas(false);
 	}
 	
@@ -164,15 +166,5 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 		this.idAgente = idAgente;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 	
 }

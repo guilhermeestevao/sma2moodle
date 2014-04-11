@@ -82,9 +82,9 @@ public class MantemForumAtivo extends ActionMoodle{
 		
 		boolean podeEnviar = false;
 		
-		/*
 		
-		JPAUtil.beginTransaction();
+		
+		
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		 
@@ -115,14 +115,15 @@ public class MantemForumAtivo extends ActionMoodle{
 			ss.setParameter(1, this.getIdAgente());
 			ss.setParameter(2, ac);
 			
-			String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
-			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
-			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+			MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+			String smallmessage = mensC.getMensagem();
+			smallmessage = smallmessage.replaceAll("<nome tutor>", tutor.getCompleteName());
+			smallmessage = smallmessage.replaceAll("<nome disciplina>", curso.getFullName());
 			
 			//String smallmessage = "Prezado(a) "+tutor.getCompleteName() +". \n";
 			
 			//smallmessage+="Na disciplina "+curso.getFullName()+", existe(m) o(s) seguinte(s) fórum(s): \n\n";
-			
+			String foruns ="";
 			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
 				if(atividade instanceof Forum){
@@ -139,9 +140,7 @@ public class MantemForumAtivo extends ActionMoodle{
 							//Caso tenha passado mais de dois dias � liberado o envio da mensagem
 							if(forum.isAvaliativo() && diasDoUltimoPost >= 0){
 								podeEnviar = true;
-								smallmessage+= retornaMensagem(ss.getResultList(), "foruns");
-								smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
-							
+								foruns+=forum.getName();
 								//smallmessage+=forum.getName()+"\n";
 							}
 							
@@ -149,8 +148,8 @@ public class MantemForumAtivo extends ActionMoodle{
 				}
 		
 			}
-			
-			smallmessage+= retornaMensagem(ss.getResultList(), "fim");
+			smallmessage = smallmessage.replaceAll("<nome forum>", foruns);
+		
 			//smallmessage +="\nnão foram encontradas publicações dos alunos nos últimos dias. Motive os alunos para que continuem participando desses fóruns, pois são avaliativos.";
 		
 			if(podeEnviar){
@@ -194,7 +193,7 @@ public class MantemForumAtivo extends ActionMoodle{
 			
 		}
 		}
-		*/
+		JPAUtil.closeEntityManager();
 		ControleActions.setMantemForumAtivo(false);
 	}
 	
@@ -206,16 +205,6 @@ public class MantemForumAtivo extends ActionMoodle{
 		this.idAgente = idAgente;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 	
 	public boolean done(){
 		return done;

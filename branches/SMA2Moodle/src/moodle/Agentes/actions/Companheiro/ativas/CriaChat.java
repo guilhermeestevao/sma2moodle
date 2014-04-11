@@ -165,7 +165,7 @@ public class CriaChat extends ActionMoodle {
 						for(Aluno aluno : c.getAlunos()){
 							
 							if(podeEnviar){
-							/*
+							
 								JPAUtil.beginTransaction();
 								EntityManager entManager2 = JPAUtil.getEntityManager();
 								BigInteger useridfrom = new BigInteger("2");
@@ -176,15 +176,12 @@ public class CriaChat extends ActionMoodle {
 								ss.setParameter(1, this.getIdAgente());
 								ss.setParameter(2, ac);
 								
-								String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+								String smallmessage = (String) ss.getResultList().get(0);
 								smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
 								smallmessage = smallmessage.replaceAll("<data do chat>", dateFormat.format(chat.getChattime()));
 								
 								JPAUtil.closeEntityManager();
 								smallmessage += "\n";
-								
-								 	
-								
 								
 								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
 								if(verificaMens(c.getId(), aluno.getId(), smallmessage))
@@ -207,7 +204,7 @@ public class CriaChat extends ActionMoodle {
 								
 								//((MoodleEnv)env).addMensagem(msg);
 								ControleEnvio.enviar(msg, env, idAction);
-								*/
+								
 							}
 							
 						}
@@ -271,14 +268,4 @@ public class CriaChat extends ActionMoodle {
 		this.idAgente = idAgente;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 }

@@ -170,7 +170,7 @@ public class InformaDataModificada extends ActionMoodle{
 	public void enviarMensgem(Environment env, Set<Aluno> alunos, Atividade at1, Atividade at2, BigInteger idCurso){
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		
-		/*
+		
 		JPAUtil.beginTransaction();
 		
 		for (Aluno aluno : alunos) {
@@ -180,7 +180,8 @@ public class InformaDataModificada extends ActionMoodle{
 			ss.setParameter(1, this.getIdAgente());
 			ss.setParameter(2, ac);
 			
-			String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+			MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+			String smallmessage = mensC.getMensagem();
 			smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
 			smallmessage = smallmessage.replaceAll("<nome da atividade>", at1.getName());
 			smallmessage = smallmessage.replaceAll("<data>", formato.format(at1.getDataFinal()));
@@ -211,7 +212,7 @@ public class InformaDataModificada extends ActionMoodle{
 				ControleEnvio.enviar(msg, env, idAction);
 			
 		}
-			*/
+			
 	}
 
 	public BigInteger getIdAgente() {
@@ -222,14 +223,4 @@ public class InformaDataModificada extends ActionMoodle{
 		this.idAgente = idAgente;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 }

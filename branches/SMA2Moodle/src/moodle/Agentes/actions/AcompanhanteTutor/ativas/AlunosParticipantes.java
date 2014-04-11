@@ -71,7 +71,7 @@ public class AlunosParticipantes extends ActionMoodle {
 
 		BigInteger useridfrom = new BigInteger("2");
 
-		/*
+		
 		
 		JPAUtil.beginTransaction();
 		
@@ -106,15 +106,16 @@ public class AlunosParticipantes extends ActionMoodle {
 				BigInteger ac = new BigInteger(""+this.getId_action());
 				ss.setParameter(1, this.getIdAgente());
 				ss.setParameter(2, ac);
+				MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
+				String smallmessage =  mensC.getMensagem();
 				
-				String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
 				smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
 				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 				
 				//String smallmessage = "Prezado(a) " + tutor.getCompleteName()+ ". \n";
 
 				//smallmessage += "Na disciplina " + curso.getFullName()+ ", existem os seguintes fóruns: \n\n";
-
+				String foruns="";
 				for (AtividadeParticipacao atividade : curso
 						.getAtividadesParticipacao()) {
 
@@ -134,22 +135,22 @@ public class AlunosParticipantes extends ActionMoodle {
 								}else{
 									podeEnviar = true;
 								}
-								smallmessage += retornaMensagem(ss.getResultList(), "foruns");
-								smallmessage = smallmessage.replaceAll("<nome do forum>", forum.getName());
+								foruns+=forum.getName()+":\n";
 								//smallmessage += "> " + forum.getName();
 								//smallmessage += "\nOnde o(s) aluno(s): \n";
+								String alunosForum ="";
 								for (Aluno aluno : alunos) {
 									if (!alunosComNota.containsKey(aluno)) {
-										smallmessage += retornaMensagem(ss.getResultList(), "alunos");
-										smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
+										alunosForum+=aluno.getCompleteName(); 
 										//smallmessage += aluno.getCompleteName()+ "\n";
 									}
 								}
+								foruns+=alunosForum;
 							}
 						}
 					}
 				}
-				smallmessage += retornaMensagem(ss.getResultList(), "fim");
+				smallmessage = smallmessage.replaceAll("<nome forum>",foruns);
 			//	smallmessage += "\nnão possue(m) nenhuma participação no(s) respectivo(s) fórum(ns) ou não receberam suas devidas notas referentes a postagens realizadas. \n";
 				//smallmessage += "É necessário que você incentive e acompanhe a participação desse(s) aluno(s) nos respectivos fórum(s).";
 
@@ -198,7 +199,7 @@ public class AlunosParticipantes extends ActionMoodle {
 		}
 		
 		}
-		*/
+		
 		ControleActions.setAlunosParticipantes(false);
 
 	}
@@ -217,14 +218,4 @@ public class AlunosParticipantes extends ActionMoodle {
 		this.idAgente = idAgente;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 }

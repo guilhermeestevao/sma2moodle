@@ -76,23 +76,23 @@ public class MoodleEnv extends Environment {
 		
 	    GenericAgent BuscadorAg= new BuscadorAgente("BuscadorAg", this, null);
 	    AgentRole BuscadorAgRole = new ModelAgentRole("BuscadorAgRole", MoodleOrg, BuscadorAg); 
-	    //addAgent("BuscadorAg", BuscadorAg); 
+	    addAgent("BuscadorAg", BuscadorAg); 
 	    
 		GenericAgent FormadorAg = new FormadorAgente("FormadorAg", this, null);
 	    AgentRole FormadorAgRole = new ProactiveAgentRole("FormadorAgRole", MoodleOrg, FormadorAg); 
-	    //addAgent("FormadorAg", FormadorAg);
+	    addAgent("FormadorAg", FormadorAg);
 		
 	    GenericAgent AcompanhanteTutorAg = new AcompanhanteTutorAgente("AcompanhanteTutorAg", this, null);
 	    AgentRole AcompanhanteTutorAgRole = new ModelAgentRole("AcompanhanteTutorAgRole", MoodleOrg, AcompanhanteTutorAg); 
-	    //addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
+	    addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
 	    
 		GenericAgent PedagogicoAg = new PedagogicoAgente("PedagogicoAg", this, null);
 	    AgentRole PedagogicoAgRole = new ProactiveAgentRole("PedagogicoAgRole", MoodleOrg, PedagogicoAg); 
-	    //addAgent("PedagogicoAg", PedagogicoAg);   
+	    addAgent("PedagogicoAg", PedagogicoAg);   
 	    
 		GenericAgent AjudanteAg = new AjudanteAgente("AjudanteAg", this, null);
 	    AgentRole AjudanteAgRole = new AgentRole("AjudanteAgRole", MoodleOrg, AjudanteAg); 
-	    //addAgent("AjudanteAg", AjudanteAg);   
+	   // addAgent("AjudanteAg", AjudanteAg);   
 	    
 	    GenericAgent AgenteAuxiliarDeEvasaoAg = new AgenteAuxiliarDeEvasao("AgenteAuxiliarDeEvasaoAg", this, null);
 	    AgentRole AgenteAuxiliarDeEvasaoAgRole = new AgentRole("AgenteAuxiliarDeEvasaoAgRole", MoodleOrg, AgenteAuxiliarDeEvasaoAg); 
@@ -116,7 +116,7 @@ public class MoodleEnv extends Environment {
 		
 		GenericAgent tutorBom = new TutorBom("tutorBom", this, null);
 		AgentRole tutorBomRole = new ReflexAgentRole("tutorBomRole", MoodleOrg, tutorBom);
-		//addAgent("tutorBom", tutorBom);
+		addAgent("tutorBom", tutorBom);
 		
 		
 	    /* REGIAO RELACIONADA AS BEANS */

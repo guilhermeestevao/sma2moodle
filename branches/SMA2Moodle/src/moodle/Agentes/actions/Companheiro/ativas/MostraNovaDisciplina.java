@@ -88,14 +88,12 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 		if (!novosCursos.isEmpty()) {
 			podeEnviar = true;
-			/*
+			
 			JPAUtil.beginTransaction();
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 			for(Curso c : manager.getCursos()){
-				
-			
-				
+					
 				for (Curso cn : novosCursos) {
 					//Se os dois cursos estiverem na mesma categoria
 					if(c.getCategory() == cn.getCategory()){
@@ -112,21 +110,22 @@ public class MostraNovaDisciplina extends ActionMoodle{
 							
 							
 							BigInteger useridto = al.getId();
-							String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
+							MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+							String smallmessage = mensC.getMensagem();
 							smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
 							smallmessage = smallmessage.replaceAll("<nome da disciplina>", cn.getFullName());
 							smallmessage = smallmessage.replaceAll("<data da criação da disciplina>", formato.format(c.getDataCriacao()));
 			
-								if (podeEnviar) {
+							if (podeEnviar) {
 						
-									smallmessage += "\n";
-									CompanheiroAgente comp = (CompanheiroAgente)myAgent;
-									if(verificaMens(c.getId(), al.getId(), smallmessage))
-										continue;
-									else{
-										Timestamp atual = new Timestamp(System.currentTimeMillis());
-										AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
-									}
+								smallmessage += "\n";
+								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
+								if(verificaMens(c.getId(), al.getId(), smallmessage))
+									continue;
+								else{
+									Timestamp atual = new Timestamp(System.currentTimeMillis());
+									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
+								}
 								String fullmessage = smallmessage;
 								fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail é uma copia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
 								Long time = System.currentTimeMillis();
@@ -157,7 +156,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 				
 			}
 			JPAUtil.closeEntityManager();
-			*/
+			
 		}
 		
 		ControleActions.setMostraNovaDisciplinaAluno(false);
@@ -172,16 +171,6 @@ public class MostraNovaDisciplina extends ActionMoodle{
 		return dias;
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 
 	public BigInteger getIdAgente() {
 		return idAgente;

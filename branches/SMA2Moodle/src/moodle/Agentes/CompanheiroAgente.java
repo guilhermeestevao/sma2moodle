@@ -68,7 +68,7 @@ public class CompanheiroAgente extends ModelAgent {
      addAction("informarAndamento", informarAndamento);
      
      Action pesquisarDatas = new PesquisarData("pesquisarDatas", null, null, new BigInteger(""+idAgente));
-     addAction("pesquisarDatas", pesquisarDatas);
+     //addAction("pesquisarDatas", pesquisarDatas);
      
      Action criaChat = new CriaChat("criaChat", null, null, new BigInteger(""+idAgente));
      addAction("criaChat", criaChat);
@@ -77,7 +77,7 @@ public class CompanheiroAgente extends ModelAgent {
      addAction("mostraNovaDisciplina", mostraNovaDisciplina);
      
      Action informaDatamodificada = new InformaDataModificada("informaDataModificada", null, null, new BigInteger(""+idAgente));
-     addAction("informaDataModificada", informaDatamodificada);
+     //addAction("informaDataModificada", informaDatamodificada);
  
      
      
