@@ -76,8 +76,8 @@ public class InformarAndamento extends ActionMoodle {
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		d_atual.setTime(new Date());
 		BigInteger useridfrom = new BigInteger("2");
-		/*
-		JPAUtil.beginTransaction();
+		
+		//JPAUtil.beginTransaction();
 		List<Atividade> atividadesAlunoSemNota = new ArrayList<Atividade>();
 			
 		
@@ -106,22 +106,21 @@ public class InformarAndamento extends ActionMoodle {
 				ss.setParameter(1, this.getIdAgente());
 				ss.setParameter(2, ac);
 				
-				List<MensagemCustomizada> mensagens = ss.getResultList();
-				smallmessage = retornaMensagem(mensagens, "introducao");
-	
+				MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+				smallmessage = mensC.getMensagem();
+				
 				smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
 				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 				smallmessage+="\n\n";
 				
+					String atividades = "";
 					for(AtividadeNota at : curso.getAtividadesNota()){
 						
 						d_final.setTime(at.getDataFinal());
 						if(at.getAlunosComNotas().containsKey(aluno) && d_atual.before(d_final)){
-							String ativ = retornaMensagem(mensagens, "atividades");
-							ativ = ativ.replaceAll("<nome da atividade>", at.getName());
-							ativ = ativ.replaceAll("<nota>", ""+at.getAlunosComNotas().get(aluno));
-							ativ+="\n";
-							smallmessage+=ativ;
+							atividades+=at.getName()+" ";
+							atividades+=at.getAlunosComNotas().get(aluno);
+							atividades+="\n";
 						
 						}else{
 							
@@ -131,7 +130,6 @@ public class InformarAndamento extends ActionMoodle {
 							if(at.getDataFinal().before(dataAtual))
 								atividadesAlunoSemNota.add(at);
 						}		
-						
 						 
 					}
 					
@@ -140,11 +138,10 @@ public class InformarAndamento extends ActionMoodle {
 						if(at.isAvaliativo()){
 							d_final.setTime(at.getDataFinal());
 							if(at.getAlunosComNotas().containsKey(aluno) && d_atual.before(d_final)){
-								String ativ = retornaMensagem(mensagens, "atividades");
-								ativ = ativ.replaceAll("<nome da atividade>", at.getName());
-								ativ = ativ.replaceAll("<nota>", ""+at.getAlunosComNotas().get(aluno));
-								ativ+="\n";
-								smallmessage+=ativ;
+								atividades+=at.getName()+" ";
+								atividades+=at.getAlunosComNotas().get(aluno);
+								atividades+="\n";
+								
 							}else{
 								Date dataAtual = new Date();
 								
@@ -156,28 +153,19 @@ public class InformarAndamento extends ActionMoodle {
 						}
 					}
 				
+					smallmessage = smallmessage.replaceAll("<nome da atividade> - <nota>", atividades);
+				
 					BigDecimal nota = curso.getNotaGeralAlunos().get(aluno);
 					
-					
-					
 					if(nota != null){
-						smallmessage+="\n";
-						String media =retornaMensagem(mensagens, "media");
-						media = media.replaceAll("<média>", nota.toString());
-						smallmessage+=media;
-						smallmessage+="\n\n";
 						if(nota.intValue() < 70){
-							String mediar = retornaMensagem(mensagens, "media ruim");
-							smallmessage += mediar;	
-							smallmessage+="\n\n";
+							smallmessage =(String) ss.getResultList().get(0);
 						}else{
-							String mediab =retornaMensagem(mensagens, "media boa");
-							smallmessage += mediab;	
-							smallmessage+="\n\n";
+							smallmessage =(String) ss.getResultList().get(1);
 						}
-					
+						smallmessage = smallmessage.replaceAll("<média>", nota.toString());
 					}
-				
+				/*
 				if(!atividadesAlunoSemNota.isEmpty()){
 					String falta =retornaMensagem(mensagens, "falta nota");
 					smallmessage +=falta;
@@ -191,6 +179,7 @@ public class InformarAndamento extends ActionMoodle {
 					}
 
 				}
+				*/
 				JPAUtil.closeEntityManager();				
 			
 				if(nota == null && atividadesAlunoSemNota.isEmpty()){
@@ -229,7 +218,7 @@ public class InformarAndamento extends ActionMoodle {
 			}
 	
 		}
-		*/	
+			
 		ControleActions.setInformaAndamento(false);
 		
 	}
@@ -245,17 +234,6 @@ public class InformarAndamento extends ActionMoodle {
 
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
-	}
-	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
 	}
 
 }

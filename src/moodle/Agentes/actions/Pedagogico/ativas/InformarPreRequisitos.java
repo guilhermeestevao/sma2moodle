@@ -60,9 +60,8 @@ public class InformarPreRequisitos extends ActionMoodle {
 		
 		GerenciaCurso manager = ((MoodleEnv)env).getGerenciaCurso();
 		
-		/*
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		
 		BigInteger useridfrom = new BigInteger("2");
 		
@@ -89,7 +88,8 @@ public class InformarPreRequisitos extends ActionMoodle {
 				ss.setParameter(1, this.getIdAgente());
 				ss.setParameter(2, ac);
 				
-				String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
+				MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+				String smallmessage = mensC.getMensagem();
 				smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
 				
 				//String smallmessage = new String();
@@ -99,16 +99,16 @@ public class InformarPreRequisitos extends ActionMoodle {
 				
 				int cont = 0;
 				
+				String preReqs = "";
 				for(Curso preReq : curso.getCursosPreRequisito()){
 					if(cont > 0)
-					smallmessage += retornaMensagem(ss.getResultList(), "requisito");
-					smallmessage = smallmessage.replaceAll("<pre-requisito>", preReq.getFullName());
+						preReqs+=preReq.getFullName()+"\n";
 					//smallmessage+=preReq.getFullName();
 					cont++;
 				}
+				smallmessage = smallmessage.replaceAll("<pré-requisito>",preReqs);
 				
-				smallmessage += retornaMensagem(ss.getResultList(), "fim");
-				smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
+				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 				//smallmessage+=" para que seu aprendizado em " + curso.getFullName() +  " seja maximizado";
 				
 				
@@ -145,7 +145,7 @@ public class InformarPreRequisitos extends ActionMoodle {
 			
 		}
 		
-		*/
+		
 		
 			ControleActions.setInformaPreRequisito(false);
 	}
@@ -157,17 +157,7 @@ public class InformarPreRequisitos extends ActionMoodle {
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
 	}
-	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
+
 	
 	
 	@Override

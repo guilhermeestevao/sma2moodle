@@ -128,8 +128,8 @@ public class InformarAtividadesEncerrando extends Action {
 		String ativ="";
 		
 		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
+			if(mensagens.get(i).getDestinatario().equals(tipo)){	
+				//ativ = mensagens.get(i).getMensagem();
 			}
 		}
 		return ativ;

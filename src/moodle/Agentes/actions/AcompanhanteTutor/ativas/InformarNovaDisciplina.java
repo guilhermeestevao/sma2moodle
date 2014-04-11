@@ -66,15 +66,15 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		int dias;
 		List<Curso> novosCursos = new ArrayList<Curso>();
 		List<Tutor> tutores = new ArrayList<Tutor>();
-		/*
-		JPAUtil.beginTransaction();
+
+		//JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 
 		for (Curso curso : cursos) {
 
-			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
-				continue;
+			//if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				//continue;
 			
 			dias = difDias(curso.getDataCriacao());
 
@@ -105,10 +105,11 @@ public class InformarNovaDisciplina extends ActionMoodle {
 								ss.setParameter(1, this.getIdAgente());
 								ss.setParameter(2, ac);
 								
-								String smallmessage = retornaMensagem(ss.getResultList(), "mensagem inteira");
-								smallmessage = smallmessage.replaceAll("<nome do tutor>", t.getCompleteName());
-								smallmessage = smallmessage.replaceAll("<data de criação>", formato.format(c.getDataCriacao()));
-								smallmessage = smallmessage.replaceAll("<nome da disciplina>", c.getFullName());
+								MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
+								String smallmessage = mensC.getMensagem();
+								smallmessage = smallmessage.replaceAll("<nome tutor>", t.getCompleteName());
+								smallmessage = smallmessage.replaceAll("<data criação>", formato.format(c.getDataCriacao()));
+								smallmessage = smallmessage.replaceAll("<nome disciplina>", c.getFullName());
 									
 								
 								
@@ -120,7 +121,6 @@ public class InformarNovaDisciplina extends ActionMoodle {
 
 							//	smallmessage += " Você deve ler o conteúdo  que está disponível na página inicial da disciplina do moodle. \n";
 
-								smallmessage += "\n";
 								if (podeEnviar) {
 									// Timestamp atual = new
 									// Timestamp(System.currentTimeMillis());
@@ -161,8 +161,9 @@ public class InformarNovaDisciplina extends ActionMoodle {
 									ControleEnvio.enviar(msg, env, idAction);
 									
 								}
-
+								JPAUtil.closeEntityManager();
 							} catch (NullPointerException e) {
+								JPAUtil.closeEntityManager();
 								ControleActions
 										.setInformaAtividadeDisciplina(false);
 							}
@@ -172,7 +173,7 @@ public class InformarNovaDisciplina extends ActionMoodle {
 				}
 			}
 		}
-		*/
+		//JPAUtil.closeEntityManager();
 		ControleActions.setInformaAtividadeDisciplina(false);
 	}
 
@@ -192,15 +193,5 @@ public class InformarNovaDisciplina extends ActionMoodle {
 		this.idAgente = idAgente;
 	}
 
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getTipo().equals(tipo)){	
-				ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 	
 }
