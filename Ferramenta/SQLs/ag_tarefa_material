@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-01-07 09:42:51 BRT
+-- Started on 2014-04-15 22:31:42 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -19,8 +19,8 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 784 (class 1259 OID 182637)
--- Dependencies: 6
+-- TOC entry 785 (class 1259 OID 182637)
+-- Dependencies: 7
 -- Name: ag_tarefa_material; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -33,20 +33,22 @@ CREATE TABLE ag_tarefa_material (
 ALTER TABLE public.ag_tarefa_material OWNER TO postgres;
 
 --
--- TOC entry 3705 (class 0 OID 182637)
--- Dependencies: 784 3706
+-- TOC entry 3757 (class 0 OID 182637)
+-- Dependencies: 785 3758
 -- Data for Name: ag_tarefa_material; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY ag_tarefa_material (id_tarefa, id_material) FROM stdin;
 18	39
 17	40
+41	41
+18	42
 \.
 
 
 --
--- TOC entry 3601 (class 1259 OID 196644)
--- Dependencies: 784 3707
+-- TOC entry 3653 (class 1259 OID 196644)
+-- Dependencies: 785 3759
 -- Name: fki_id_tarefa; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -54,8 +56,8 @@ CREATE INDEX fki_id_tarefa ON ag_tarefa_material USING btree (id_tarefa);
 
 
 --
--- TOC entry 3603 (class 2606 OID 196634)
--- Dependencies: 778 784 3707
+-- TOC entry 3655 (class 2606 OID 196634)
+-- Dependencies: 779 785 3759
 -- Name: fk2ad0b0b2255072f3; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -64,8 +66,8 @@ ALTER TABLE ONLY ag_tarefa_material
 
 
 --
--- TOC entry 3602 (class 2606 OID 196645)
--- Dependencies: 161 784 3707
+-- TOC entry 3654 (class 2606 OID 196645)
+-- Dependencies: 162 785 3759
 -- Name: fktarefa; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -73,7 +75,7 @@ ALTER TABLE ONLY ag_tarefa_material
     ADD CONSTRAINT fktarefa FOREIGN KEY (id_tarefa) REFERENCES mdl_assign(id);
 
 
--- Completed on 2014-01-07 09:42:51 BRT
+-- Completed on 2014-04-15 22:31:43 BRT
 
 --
 -- PostgreSQL database dump complete

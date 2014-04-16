@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-01-07 09:41:21 BRT
+-- Started on 2014-04-15 22:30:28 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -19,136 +19,66 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 806 (class 1259 OID 196569)
--- Dependencies: 3602 3603 6
+-- TOC entry 813 (class 1259 OID 230728)
+-- Dependencies: 3653 3654 7
 -- Name: ag_mensagens; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE ag_mensagens (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     mensagem character varying(10000) DEFAULT NULL::character varying,
     destinatario character varying(255) DEFAULT NULL::character varying,
     f_envio integer,
     agente bigint,
-    action bigint
+    action bigint,
+    tipo text,
+    id_professor integer
 );
 
 
 ALTER TABLE public.ag_mensagens OWNER TO postgres;
 
 --
--- TOC entry 805 (class 1259 OID 196567)
--- Dependencies: 806 6
--- Name: ag_mensagens_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE ag_mensagens_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ag_mensagens_id_seq OWNER TO postgres;
-
---
--- TOC entry 3718 (class 0 OID 0)
--- Dependencies: 805
--- Name: ag_mensagens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE ag_mensagens_id_seq OWNED BY ag_mensagens.id;
-
-
---
--- TOC entry 3601 (class 2604 OID 196572)
--- Dependencies: 805 806 806
--- Name: id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ag_mensagens ALTER COLUMN id SET DEFAULT nextval('ag_mensagens_id_seq'::regclass);
-
-
---
--- TOC entry 3713 (class 0 OID 196569)
--- Dependencies: 806 3714
+-- TOC entry 3759 (class 0 OID 230728)
+-- Dependencies: 813 3760
 -- Data for Name: ag_mensagens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY ag_mensagens (id, mensagem, destinatario, f_envio, agente, action) FROM stdin;
-31	Prezado(a) <nome o aluno>, na disciplina  <nome da disciplina>, seu atual desempenho é: \n <nome da atividade> Sua nota:  <nota> \n Sua média atual é: <média> \nProcure estudar mais, peça ajuda aos colegas e ao tutor e busque se envolver mais nas atividades \nParabéns! Continue estudando e buscando evoluir em seus estudos.	Gerente	2	1	1
+COPY ag_mensagens (id, mensagem, destinatario, f_envio, agente, action, tipo, id_professor) FROM stdin;
+12	Olá <nome do aluno>, caso esteja com alguma dúvida em algum dos conteúdos,  bastar clicar sobre o nome do curso que está matriculado e procurar algum fórum,  todos os cursos por padrão possuem uma atividade chamada Fórum de noticias.  Você tanto pode criar um tópico ou participar de um já existente.\nEm um fórum os alunos podem interagir com tutores e professores com o objetivo de compartilhar conhecimentos tirando dúvidas dos conteúdos ou postando notícias ligadas ao assunto em discussão.  Procure participar dos fóruns dos cursos em que está matriculado, pois alguns são avaliativos.	\N	\N	2	8	\N	\N
+15	Prezado(a) <nome do aluno>, \\n Revise os principais conceitos da(s) disciplina(s): \\n\n<pré-requisito> "  "para que seu aprendizado em  <nome da disciplina> seja maximizado.	\N	\N	7	18	\N	\N
+16	Prezado(a) <nome professor>, \\n Já fazem duas semanas que a atividade  <nome atividade> da disciplina <nome curso> teve seu período de avaliação encerrado, porém as notas dos alunos não foram postadas. \\n\n Favor postar as notas dos alunos o quanto antes. \\n	\N	\N	8	19	\N	\N
+13	Olá  <nome do aluno>  para conhecer seus colegas e quem é o tutor responsável pelo acompanhamento de sua turma ou o professor da disciplina, basta ir no menu de navegação no canto direito da tela do moodle e clicar sobre o nome do curso, depois clique em PARTICIPANTES.\nA partir da visualização de participantes, você poderá entrar em contato com qualquer um deles clicando em ENVIAR MENSAGEM.	\N	\N	2	9	\N	\N
+10	Olá  <nome do aluno>, esteja sempre atento ao calendário, pois ele informa todos os eventos e prazos do curso Para saber o que vai acontecer sobre uma determinada data, basta passar o mouse sobre o dia desejado. Você também pode cadastrar eventos de acordo com o ritmo de seus estudos clicando em NOVO EVENTO.	\N	\N	2	6	\N	\N
+11	Olá <nome do aluno> você pode fazer alterações de seu perfil clicando no menu CONFIGURAÇÕES. Nesse menu é possível alterar sua senha, informações de contato, informações pessoais, etc. \\n	\N	\N	2	7	\N	\N
+17	\N	\N	\N	8	21	\N	\N
+18	Prezado(a)  <nome do aluno> \\n Na disciplina  <nome da disciplina>  há algumas atividades pendentes, são elas: \\n <nome da atividade> - <dia que encerra a atividade> às <hora que encerra a atividade> .\\n Fique atento com estas datas...	alan	\N	4	12	\N	\N
+20	Prezado(a) <nome do aluno>, \\n As atividades da disciplina  <nome da disciplina> são: \\n-  <nome da atividade>  \\n<média>	alan	\N	7	17	\N	\N
+21	Prezado(a)  <nome do aluno> \\n Na disciplina  <nome da disciplina>  há algumas atividades pendentes, são elas: \\n <nome da atividade> - <dia que encerra a atividade> às <hora que encerra a atividade> .\\n Fique atento com estas datas	alan	\N	4	12	\N	\N
 \.
 
 
 --
--- TOC entry 3719 (class 0 OID 0)
--- Dependencies: 805
--- Name: ag_mensagens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('ag_mensagens_id_seq', 31, true);
-
-
---
--- TOC entry 3605 (class 2606 OID 196579)
--- Dependencies: 806 806 3715
--- Name: ag_mensagens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+-- TOC entry 3656 (class 2606 OID 241405)
+-- Dependencies: 813 813 3761
+-- Name: pk_ag_mensagens; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY ag_mensagens
-    ADD CONSTRAINT ag_mensagens_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT pk_ag_mensagens PRIMARY KEY (id);
 
 
 --
--- TOC entry 3606 (class 1259 OID 213470)
--- Dependencies: 806 3715
--- Name: fki_key_to_ag_actions_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX fki_key_to_ag_actions_id ON ag_mensagens USING btree (action);
-
-
---
--- TOC entry 3607 (class 1259 OID 213462)
--- Dependencies: 806 3715
--- Name: fki_key_to_ag_agentes_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX fki_key_to_ag_agentes_id ON ag_mensagens USING btree (agente);
-
-
---
--- TOC entry 3610 (class 2606 OID 196580)
--- Dependencies: 804 806 3715
--- Name: ag_mensagens_f_envio_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- TOC entry 3657 (class 2606 OID 240180)
+-- Dependencies: 805 813 3761
+-- Name: fk1b408eee29fb0db2; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY ag_mensagens
-    ADD CONSTRAINT ag_mensagens_f_envio_fkey FOREIGN KEY (f_envio) REFERENCES ag_formas_de_envio(id);
+    ADD CONSTRAINT fk1b408eee29fb0db2 FOREIGN KEY (f_envio) REFERENCES ag_formas_de_envio(id);
 
 
---
--- TOC entry 3608 (class 2606 OID 213465)
--- Dependencies: 774 806 3715
--- Name: key_to_ag_actions_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ag_mensagens
-    ADD CONSTRAINT key_to_ag_actions_id FOREIGN KEY (action) REFERENCES ag_actions(id);
-
-
---
--- TOC entry 3609 (class 2606 OID 213457)
--- Dependencies: 773 806 3715
--- Name: key_to_ag_agentes_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY ag_mensagens
-    ADD CONSTRAINT key_to_ag_agentes_id FOREIGN KEY (agente) REFERENCES ag_agentes(id);
-
-
--- Completed on 2014-01-07 09:41:21 BRT
+-- Completed on 2014-04-15 22:30:28 BRT
 
 --
 -- PostgreSQL database dump complete
