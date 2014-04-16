@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-01-07 09:39:59 BRT
+-- Started on 2014-04-15 22:29:38 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -19,8 +19,8 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 775 (class 1259 OID 165049)
--- Dependencies: 6
+-- TOC entry 776 (class 1259 OID 165049)
+-- Dependencies: 7
 -- Name: ag_login; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -34,8 +34,8 @@ CREATE TABLE ag_login (
 ALTER TABLE public.ag_login OWNER TO postgres;
 
 --
--- TOC entry 3702 (class 0 OID 165049)
--- Dependencies: 775 3703
+-- TOC entry 3754 (class 0 OID 165049)
+-- Dependencies: 776 3755
 -- Data for Name: ag_login; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -44,7 +44,7 @@ COPY ag_login (id, login, senha) FROM stdin;
 \.
 
 
--- Completed on 2014-01-07 09:39:59 BRT
+-- Completed on 2014-04-15 22:29:38 BRT
 
 --
 -- PostgreSQL database dump complete
