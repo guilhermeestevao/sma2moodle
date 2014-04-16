@@ -1,0 +1,161 @@
+<?php include_once "../strings.php";?>
+
+<div id="pano"></div>
+
+<center>
+
+	<div id="show_files">
+		
+		<table id="files_table">
+			
+
+		</table>
+
+	</div>
+
+	<div id="add_file_view">
+
+		<form id="add_form" action="_add_file.php" target="upload_target" onsubmit="startUpload();" method="POST" enctype="multipart/form-data">
+
+			<span id="view_course_select" class="hidden">
+				<p class="title"><?php echo getString("files_select_course");?>:</p><br/>
+				<select id="select_course">
+					
+				</select>	
+			</span>
+
+			<br/>
+			<span id="view_activity_select" class="hidden">
+				<p class="title"><?php echo getString("files_select_activity");?>:</p><br/>
+				<select id="select_activity"> </select>
+			</span>
+
+			<br/>
+
+			<span id="select_subject_view" class="hidden">
+				<p class="title"><?php echo getString("files_select_subject");?>:</p><br/>
+				<select id="select_subject" class="left">
+					
+				</select>
+
+				<input type="button" value="<?php echo getString('files_add_subject');?>" class="right" id="add_subject_button"/>
+
+			</span>
+
+			<br/>
+
+			<span id="view_type_select" class="hidden">
+
+				<p class="title"><?php echo getString("files_submit_type");?>:</p><br/>
+
+				<select id="select_type">
+					<option value="...">...</option>
+					<option value="1"><?php echo getString("file_link");?></option>
+					<option value="2"><?php echo getString("file_file");?></option>
+				</select>
+
+			</span>
+
+			<br/>
+
+			<span id="link_view">
+				<input type="text" placeholder="<?php echo getString('title');?>" id="link_text_title"/><br/>
+				<input type="text" placeholder="<?php echo getString('file_link');?>" id="link_text_link"/><br/>
+
+				<input type="button" class="submit" value="<?php echo getString('submit');?>" id="link_submit"/>
+
+			</span>
+
+			<span id="file_view">
+				<input type="file" id="file_file"/><br/>
+
+				<input type="button" class="submit" value="<?php echo getString('submit');?>" id="file_submit"/>
+			</span>
+
+			<br/><input type="button" class='cancel' id="close_add_file" value="<?php echo getString('cancel');?>"/>
+
+		</form>
+
+	</div>
+
+	<div id="edit_file_view">
+
+		<form id="edit_form" action="_edit_file.php" target="upload_target" onsubmit="startUpload();" method="POST" enctype="multipart/form-data">
+
+			<span id="view_course_select_" class="hidden">
+				<p class="title">Select Course:</p><br/>
+				<select id="select_course_">
+					
+				</select>	
+			</span>
+
+			<br/>
+			<span id="view_activity_select_" class="hidden">
+				<p class="title">Select Activity:</p><br/>
+				<select id="select_activity_"> </select>
+			</span>
+
+			<br/>
+
+			<span id="select_subject_view_" class="hidden">
+				<p class="title">Select Subject:</p><br/>
+				<select id="select_subject_" class="left">
+					
+				</select>
+
+				<input type="button" value="Append Subject" class="right" id="add_subject_button"/>
+
+			</span>
+
+			<br/>
+
+			<span id="view_type_select_" class="hidden">
+
+				<p class="title">Select Type of stuff:</p><br/>
+
+				<select id="select_type_">
+					<option value="...">...</option>
+					<option value="1">Link</option>
+					<option value="2">File</option>
+				</select>
+
+			</span>
+
+			<br/>
+
+			<span id="link_view_">
+				<input type="text" placeholder="<?php echo getString('title');?>" id="link_text_title_"/><br/>
+				<input type="text" placeholder="<?php echo getString('file_link');?>" id="link_text_link_"/><br/>
+
+				<input type="button" class="submit" value="Submit" id="link_submit_"/>
+
+			</span>
+
+			<span id="file_view_">
+				<input type="file" id="file_file_"/><br/>
+
+				<input type="button" class="submit" value="Submit" id="file_submit_"/>
+			</span>
+
+			<br/><input type="button" class='cancel' id="close_edit_file" value="Cancel"/>
+
+		</form>
+
+	</div>
+
+
+	<div id="add_subject_view">
+		
+		<form>
+			
+			<input type="text" id="text_subject" placeholder="Subject"/><br/>
+			<input type="button" id="add_subject_cancel" class="cancel" value="Cancel"/>
+			<input type="button" id="add_subject_submit" class="submit" value="Insert Subject"/>
+
+		</form>
+
+	</div>
+
+		<br/>
+
+</center>
