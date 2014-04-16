@@ -1,0 +1,147 @@
+#menu{
+	background-color: #cccccc;
+	padding:5px;
+	margin-left: -8px;
+	margin-right: -8px;
+}
+
+#menu li{
+	display: inline;
+	padding:5px;
+}
+
+#menu li a{
+	text-decoration: none;
+	color:black;
+}
+
+#menu li:hover a{
+	text-decoration: underline;
+	color:#cc0000;
+}
+
+div, #loading{
+	display: none;
+	border: 1px solid #cccccc;
+	padding:10px;
+	border-radius: 3px;
+	background-color: #dddddd;
+	box-shadow: 1px 1px 2px #aaaaaa;
+}
+
+#add_way{
+	width:400px;
+	position: absolute;
+	top:20px;
+	left:50%;
+	margin-left: -200px;
+}
+
+#blank{
+	position: absolute;
+	top:0px;
+	left: 0px;
+	background-color: #cccccc;
+	width: 100%;
+	height: 100%;
+	opacity: 0.4;
+}
+
+#manage_sending_ways{
+	width: 400px;
+}
+
+th{
+	padding:5px;
+}
+
+th{
+	background-color: #999999;
+}
+
+table{
+	border-collapse: collapse;
+	border: 1px solid #aaaaaa;
+	border-radius: 5px;
+}
+
+tr.type_1{
+	background-color: #bbbbbb;
+}
+
+#new_message{
+	width:720px;
+	position:absolute;
+	margin-left: 360px;
+	z-index: 10;
+}
+
+#pano{
+	position:absolute;
+	width:100%;
+	height: 100%;
+	background-color: #888888;
+	opacity: 0.9;
+}
+
+
+#tags{
+	display:none;
+	position: absolute;
+	top:45px;
+	left:55%;
+	background-color: #cccccc;
+	margin:0px;
+	border-radius: 5px;
+	box-shadow: 1px 1px 1px #aaaaaa;
+	width:200px;
+	z-index: 11;
+}
+
+#tags li{
+	width:100%;
+	margin:0px;
+	padding-top:5px;
+	padding-bottom: 5px;
+	border-color:#555555;
+	border-width:1px;
+	border-style:dashed;
+}
+
+#tags li:hover, li.choosed{
+	background-color: #eeeeee !important; 
+}
+
+#tags, #tags li{
+	list-style-type: none;
+    list-style-position:inside;
+    margin:0;
+    padding:0;
+}
+
+
+textarea{
+	width:700px;
+	height:200px;
+}
+
+li{
+	list-style: none;
+}
+
+#message_list li{
+	background: #fefefe;
+	border-radius: 5px;
+	padding:5px;
+	width:90%;
+}
+
+#messages{
+	width:700px;
+}
+
+textarea.menor{
+	width:400px;
+	height:100px;
+	white-space: pre;
+}
