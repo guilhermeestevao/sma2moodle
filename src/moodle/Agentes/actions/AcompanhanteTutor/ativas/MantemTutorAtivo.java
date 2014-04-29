@@ -77,6 +77,8 @@ public class MantemTutorAtivo extends ActionMoodle{
 			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
 			
+			System.out.println(">"+curso.getFullName());
+			
 			List<Tutor> tutores = curso.getTutores();
 			
 			for(Tutor tutor : tutores){

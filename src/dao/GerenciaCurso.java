@@ -93,6 +93,11 @@ public class GerenciaCurso {
 		return atividades;
 	}
 	
+	
+	public void addPostAoForum(Curso curso){
+		
+	}
+	
 	public static void defineAgentesPorCurso(Curso curso){
 		try{
 			EntityManager manager = JPAUtil.getEntityManager();

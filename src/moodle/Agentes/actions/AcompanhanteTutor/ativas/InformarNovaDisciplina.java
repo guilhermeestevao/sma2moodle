@@ -73,8 +73,10 @@ public class InformarNovaDisciplina extends ActionMoodle {
 
 		for (Curso curso : cursos) {
 
-			//if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
-				//continue;
+			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
+				continue;
+			
+			System.out.println(">"+curso.getFullName());
 			
 			dias = difDias(curso.getDataCriacao());
 

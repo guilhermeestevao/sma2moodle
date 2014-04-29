@@ -65,6 +65,7 @@ public class AlunosParticipantes extends ActionMoodle {
 			return;
 
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
+		
 		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
@@ -73,7 +74,7 @@ public class AlunosParticipantes extends ActionMoodle {
 
 		
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
 

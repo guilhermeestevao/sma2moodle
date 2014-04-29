@@ -12,6 +12,7 @@ import java.util.List;
 
 
 
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -97,6 +98,8 @@ public class ExibirDicasParticipantes extends ActionMoodle {
 			
 			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
+			
+			System.out.println(">"+c.getFullName());
 
 			for (Aluno al : c.getAlunos()) {
 

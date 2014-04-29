@@ -81,7 +81,7 @@ public class ExibirDicasForuns extends ActionMoodle {
 		BigInteger useridfrom = new BigInteger("2");
 		
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 
 		boolean podeEnviar = false;
 
@@ -91,6 +91,8 @@ public class ExibirDicasForuns extends ActionMoodle {
 
 			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
+			
+			System.out.println(">"+c.getFullName());
 			
 			for (Aluno al : c.getAlunos()) {
 

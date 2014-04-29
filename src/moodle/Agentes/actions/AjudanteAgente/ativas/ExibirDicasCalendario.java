@@ -81,7 +81,7 @@ public class ExibirDicasCalendario extends ActionMoodle {
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		BigInteger useridfrom = new BigInteger("2");
 
 		boolean podeEnviar = false;
@@ -93,6 +93,8 @@ public class ExibirDicasCalendario extends ActionMoodle {
 			
 			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
+			
+			System.out.println(">"+c.getFullName());
 
 			for (Aluno al : c.getAlunos()) {
 

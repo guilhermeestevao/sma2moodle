@@ -94,6 +94,8 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
 			
+			System.out.println(">"+c.getFullName());
+			
 			try {
 
 				List<Tutor> tutores = c.getTutores();

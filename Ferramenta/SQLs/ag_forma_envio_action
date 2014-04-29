@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-04-15 22:28:28 BRT
+-- Started on 2014-04-24 18:06:46 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -74,26 +74,22 @@ ALTER TABLE ONLY ag_forma_envio_action ALTER COLUMN id SET DEFAULT nextval('ag_f
 --
 
 COPY ag_forma_envio_action (id, forma, action) FROM stdin;
-7	3	2
-8	3	3
-9	3	4
-10	3	5
-11	3	6
-12	3	7
-13	3	8
-14	3	9
-15	3	10
-16	3	11
-18	3	13
-19	3	14
-20	3	15
-21	3	16
-23	3	18
-24	3	19
-32	3	1
-41	2	17
-42	2	12
-43	3	12
+91	2	6
+92	3	6
+93	1	6
+94	2	8
+95	3	8
+96	1	8
+97	2	9
+98	3	9
+99	1	9
+100	2	7
+101	3	7
+102	1	7
+103	2	10
+104	3	10
+105	1	10
+107	3	15
 \.
 
 
@@ -103,7 +99,7 @@ COPY ag_forma_envio_action (id, forma, action) FROM stdin;
 -- Name: ag_forma_envio_action_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('ag_forma_envio_action_id_seq', 43, true);
+SELECT pg_catalog.setval('ag_forma_envio_action_id_seq', 107, true);
 
 
 --
@@ -145,7 +141,7 @@ ALTER TABLE ONLY ag_forma_envio_action
     ADD CONSTRAINT for_envio FOREIGN KEY (forma) REFERENCES ag_formas_de_envio(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
--- Completed on 2014-04-15 22:28:28 BRT
+-- Completed on 2014-04-24 18:06:46 BRT
 
 --
 -- PostgreSQL database dump complete

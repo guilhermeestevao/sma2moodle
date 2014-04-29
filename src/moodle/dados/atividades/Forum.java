@@ -1,6 +1,8 @@
 package moodle.dados.atividades;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -87,5 +89,7 @@ public class Forum extends AtividadeParticipacao {
 	public BigDecimal getNotaMaxima(){
 		return scale;
 	}
+
+
 	
 }
