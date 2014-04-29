@@ -78,6 +78,8 @@ public class InformarAtividadesDisciplina extends ActionMoodle {
 			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
 			
+			System.out.println(">"+curso.getFullName());
+			
 			EntityManager entManager = JPAUtil.getEntityManager(); 
 			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
 			BigInteger ac = new BigInteger(""+this.getId_action());

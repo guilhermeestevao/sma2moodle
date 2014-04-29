@@ -72,6 +72,8 @@ public class InformarPreRequisitos extends ActionMoodle {
 			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
 			
+			System.out.println(">"+curso.getFullName());
+			
 			if(curso.getCursosPreRequisito().isEmpty())
 				continue;
 			

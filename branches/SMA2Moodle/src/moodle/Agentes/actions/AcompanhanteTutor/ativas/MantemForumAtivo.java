@@ -19,6 +19,8 @@ import java.util.List;
 
 
 
+
+
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
@@ -93,6 +95,8 @@ public class MantemForumAtivo extends ActionMoodle{
 			
 			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
+			
+			System.out.println(">"+curso.getFullName());
 			
 			List<Tutor> tutores = curso.getTutores();
 			for(Tutor tutor : tutores){

@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-04-15 22:26:59 BRT
+-- Started on 2014-04-24 18:06:24 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -96,7 +96,7 @@ ALTER TABLE ONLY ag_coordenador
     ADD CONSTRAINT ag_coordenador_pkey PRIMARY KEY (id);
 
 
--- Completed on 2014-04-15 22:26:59 BRT
+-- Completed on 2014-04-24 18:06:25 BRT
 
 --
 -- PostgreSQL database dump complete

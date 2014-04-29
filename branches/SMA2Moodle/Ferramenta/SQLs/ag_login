@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-04-15 22:29:38 BRT
+-- Started on 2014-04-24 18:07:16 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -44,7 +44,7 @@ COPY ag_login (id, login, senha) FROM stdin;
 \.
 
 
--- Completed on 2014-04-15 22:29:38 BRT
+-- Completed on 2014-04-24 18:07:16 BRT
 
 --
 -- PostgreSQL database dump complete

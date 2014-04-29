@@ -71,6 +71,7 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 
 	@Override
 	public void execute(Environment env, Object[] params) {
+		try{
 		
 		if(!ControleActions.isExibirDicasConfiguracao())
 			return;
@@ -83,7 +84,7 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 		BigInteger useridfrom = new BigInteger("2");
 		
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
 
@@ -94,6 +95,8 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 			
 			if(!c.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
+			
+			System.out.println(">"+c.getFullName());
 
 			for (Aluno al : c.getAlunos()) {
 
@@ -149,6 +152,10 @@ public class ExibirDicasConfiguracoes extends ActionMoodle {
 					
 				}
 			}
+		}
+		
+		}catch(Exception e){
+			ControleActions.setExibirDicasConfiguracao(false);
 		}
 		
 		ControleActions.setExibirDicasConfiguracao(false);

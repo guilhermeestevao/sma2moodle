@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-04-15 22:26:35 BRT
+-- Started on 2014-04-24 18:06:15 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -97,7 +97,7 @@ ALTER TABLE ONLY ag_assunto
     ADD CONSTRAINT ag_assunto_pkey PRIMARY KEY (id);
 
 
--- Completed on 2014-04-15 22:26:35 BRT
+-- Completed on 2014-04-24 18:06:15 BRT
 
 --
 -- PostgreSQL database dump complete

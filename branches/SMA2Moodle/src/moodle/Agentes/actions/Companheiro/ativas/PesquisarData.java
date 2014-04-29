@@ -75,8 +75,8 @@ public class PesquisarData extends ActionMoodle {
 		GerenciaCurso manager = envir.getGerenciaCurso();
 		
 		BigInteger useridfrom = new BigInteger("2");
-		/*
-		JPAUtil.beginTransaction();
+		
+		//JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
@@ -100,11 +100,12 @@ public class PesquisarData extends ActionMoodle {
 				BigInteger ac = new BigInteger(""+this.getId_action());
 				ss.setParameter(1, this.getIdAgente());
 				ss.setParameter(2, ac);
+				MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+				String smallmessage = mensC.getMensagem();
 				
-				String smallmessage = retornaMensagem(ss.getResultList(), "introducao");
 				smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
 				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
-				
+				String atividades_data="";
 				for(AtividadeNota at : curso.getAtividadesNota()){
 					
 					
@@ -114,23 +115,20 @@ public class PesquisarData extends ActionMoodle {
 					if(at.getAlunosComNotas().containsKey(aluno))
 						continue;
 					
-					String ativ = retornaMensagem(ss.getResultList(), "atividades");
-					ativ = ativ.replaceAll("<nome da atividade>", at.getName());
-					ativ = ativ.replaceAll("<dia que encerra a atividade>", dateFormat.format(at.getDataFinal()));
+					atividades_data+=at.getName()+" - "+dateFormat.format(at.getDataFinal())+" ";
 					
 					
 					podeEnviar = true;
 					dateFormat.applyPattern("dd/MM/yyyy");
-					//smallmessage += at.getName() + " - Finaliza em: "  + dateFormat.format(at.getDataFinal());
 					dateFormat.applyPattern("H:mm");
-					
+					String horas_falta = "";
 					if(calculaDias(at.getDataFinal())==0){
-						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+".");	
-						smallmessage+=ativ;
+						horas_falta = dateFormat.format(at.getDataFinal())+".";
 					}else{
-						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n");
-						smallmessage += ativ;
+						horas_falta = dateFormat.format(at.getDataFinal());
 					}
+					
+					atividades_data+=horas_falta+"\n";
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
 					}else{
@@ -153,20 +151,17 @@ public class PesquisarData extends ActionMoodle {
 					podeEnviar = true;
 					dateFormat.applyPattern("dd/MM/yyyy");
 					
-					String ativ = retornaMensagem(ss.getResultList(), "atividades");
-					ativ = ativ.replaceAll("<nome da atividade>", at.getName());
-					ativ = ativ.replaceAll("<dia que encerra a atividade>", dateFormat.format(at.getDataFinal()));
+					atividades_data+=at.getName()+" - "+dateFormat.format(at.getDataFinal())+" ";
 					
-					
+					String horas_falta = "";
 					dateFormat.applyPattern("H:mm");
 					if(calculaDias(at.getDataFinal())==0){
-						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+".");	
-						smallmessage += ativ;
+						horas_falta = dateFormat.format(at.getDataFinal())+".";
 					}else{
-						ativ = ativ.replaceAll("<hora que encerra a atividade>", dateFormat.format(at.getDataFinal())+". Falta(m) apenas "+calculaDias(at.getDataFinal())+" dia(s). \n\n");
-						smallmessage += ativ;
+						horas_falta = dateFormat.format(at.getDataFinal()); 
 					}
 					
+					atividades_data+=horas_falta+"\n";
 					if(envir.getAtividadesEncerrando().containsKey(aluno)){
 						envir.getAtividadesEncerrando().get(aluno).add(at);
 					}else{
@@ -177,8 +172,8 @@ public class PesquisarData extends ActionMoodle {
 					
 				}
 				
-				String fim = retornaMensagem(ss.getResultList(), "fim");
-				smallmessage+=fim;
+				smallmessage = smallmessage.replaceAll("<nome da atividade - data encerramento>", atividades_data);
+				
 				
 				if(podeEnviar){
 					//Timestamp atual = new Timestamp(System.currentTimeMillis());
@@ -217,7 +212,7 @@ public class PesquisarData extends ActionMoodle {
 		}
 		
 		JPAUtil.closeEntityManager();
-		*/
+		
 		ControleActions.setPesquisaData(false);
 		
 	}

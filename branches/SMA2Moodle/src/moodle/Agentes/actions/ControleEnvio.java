@@ -41,8 +41,8 @@ public class ControleEnvio {
 
 	static{
 		formasDeEnvio = new HashMap<Integer, String>();
-		//formasDeEnvio.put(new Integer(1), "SMS");
-		//formasDeEnvio.put(new Integer(2), "E-Mail");
+		formasDeEnvio.put(new Integer(1), "SMS");
+		formasDeEnvio.put(new Integer(2), "E-Mail");
 		formasDeEnvio.put(new Integer(3), "Moodle");
 		
 	}
@@ -68,6 +68,10 @@ public class ControleEnvio {
 			for(int forma: idsFormas){
 				if(formasCadastradas.contains(forma)){
 
+					if(formasDeEnvio.get(forma).equals("SMS")){
+						enviarViaSMS(mensagem);
+					}
+
 					if(formasDeEnvio.get(forma).equals("E-Mail")){
 						enviarViaEmail(mensagem);
 					}
@@ -75,11 +79,6 @@ public class ControleEnvio {
 					if(formasDeEnvio.get(forma).equals("Moodle")){
 						enviarViaMoodle(mensagem, env);
 					}
-
-					if(formasDeEnvio.get(forma).equals("SMMS")){
-						enviarViaSMS(mensagem);
-					}
-
 				}
 			}
 		}else{
@@ -107,6 +106,8 @@ public class ControleEnvio {
 
 			String destinatario = a.getEmail();
 
+			destinatario = "guilhermeestevo@gmail.com";
+			
 			JPAUtil.beginTransaction();
 			EntityManager entManager = JPAUtil.getEntityManager();		
 			String sqlLogin = "Select login from ag_login";
@@ -153,6 +154,7 @@ public class ControleEnvio {
 	}
 
 	private static void enviarViaSMS(Mensagem mensagem){
+		System.out.println("Enviando via SMS");
 		try{
 			// monta estrutura de parametros a serem eviados
 			String data = URLEncoder.encode( "nome", "UTF-8" ) + "=" + URLEncoder.encode( "nome", "UTF-8" );
@@ -166,14 +168,14 @@ public class ControleEnvio {
 			String destinatario = a.getTelefone();
 			
 			//teste para quando usuario nao tiver telefone cadastrado
-			if(destinatario.equals("55"))
-				return;
 			
 			String telefonedeorigem="558899272294";
 			String telefonededestino=destinatario ;
-			String username="gesma"; 
-			String password="gesma";  
-			String mensagemaenviar= mensagem.getSmallmessage(); 
+			telefonededestino = "558899272294";
+			String username="guilhermeestevo"; 
+			String password="guilhermeestevo";  
+			String mensagemaenviar= mensagem.getSmallmessage();
+			System.out.println(mensagemaenviar);
 			mensagemaenviar.replaceAll(" ", "+");
 			String mensagemlonga = "0";
 			String tipo = "normal"; 
@@ -197,7 +199,8 @@ public class ControleEnvio {
 			}
  
 		} catch (Exception e) {
-			System.out.println( e.getMessage() );
+			
+			System.out.println("Exception: "+ e.getMessage() );
 		}
 	}
 

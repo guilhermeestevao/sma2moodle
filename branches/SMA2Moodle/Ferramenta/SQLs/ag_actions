@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-04-15 22:25:03 BRT
+-- Started on 2014-04-24 18:05:07 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -61,6 +61,10 @@ COPY ag_actions (id, nome, agente, descricao) FROM stdin;
 10	exibirDicasRelatorioDeNotas	2	Sem descrição
 11	 	2	Sem descrição
 21	InformarDataModificada	4	\N
+30	InformaAtividadesEncerrando	1	\N
+31	OrientarAlunoNotaBaixaDisciplina	7	\N
+32	IncentivaParticipação	7	\N
+33	ComunicaAvaliação	7	\N
 \.
 
 
@@ -93,7 +97,7 @@ ALTER TABLE ONLY ag_actions
     ADD CONSTRAINT key FOREIGN KEY (agente) REFERENCES ag_agentes(id);
 
 
--- Completed on 2014-04-15 22:25:03 BRT
+-- Completed on 2014-04-24 18:05:08 BRT
 
 --
 -- PostgreSQL database dump complete

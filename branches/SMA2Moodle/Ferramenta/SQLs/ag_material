@@ -4,7 +4,7 @@
 
 -- Dumped from database version 9.1.11
 -- Dumped by pg_dump version 9.1.11
--- Started on 2014-04-15 22:30:00 BRT
+-- Started on 2014-04-24 18:07:23 BRT
 
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -122,7 +122,7 @@ ALTER TABLE ONLY ag_material
     ADD CONSTRAINT fkcb6cd520e5e68865 FOREIGN KEY (id_assunto) REFERENCES ag_assunto(id);
 
 
--- Completed on 2014-04-15 22:30:00 BRT
+-- Completed on 2014-04-24 18:07:24 BRT
 
 --
 -- PostgreSQL database dump complete
