@@ -64,6 +64,8 @@ public class MostraNovaDisciplina extends ActionMoodle{
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
+		System.out.println("Action chamada");
+		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -72,33 +74,44 @@ public class MostraNovaDisciplina extends ActionMoodle{
 
 		int dias;
 		List<Curso> novosCursos = new ArrayList<Curso>();
-		List<Aluno> alunos = new ArrayList<Aluno>();
+		
 		for (Curso curso : manager.getCursos()) {
 			
 			if(!curso.getAgentesAtivosNoCursos().contains(idAgente))
 				continue;
 			
-			System.out.println(">"+curso.getFullName());
+			
+			System.out.println("N>"+curso.getFullName());
 		
 			dias = difDias(curso.getDataCriacao());
 
 			if (dias == 0)
 				novosCursos.add(curso);
 		}
+		
+		System.out.println("Cursos Novos Vazio:"+ novosCursos.isEmpty());
 
 		if (!novosCursos.isEmpty()) {
 			podeEnviar = true;
 			
-			JPAUtil.beginTransaction();
+			//JPAUtil.beginTransaction();
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 			for(Curso c : manager.getCursos()){
-					
+					System.out.println("Curso velho: "+c.getFullName());
+					System.out.println("Curso velho categoria: "+c.getCategory());
 				for (Curso cn : novosCursos) {
 					//Se os dois cursos estiverem na mesma categoria
-					if(c.getCategory() == cn.getCategory()){
+					System.out.println("Curso novo: "+cn.getFullName());
+					System.out.println("Curso novo categoria: "+cn.getCategory());
 					
+					if(c.getCategory().equals(cn.getCategory())){
+					
+						
+					System.out.println("Vai percorrer os alunos");
 					for (Aluno al : c.getAlunos()) {
+						
+						System.out.println("Aluno: "+al.getCompleteName());
 						
 						EntityManager entManager = JPAUtil.getEntityManager();
 						try {
@@ -114,7 +127,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 							String smallmessage = mensC.getMensagem();
 							smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
 							smallmessage = smallmessage.replaceAll("<nome da disciplina>", cn.getFullName());
-							smallmessage = smallmessage.replaceAll("<data da criação da disciplina>", formato.format(c.getDataCriacao()));
+							smallmessage = smallmessage.replaceAll("<data>", formato.format(cn.getDataCriacao()));
 			
 							if (podeEnviar) {
 						
@@ -126,6 +139,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 									Timestamp atual = new Timestamp(System.currentTimeMillis());
 									AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), al.getId(), c.getId(),atual,smallmessage);
 								}
+								
 								String fullmessage = smallmessage;
 								fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail é uma copia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user="+ useridto+ "&id= "+ useridfrom+ " para responder. ";
 								Long time = System.currentTimeMillis();
@@ -148,6 +162,8 @@ public class MostraNovaDisciplina extends ActionMoodle{
 						}
 
 					}
+				}else{
+					System.out.println("Categorias diferentes."+"Velho: "+c.getCategory()+" Novo: "+cn.getCategory());
 				}
 			
 				}
