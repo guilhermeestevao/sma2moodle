@@ -69,10 +69,9 @@ public class ActionMoodle extends Action {
 			
 			JPAUtil.beginTransaction();
 			
-			Query q = 	JPAUtil.getEntityManager().createNativeQuery("SELECT mensagem FROM ag_actions_agentes WHERE id_curso = ? AND id_aluno = ? AND id_action = ?");
-			q.setParameter(1, idCurso);
-			q.setParameter(2, idAluno);
-			q.setParameter(3, idAction);
+			Query q = 	JPAUtil.getEntityManager().createNativeQuery("SELECT mensagem FROM ag_actions_agentes WHERE id_aluno = ? AND id_action = ?");
+			q.setParameter(1, idAluno);
+			q.setParameter(2, idAction);
 			
 			List<String> mensagens = q.getResultList();
 			
