@@ -88,7 +88,7 @@ public class PesquisarData extends ActionMoodle {
 			System.out.println(">"+curso.getFullName());
 			
 			for(Aluno aluno : curso.getAlunos()){
-				
+				System.out.println("Aluno ->"+aluno.getCompleteName());
 				
 				podeEnviar = false;
 				
@@ -105,27 +105,28 @@ public class PesquisarData extends ActionMoodle {
 				
 				smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
 				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+				
 				String atividades_data="";
 				for(AtividadeNota at : curso.getAtividadesNota()){
 					
-					
+					//se falta 3 dias ou menos enviamos a mensagem
 					if(!verificarData(at.getDataFinal()))
 						continue;
-					
+					//se não foi atribuida nota para o aluno nessa atividade então enviamos a mensagem
 					if(at.getAlunosComNotas().containsKey(aluno))
 						continue;
 					
-					atividades_data+=at.getName()+" - "+dateFormat.format(at.getDataFinal())+" ";
-					
-					
+					System.out.println("Atividade ->"+at.getName());
 					podeEnviar = true;
 					dateFormat.applyPattern("dd/MM/yyyy");
+					
+					atividades_data+=at.getName()+" - "+dateFormat.format(at.getDataFinal())+" ";
+					
 					dateFormat.applyPattern("H:mm");
+					
 					String horas_falta = "";
 					if(calculaDias(at.getDataFinal())==0){
 						horas_falta = dateFormat.format(at.getDataFinal())+".";
-					}else{
-						horas_falta = dateFormat.format(at.getDataFinal());
 					}
 					
 					atividades_data+=horas_falta+"\n";
@@ -147,18 +148,18 @@ public class PesquisarData extends ActionMoodle {
 					
 					if(at.getAlunosParticipantes().contains(aluno) || at.getAlunosComNotas().containsKey(aluno))
 						continue;
-					
+
+					System.out.println("Atividade ->"+at.getName());
 					podeEnviar = true;
 					dateFormat.applyPattern("dd/MM/yyyy");
 					
 					atividades_data+=at.getName()+" - "+dateFormat.format(at.getDataFinal())+" ";
 					
-					String horas_falta = "";
 					dateFormat.applyPattern("H:mm");
+					
+					String horas_falta = "";
 					if(calculaDias(at.getDataFinal())==0){
 						horas_falta = dateFormat.format(at.getDataFinal())+".";
-					}else{
-						horas_falta = dateFormat.format(at.getDataFinal()); 
 					}
 					
 					atividades_data+=horas_falta+"\n";
@@ -243,7 +244,6 @@ public class PesquisarData extends ActionMoodle {
 					return true;
 		
 			}
-			
 			
 			
 		}
