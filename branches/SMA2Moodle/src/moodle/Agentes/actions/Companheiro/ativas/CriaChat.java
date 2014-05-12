@@ -98,11 +98,11 @@ public class CriaChat extends ActionMoodle {
 				if (an instanceof Questionario) {
 					
 					Questionario questionario = (Questionario) an;
-					
+					System.out.println("Questionario -> "+questionario.getName());
 					if (difDias(questionario.getDataFinal()) == 3) {
 						podeEnviar = true;
-						
-						JPAUtil.beginTransaction();
+						System.out.println("Falta 3 dias");
+						//JPAUtil.beginTransaction();
 						EntityManager entManager = JPAUtil.getEntityManager();
 						
 						Query query = entManager.createQuery("SELECT c FROM Chat c WHERE c.name = ?1");
@@ -166,7 +166,8 @@ public class CriaChat extends ActionMoodle {
 							
 							if(podeEnviar){
 							
-								JPAUtil.beginTransaction();
+								System.out.println("Aluno: "+aluno.getCompleteName());
+						//		JPAUtil.beginTransaction();
 								EntityManager entManager2 = JPAUtil.getEntityManager();
 								BigInteger useridfrom = new BigInteger("2");
 								BigInteger useridto = aluno.getId();
