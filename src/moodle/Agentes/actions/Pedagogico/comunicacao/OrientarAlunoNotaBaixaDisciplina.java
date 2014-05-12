@@ -9,29 +9,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
+import dao.JPAUtil;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 
 public class OrientarAlunoNotaBaixaDisciplina extends Action {
 
 	private boolean done = false;
 	private boolean mantemAtivo;
 	private Map<Curso, List<Aluno>> alunosNotaBaixa;
+	private BigInteger idAgente;
+	private int idAction; 
 	
-	
-	public OrientarAlunoNotaBaixaDisciplina(String name) {
+	public OrientarAlunoNotaBaixaDisciplina(String name, BigInteger id) {
 		super(name);
-		
+		idAgente = id;
+		idAction = 31;
 	}
 	
 	public OrientarAlunoNotaBaixaDisciplina(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
-
+		idAgente = id;
+		idAction = 31;
 	}
 	
 	public OrientarAlunoNotaBaixaDisciplina(String name, Map<Curso, List<Aluno>> als) {
@@ -67,20 +74,24 @@ public class OrientarAlunoNotaBaixaDisciplina extends Action {
 					}
 				}
 				
-				
-				
 				if(!isPreRequisito)
 					continue;
 				
-				
 
 				for(Aluno al : results.getValue()){
+					EntityManager entManager = JPAUtil.getEntityManager(); 
 					
-					StringBuilder smallmessage = new StringBuilder();
-					smallmessage.append("Prezado Aluno,"+al.getCompleteName()+" \n\n");
-					smallmessage.append("Estude mais a disciplina " + results.getKey().getFullName() + ", pois seu rendimento está abaixo do desejado e esta é uma disciplina fundamental para o curso, sendo pré-requisito das seguintes disciplinas: \n\n");
-					smallmessage.append(cursos.toString());
+					Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+					BigInteger ac = new BigInteger(""+this.getIdAction());
+					ss.setParameter(1, this.getIdAgente());
+					ss.setParameter(2, ac);
 					
+					MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
+					String smallmessage = mensC.getMensagem();
+					smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
+					smallmessage = smallmessage.replaceAll("<nome da disciplina>", results.getKey().getFullName());
+					smallmessage = smallmessage.replaceAll("<pré-requisito>", cursos.toString());
+				
 					
 					Long time = System.currentTimeMillis();
 					
@@ -117,6 +128,22 @@ public class OrientarAlunoNotaBaixaDisciplina extends Action {
 	@Override
 	public boolean done() {
 		return done;
+	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+
+	public int getIdAction() {
+		return idAction;
+	}
+
+	public void setIdAction(int idAction) {
+		this.idAction = idAction;
 	}
 
 }
