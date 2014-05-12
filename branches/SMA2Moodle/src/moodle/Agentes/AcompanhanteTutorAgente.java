@@ -33,19 +33,19 @@ public class AcompanhanteTutorAgente extends ModelAgent{
 				
 		
 		Action alunosParticipantes = new AlunosParticipantes("alunosParticipantes", null, null, new BigInteger(""+idAgente));
-		addAction("alunosParticipantes", alunosParticipantes);
+		//addAction("alunosParticipantes", alunosParticipantes);
 		
 		Action mantemForumAtivo = new MantemForumAtivo("mantemForumAtivo", null, null, new BigInteger(""+idAgente));
-		addAction("mantemForumAtivo", mantemForumAtivo);
+		//addAction("mantemForumAtivo", mantemForumAtivo);
 		
 		Action mantemTutorAtivo = new MantemTutorAtivo("mantemTutorAtivo", null, null, new BigInteger(""+idAgente));
-	 	addAction("mantemTutorAtivo", mantemTutorAtivo);
+	 	//addAction("mantemTutorAtivo", mantemTutorAtivo);
 		
 		Action tutoresParticipantes = new TutoresParticipantes("tutoresParticipantes", null, null, new BigInteger(""+idAgente));
-		addAction("tutoresParticipantes", tutoresParticipantes);
+		//addAction("tutoresParticipantes", tutoresParticipantes);
 		
 		Action informarNovaDisciplina = new InformarNovaDisciplina("informarNovaDisciplina", null, null, new BigInteger(""+idAgente));
-		addAction("informarNovaDisciplina", informarNovaDisciplina);
+		//addAction("informarNovaDisciplina", informarNovaDisciplina);
 		
 		Action notificaCoordenadorDeTutores = new NotificaCoordenadorDeTutores("notificaCoordenadorDeTutores", null, null, new BigInteger(""+idAgente));
 		//addAction("notificaCoordenadorDeTutores", notificaCoordenadorDeTutores);
