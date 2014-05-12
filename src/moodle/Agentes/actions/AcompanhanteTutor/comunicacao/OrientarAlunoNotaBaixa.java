@@ -4,13 +4,17 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
+import dao.JPAUtil;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import moodle.dados.Tutor;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 import jamder.Environment;
 import jamder.behavioural.Action;
 import jamder.behavioural.Condition;
@@ -20,16 +24,19 @@ public class OrientarAlunoNotaBaixa extends Action {
 	private boolean done = false;
 	private boolean mantemAtivo;
 	private Map<Curso, List<Aluno>> alunosNotaBaixa;
+	private BigInteger idAgente;
+	private int idAction; 
 	
-	public OrientarAlunoNotaBaixa(String name) {
+	public OrientarAlunoNotaBaixa(String name, BigInteger id) {
 		super(name);
-		
+		idAction = 34;
 	}
 	
 	public OrientarAlunoNotaBaixa(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
-
+		idAction = 34;
+		idAgente = id;
 	}
 	
 	public OrientarAlunoNotaBaixa(String name, Map<Curso, List<Aluno>> aluno){
@@ -63,20 +70,27 @@ public class OrientarAlunoNotaBaixa extends Action {
 			
 				List<Tutor> tutores = results.getKey().getTutores();
 				
-				for(Tutor tutor : tutores){
-				StringBuilder smallmessage = new StringBuilder();
-				smallmessage.append("Prezado(a) "+tutor.getCompleteName()+" ''\n Os seguintes alunos, estão com notas baixas \n\n");
+			for(Tutor tutor : tutores){
+				EntityManager entManager = JPAUtil.getEntityManager();
+				Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+				BigInteger ac = new BigInteger(""+getIdAction());
+				ss.setParameter(1, this.getIdAgente());
+				ss.setParameter(2, ac);
 				
-				smallmessage.append(results.getKey().getFullName() + ":\n\n");
+				MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
+				String smallmessage =  mensC.getMensagem();
+				
+				smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
+				smallmessage = smallmessage.replaceAll("<nome da disciplina>", results.getKey().getFullName());
 				
 				BigInteger useridto = new BigInteger(tutor.getId().toString());		
 				
 				
-				
+				String als ="";
 				for(Aluno al : results.getValue()){
-					smallmessage.append(al.getCompleteName() + "\n");
+					als+=al.getCompleteName()+"\n";
 				}
-				smallmessage.append("Faça um acompanhamento mais próximo sugerindo leituras e cobrando mais empenho..");
+				smallmessage = smallmessage.replaceAll("<nome do aluno>", als);
 				
 				
 				StringBuilder fullmessage = new StringBuilder(smallmessage);
@@ -106,6 +120,22 @@ public class OrientarAlunoNotaBaixa extends Action {
 	@Override
 	public boolean done() {
 		return done;
+	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+
+	public int getIdAction() {
+		return idAction;
+	}
+
+	public void setIdAction(int idAction) {
+		this.idAction = idAction;
 	}
 
 

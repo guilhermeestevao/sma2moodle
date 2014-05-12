@@ -103,7 +103,7 @@ public class MantemForumAtivo extends ActionMoodle{
 				
 			if(tutor == null || tutor.getId() == null)
 				continue;
-			
+			System.out.println("Tutor: "+tutor.getCompleteName() +" ID "+tutor.getId());
 			
 			//JOptionPane.showMessageDialog(null,tutor.getFirstName());
 			
@@ -133,6 +133,9 @@ public class MantemForumAtivo extends ActionMoodle{
 				if(atividade instanceof Forum){
 				
 					Forum forum = (Forum) atividade ;
+					
+					System.out.println("Fórum: "+forum.getName());
+					System.out.println("Participa ? : "+forum.isTutorParticipa());
 						//1� verificar se o tutor participou do forum
 						if(forum.isTutorParticipa()){
 							
