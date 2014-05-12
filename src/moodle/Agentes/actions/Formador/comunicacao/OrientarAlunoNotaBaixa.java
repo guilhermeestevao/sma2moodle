@@ -12,29 +12,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
+import dao.JPAUtil;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import moodle.dados.mensagem.Mensagem;
+import moodle.dados.mensagem.MensagemCustomizada;
 
 public class OrientarAlunoNotaBaixa extends Action {
 
 	private boolean done = false;
 	private boolean mantemAtivo;
 	private Map<Curso, List<Aluno>> alunosNotaBaixa;
+	private BigInteger idAgente;
+	private int idAction; 
 	
-	
-	public OrientarAlunoNotaBaixa(String name) {
+	public OrientarAlunoNotaBaixa(String name, BigInteger id) {
 		super(name);
-		
+		idAgente = id;
+		idAction = 35;
 	}
 	
 	public OrientarAlunoNotaBaixa(String name, Condition pre_condition,
-			Condition pos_condition) {
+			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
-
+		idAgente = id;
+		idAction = 35;
 	}
 	
 	public OrientarAlunoNotaBaixa(String name, Map<Curso, List<Aluno>> als) {
@@ -57,12 +64,19 @@ public class OrientarAlunoNotaBaixa extends Action {
 				if(results.getValue().isEmpty())
 					continue;
 				
+				
 				for(Aluno al : results.getValue()){
 					
-					StringBuilder smallmessage = new StringBuilder();
-					smallmessage.append("Prezado(a) "+al.getCompleteName()+" \n\n");
-					smallmessage.append("Na disciplina " + results.getKey().getFullName() +" ,o seu rendimento está baixo.Procure o seu grupo de estudo ou,caso ainda não tenha um, busque apoio com seus colegas de curso \n\n");
-				
+					EntityManager entManager = JPAUtil.getEntityManager();	
+					Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+					BigInteger ac = new BigInteger(""+getIdAction());
+					ss.setParameter(1, this.getIdAgente());
+					ss.setParameter(2, ac);
+					MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
+					String smallmessage =  mensC.getMensagem();
+					
+					smallmessage = smallmessage.replaceAll("<nome do aluno>", al.getCompleteName());
+					smallmessage = smallmessage.replaceAll("<nome da disciplina>", results.getKey().getFullName());
 					
 					Long time = System.currentTimeMillis();
 					
@@ -102,5 +116,23 @@ public class OrientarAlunoNotaBaixa extends Action {
 	public boolean done() {
 		return done;
 	}
+
+	public BigInteger getIdAgente() {
+		return idAgente;
+	}
+
+	public void setIdAgente(BigInteger idAgente) {
+		this.idAgente = idAgente;
+	}
+
+	public int getIdAction() {
+		return idAction;
+	}
+
+	public void setIdAction(int idAction) {
+		this.idAction = idAction;
+	}
+	
+	
 	
 }
