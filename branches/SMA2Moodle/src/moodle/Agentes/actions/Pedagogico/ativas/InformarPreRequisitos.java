@@ -78,8 +78,6 @@ public class InformarPreRequisitos extends ActionMoodle {
 				continue;
 			
 			
-		
-			
 			for(Aluno al : curso.getAlunos()){
 
 				
@@ -105,12 +103,12 @@ public class InformarPreRequisitos extends ActionMoodle {
 				for(Curso preReq : curso.getCursosPreRequisito()){
 					if(cont > 0)
 						preReqs+=preReq.getFullName()+"\n";
-					//smallmessage+=preReq.getFullName();
+					
 					cont++;
 				}
 				smallmessage = smallmessage.replaceAll("<pré-requisito>",preReqs);
 				
-				smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
+				smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
 				//smallmessage+=" para que seu aprendizado em " + curso.getFullName() +  " seja maximizado";
 				
 				
