@@ -55,7 +55,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 	@Override
 	public void execute(Environment env, Object[] params) {
 
-
+		System.out.println("Action chamada");
 		if(!ControleActions.isInformarNotasAtrasadas())
 			return;
 		
@@ -66,7 +66,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 
 		
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		
 		boolean podeEnviar = false;
 
@@ -79,6 +79,9 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 				continue;
 				
 			System.out.println(curso.getFullName());
+			
+			Professor professor = curso.getProfessor();
+			System.out.println(professor.getCompleteName());
 			
 			for(Atividade atividade : curso.getAtividadesNota()){
 				
@@ -96,7 +99,6 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 					
 					try{
 						
-						Professor professor = curso.getProfessor();
 						BigInteger useridto = professor.getId();
 						BigInteger useridfrom = new BigInteger("2");
 						
@@ -109,9 +111,9 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 						
 						MensagemCustomizada mensC = (MensagemCustomizada) ss.getResultList().get(0);
 						String smallmessage = mensC.getMensagem();
-						smallmessage = smallmessage.replaceAll("<nome professor>", professor.getLastName());
-						smallmessage = smallmessage.replaceAll("<nome atividade>", atividade.getName());
-						smallmessage = smallmessage.replaceAll("<nome curso>", curso.getFullName());
+						smallmessage = smallmessage.replaceAll("<nome do professor>", professor.getLastName());
+						smallmessage = smallmessage.replaceAll("<nome da atividade>", atividade.getName());
+						smallmessage = smallmessage.replaceAll("<nome do curso>", curso.getFullName());
 						
 						
 						
