@@ -30,10 +30,10 @@ public class FormadorAgente extends UtilityAgent {
     addBelief("crencasFormaGrupos.pl", new Belief("crencasFormaGrupos.pl", "String", ""));
     
     Action classificandoAlunos = new ClassificandoAlunos("classificandoAlunos");
-    addAction("classificandoAlunos", classificandoAlunos);
+   // addAction("classificandoAlunos", classificandoAlunos);
     
     Action formarGrupos = new FormarGrupos("formarGrupos");
-    addAction("formarGrupos", formarGrupos);
+   // addAction("formarGrupos", formarGrupos);
     
   
     
