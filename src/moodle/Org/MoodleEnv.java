@@ -72,7 +72,7 @@ public class MoodleEnv extends Environment {
 		
 		GenericAgent CompanheiroAg = new CompanheiroAgente("CompanheiroAg", this, null);
 	    AgentRole CompanheiroAgRole = new ModelAgentRole("CompanheiroAgRole", MoodleOrg, CompanheiroAg); 
-	    addAgent("CompanheiroAg", CompanheiroAg); 
+	    //addAgent("CompanheiroAg", CompanheiroAg); 
 		
 	    GenericAgent BuscadorAg= new BuscadorAgente("BuscadorAg", this, null);
 	    AgentRole BuscadorAgRole = new ModelAgentRole("BuscadorAgRole", MoodleOrg, BuscadorAg); 
@@ -84,11 +84,11 @@ public class MoodleEnv extends Environment {
 		
 	    GenericAgent AcompanhanteTutorAg = new AcompanhanteTutorAgente("AcompanhanteTutorAg", this, null);
 	    AgentRole AcompanhanteTutorAgRole = new ModelAgentRole("AcompanhanteTutorAgRole", MoodleOrg, AcompanhanteTutorAg); 
-	    //addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
+	    addAgent("AcompanhanteTutorAg", AcompanhanteTutorAg);
 	    
 		GenericAgent PedagogicoAg = new PedagogicoAgente("PedagogicoAg", this, null);
 	    AgentRole PedagogicoAgRole = new ProactiveAgentRole("PedagogicoAgRole", MoodleOrg, PedagogicoAg); 
-	    //addAgent("PedagogicoAg", PedagogicoAg);   
+	    addAgent("PedagogicoAg", PedagogicoAg);   
 	    
 		GenericAgent AjudanteAg = new AjudanteAgente("AjudanteAg", this, null);
 	    AgentRole AjudanteAgRole = new AgentRole("AjudanteAgRole", MoodleOrg, AjudanteAg); 
@@ -428,9 +428,7 @@ public class MoodleEnv extends Environment {
 		 
 		Date dataAtual = new Date();
 				
-				
 		if(dataAtividade.after(dataAtual)){
-					
 					
 			Calendar calDataAtual = Calendar.getInstance();
 			calDataAtual.setTime(dataAtual);
@@ -439,20 +437,15 @@ public class MoodleEnv extends Environment {
 			calDataAtividade.setTime(dataAtividade);
 					
 			if(calDataAtividade.get(Calendar.MONTH) == calDataAtual.get(Calendar.MONTH)){
-						
-						
-				if(calDataAtividade.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH) <= dias )
+				if(calDataAtividade.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH) <= dias && calDataAtividade.get(Calendar.DAY_OF_MONTH) - calDataAtual.get(Calendar.DAY_OF_MONTH)>=0)
 						return true;
 				
-				}
-					
-					
+			}
 					
 		}
 				
 		return false;
-				
-				
+					
 	}
 	
 	
