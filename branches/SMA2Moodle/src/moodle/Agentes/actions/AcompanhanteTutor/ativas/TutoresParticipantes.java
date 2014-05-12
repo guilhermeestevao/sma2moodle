@@ -69,7 +69,7 @@ public class TutoresParticipantes extends ActionMoodle{
 		
 		//JPAUtil.beginTransaction();
 		
-		List<Forum> forunsSemTotor = new ArrayList<Forum>();
+		//List<Forum> forunsSemTotor = new ArrayList<Forum>();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
@@ -87,14 +87,14 @@ public class TutoresParticipantes extends ActionMoodle{
 			if(tutor == null)
 				continue;
 		
-			
+			System.out.println("Tutor: "+tutor.getCompleteName());
 			
 			try{
 			BigInteger useridto = tutor.getId();
 			
 			podeEnviar = false;
 			
-			forunsSemTotor.clear();
+			//forunsSemTotor.clear();
 			
 			EntityManager entManager = JPAUtil.getEntityManager();
 			
@@ -112,7 +112,7 @@ public class TutoresParticipantes extends ActionMoodle{
 			
 			//smallmessage+="Na disciplina "+curso.getFullName()+",  existe(m) o(s) seguinte(s) fórum(s) onde sua participação não foi identificada: \n  \n\n";
 			String foruns="";
-			for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
+		  for(AtividadeParticipacao atividade : curso.getAtividadesParticipacao()){
 			
 				if(atividade instanceof Forum){
 				
@@ -122,6 +122,7 @@ public class TutoresParticipantes extends ActionMoodle{
 					
 							podeEnviar = true;
 							foruns+=forum.getName()+"\n";
+							System.out.println("Forum Participou: "+forum.getName());
 							//smallmessage += "> " +forum.getName()+"\n";
 						}
 				}

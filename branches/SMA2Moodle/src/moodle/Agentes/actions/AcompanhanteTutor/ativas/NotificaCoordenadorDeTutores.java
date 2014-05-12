@@ -110,15 +110,17 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 							
 				if(podeEnviar){
 					
+					String assunto = "Informação sobre os Tutores.";
+					
 					Query ss = entManager.createNamedQuery("byMensagemCustomizada");
 					BigInteger ac = new BigInteger(""+this.getId_action());
 					ss.setParameter(1, this.getIdAgente());
 					ss.setParameter(2, ac);
 					
-					String assunto = retornaMensagem(ss.getResultList(), "assunto");
-					assunto = assunto.replaceAll("<assunto>", "A definir");
-					String mensagem = retornaMensagem(ss.getResultList(), "mensagem inteira");
-					mensagem = mensagem.replaceAll(" <lista de tutores>", t.getCompleteName());
+					MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
+					String mensagem =  mensC.getMensagem();
+					
+					mensagem = mensagem.replaceAll("<nome do tutor>", t.getCompleteName());
 					
 					
 					//String assunto = "A definir";
@@ -175,16 +177,6 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		ControleActions.setNotificaCoordenadorDeTutores(false);
 	}
 	
-	public String retornaMensagem(List<MensagemCustomizada> mensagens, String tipo){
-		String ativ="";
-		
-		for(int i=0;i<mensagens.size();i++){	
-			if(mensagens.get(i).getDestinatario().equals(tipo)){	
-				//ativ = mensagens.get(i).getMensagem();
-			}
-		}
-		return ativ;
-	}
 	
 	public BigInteger getIdAgente() {
 		return idAgente;

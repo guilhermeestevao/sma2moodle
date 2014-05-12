@@ -94,7 +94,7 @@ public class AlunosParticipantes extends ActionMoodle {
 				continue;
 			
 			for(Tutor tutor : tutores){
-		
+				System.out.println("Tutor -> "+tutor.getCompleteName());
 			EntityManager entManager = JPAUtil.getEntityManager();
 				
 			Set<Aluno> alunos = curso.getAlunos();
@@ -123,25 +123,30 @@ public class AlunosParticipantes extends ActionMoodle {
 					if (atividade instanceof Forum) {
 						Forum forum = (Forum) atividade;
 						// Foruns n�o avaliativos
-
+						System.out.println("Fórum: "+forum.getName());
 						if (forum.isAvaliativo()) {
-
+							System.out.println("Fórum avaliativo: "+forum.getName());
 							Map<Aluno, BigDecimal> alunosComNota = forum
 									.getAlunosComNotas();
 							// caso faltem at� dois dias para o fim da avalia��o
-
+							
 							if (MoodleEnv.verificarData(forum.getDataFinal(), 3)) {
-								if(alunos.containsAll(alunosComNota.keySet())){
+								if(alunosComNota.keySet().size()==alunos.size()){
+									System.out.println("Não pode enviar");
 									podeEnviar = false;	
 								}else{
+									System.out.println("pode enviar");
 									podeEnviar = true;
 								}
+								System.out.println("Menos de 3 dias");
 								foruns+=forum.getName()+":\n";
 								//smallmessage += "> " + forum.getName();
 								//smallmessage += "\nOnde o(s) aluno(s): \n";
 								String alunosForum ="";
 								for (Aluno aluno : alunos) {
+									System.out.println("Aluno -> "+aluno.getCompleteName());
 									if (!alunosComNota.containsKey(aluno)) {
+										System.out.println("Aluno N Nota -> "+aluno.getCompleteName());
 										alunosForum+=aluno.getCompleteName(); 
 										//smallmessage += aluno.getCompleteName()+ "\n";
 									}
@@ -151,7 +156,7 @@ public class AlunosParticipantes extends ActionMoodle {
 						}
 					}
 				}
-				smallmessage = smallmessage.replaceAll("<nome forum>",foruns);
+				smallmessage = smallmessage.replaceAll("<nome do fórum - alunos do fórum>",foruns);
 			//	smallmessage += "\nnão possue(m) nenhuma participação no(s) respectivo(s) fórum(ns) ou não receberam suas devidas notas referentes a postagens realizadas. \n";
 				//smallmessage += "É necessário que você incentive e acompanhe a participação desse(s) aluno(s) nos respectivos fórum(s).";
 
@@ -218,5 +223,7 @@ public class AlunosParticipantes extends ActionMoodle {
 	public void setIdAgente(BigInteger idAgente) {
 		this.idAgente = idAgente;
 	}
+	
+	
 	
 }

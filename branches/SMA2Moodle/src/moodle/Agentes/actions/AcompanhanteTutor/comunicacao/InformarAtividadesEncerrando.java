@@ -4,8 +4,11 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.JOptionPane;
 
+import dao.JPAUtil;
 import moodle.Org.MoodleEnv;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
@@ -22,16 +25,19 @@ public class InformarAtividadesEncerrando extends Action {
 	private boolean done = false;
 	private Map<Aluno,List<Atividade>> atividadesEncerrando;
 	private BigInteger idAgente;
+	private int idAction; 
 	
 	public InformarAtividadesEncerrando(String name, BigInteger id) {
 		super(name);
 		idAgente = id;
+		idAction = 30;
 	}
 	
 	public InformarAtividadesEncerrando(String name, Condition pre_condition,
 			Condition pos_condition, BigInteger id) {
 		super(name, pre_condition, pos_condition);
 		idAgente = id;
+		idAction = 30;
 	}
 	
 	public InformarAtividadesEncerrando(String name, Map<Aluno, List<Atividade>> als) {
@@ -53,15 +59,21 @@ public class InformarAtividadesEncerrando extends Action {
 				continue;
 			
 			
-			for(Tutor tutor : curso.getTutores()){
+		for(Tutor tutor : curso.getTutores()){
 			
+			EntityManager entManager = JPAUtil.getEntityManager();
+			Query ss = entManager.createNamedQuery("byMensagemCustomizada");
+			BigInteger ac = new BigInteger(""+getIdAction());
+			ss.setParameter(1, this.getIdAgente());
+			ss.setParameter(2, ac);
+			
+			MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
+			String smallmessage =  mensC.getMensagem();
 		
+			smallmessage = smallmessage.replaceAll("<nome do tutor>", tutor.getCompleteName());
+			smallmessage = smallmessage.replaceAll("<nome da disciplina>", curso.getFullName());
 			
-			StringBuilder smallmessage = new StringBuilder();
-			smallmessage.append("Prezado(s),+"+tutor.getCompleteName()+". \n\n");
-			smallmessage.append("Abaixo segue a lista dos alunos que ainda não participaram das atividades que estão encerrando na disciplina " + curso.getFullName() +": \n\n");
-			
-			
+			String alusativs="";
 			for(Map.Entry<Aluno, List<Atividade>> results : atividades.entrySet()){
 				
 				if(!curso.getAlunos().contains(results.getKey()))
@@ -69,24 +81,21 @@ public class InformarAtividadesEncerrando extends Action {
 				
 				if(results.getValue().isEmpty())
 					continue;
-				
-				smallmessage.append("\n\nAluno: " + results.getKey().getCompleteName() + "\n");
-				smallmessage.append("Atividades:\n\n");
+				alusativs+=results.getKey().getCompleteName()+"\n";
 				
 				for(Atividade at : results.getValue()){
 					
 					if((!curso.getAtividadesNota().contains(at)) && (!curso.getAtividadesParticipacao().contains(at)))
 						continue;
-				
-					smallmessage.append(at.getName() + "\n");
 					
+					alusativs+=at.getName()+"\n";
 				}
 			
-			}
+			  }
 			
+				smallmessage = smallmessage.replaceAll("<nome do aluno - atividades>", alusativs);
 				
 				Long time = System.currentTimeMillis();
-				smallmessage.append("Entre em contato com este(s) para alerta-los sobre as datas");
 				BigInteger useridfrom = new BigInteger("2");
 				BigInteger useridto = new BigInteger(tutor.getId().toString());
 				
@@ -138,6 +147,14 @@ public class InformarAtividadesEncerrando extends Action {
 	@Override
 	public boolean done() {
 		return done;
+	}
+
+	public int getIdAction() {
+		return idAction;
+	}
+
+	public void setIdAction(int idAction) {
+		this.idAction = idAction;
 	}
 
 	

@@ -68,7 +68,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 		
 		boolean podeEnviar = false;
 		
-		JPAUtil.beginTransaction();
+		//JPAUtil.beginTransaction();
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		
@@ -87,7 +87,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 		
 			try{
 			BigInteger useridto = tutor.getId();
-			
+			System.out.println("Tutor: "+tutor.getCompleteName());
 			podeEnviar = false;
 			
 			EntityManager entManager = JPAUtil.getEntityManager();
@@ -112,8 +112,8 @@ public class MantemTutorAtivo extends ActionMoodle{
 				if(atividade instanceof Forum){
 				
 					Forum forum = (Forum) atividade ;
-					
-					
+					System.out.println("Forum: "+forum.getName());
+					System.out.println("Participou ? : "+forum.isTutorParticipa());
 						//1� verificar se o tutor participou do forum
 						if(forum.isTutorParticipa()){	
 							//Calcula os dias da ultima participa��o do tutor
@@ -124,8 +124,10 @@ public class MantemTutorAtivo extends ActionMoodle{
 							
 							if(forum.isAvaliativo()){
 								//Verifica se h� topicos ou posts no forum
+								System.out.println("Forum avaliativo: "+forum.getName());
 								if(!forum.getAlunosComNotas().isEmpty()){
 									//Data do ultimo post
+									System.out.println("Alunos com notas");
 									DateTime ultimoPostAluno = new DateTime(forum.getUltimoPost());
 									int diaPassadosUltimoPost = Days.daysBetween(ultimoPostAluno, hoje).getDays();
 									//verifica se houve partici��o do tutor desde o ultimo post feito pelos alunos 
@@ -135,6 +137,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 										podeEnviar = true;
 										tutor.setContAdveretencias(tutor.getContAdveretencias()+1);
 										foruns+=forum.getName()+"\n";
+										System.out.println("Forum sem p: "+forum.getName());
 										//smallmessage+=forum.getName();
 									}
 								}
@@ -144,7 +147,7 @@ public class MantemTutorAtivo extends ActionMoodle{
 						}
 				}
 			}
-			smallmessage = smallmessage.replaceAll("<nome forum>", foruns);
+			smallmessage = smallmessage.replaceAll("<nome do fórum>", foruns);
 		//	smallmessage +="\n Analise as postagens dos alunos, realizando comentários, sugestões ou criticas.";
 			if(podeEnviar){
 				//Timestamp atual = new Timestamp(System.currentTimeMillis());

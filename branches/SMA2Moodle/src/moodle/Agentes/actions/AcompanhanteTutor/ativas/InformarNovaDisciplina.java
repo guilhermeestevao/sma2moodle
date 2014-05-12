@@ -82,6 +82,8 @@ public class InformarNovaDisciplina extends ActionMoodle {
 
 			if (dias == 0)
 				novosCursos.add(curso);
+			
+			System.out.println("Qnt nvs: "+novosCursos.size());
 		}
 
 		if (!novosCursos.isEmpty()) {
@@ -89,14 +91,16 @@ public class InformarNovaDisciplina extends ActionMoodle {
 
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
-			for (Curso c : novosCursos) {
-
+			for (Curso c : cursos) {
+				System.out.println("Curso velho: "+c.getFullName());
+				System.out.println("Curso velho categoria: "+c.getCategory());
 				for (Curso cn : novosCursos) {
-
-					if (c.getCategory() == cn.getCategory()) {
-
+					System.out.println("Curso novo: "+cn.getFullName());
+					System.out.println("Curso novo categoria: "+cn.getCategory());
+					if (c.getCategory().equals(cn.getCategory())) {
+						System.out.println("Vai percorrer os tutores");
 						for (Tutor t : c.getTutores()) {
-
+							System.out.println("Tutor: "+t.getCompleteName());
 							try {
 								BigInteger useridto = t.getId();
 
@@ -109,9 +113,9 @@ public class InformarNovaDisciplina extends ActionMoodle {
 								
 								MensagemCustomizada mensC = (MensagemCustomizada)ss.getResultList().get(0);
 								String smallmessage = mensC.getMensagem();
-								smallmessage = smallmessage.replaceAll("<nome tutor>", t.getCompleteName());
-								smallmessage = smallmessage.replaceAll("<data criação>", formato.format(c.getDataCriacao()));
-								smallmessage = smallmessage.replaceAll("<nome disciplina>", c.getFullName());
+								smallmessage = smallmessage.replaceAll("<nome do tutor>", t.getCompleteName());
+								smallmessage = smallmessage.replaceAll("<data>", formato.format(cn.getDataCriacao()));
+								smallmessage = smallmessage.replaceAll("<nome da disciplina>", cn.getFullName());
 									
 								
 								
