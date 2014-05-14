@@ -4,13 +4,13 @@ import java.math.BigInteger;
 import java.util.Map;
 
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.AlunosParticipantes;
+import moodle.Agentes.actions.AcompanhanteTutor.ativas.InformarAtividadesEncerrando;
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.InformarNovaDisciplina;
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.MantemForumAtivo;
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.MantemTutorAtivo;
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.NotificaCoordenadorDeTutores;
+import moodle.Agentes.actions.AcompanhanteTutor.ativas.OrientarAlunoNotaBaixa;
 import moodle.Agentes.actions.AcompanhanteTutor.ativas.TutoresParticipantes;
-import moodle.Agentes.actions.AcompanhanteTutor.comunicacao.InformarAtividadesEncerrando;
-import moodle.Agentes.actions.AcompanhanteTutor.comunicacao.OrientarAlunoNotaBaixa;
 import moodle.Agentes.actions.AcompanhanteTutor.comunicacao.ResponderAgentes;
 import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
