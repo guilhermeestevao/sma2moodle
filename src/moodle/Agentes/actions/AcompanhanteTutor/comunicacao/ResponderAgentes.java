@@ -3,6 +3,8 @@ package moodle.Agentes.actions.AcompanhanteTutor.comunicacao;
 import java.util.List;
 import java.util.Map;
 
+import moodle.Agentes.actions.AcompanhanteTutor.ativas.InformarAtividadesEncerrando;
+import moodle.Agentes.actions.AcompanhanteTutor.ativas.OrientarAlunoNotaBaixa;
 import moodle.dados.Aluno;
 import moodle.dados.Atividade;
 import moodle.dados.Curso;

@@ -1,4 +1,4 @@
-package moodle.Agentes.actions.AcompanhanteTutor.comunicacao;
+package moodle.Agentes.actions.AcompanhanteTutor.ativas;
 
 import java.math.BigInteger;
 import java.util.List;
