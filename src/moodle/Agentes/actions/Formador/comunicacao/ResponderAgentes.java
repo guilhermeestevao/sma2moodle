@@ -3,6 +3,7 @@ package moodle.Agentes.actions.Formador.comunicacao;
 import java.util.List;
 import java.util.Map;
 
+import moodle.Agentes.actions.Formador.ativas.OrientarAlunoNotaBaixa;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 import jade.core.Agent;
