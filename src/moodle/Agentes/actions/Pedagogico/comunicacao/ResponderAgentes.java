@@ -12,6 +12,7 @@ import jade.proto.AchieveREResponder;
 import java.util.List;
 import java.util.Map;
 
+import moodle.Agentes.actions.Pedagogico.ativas.OrientarAlunoNotaBaixaDisciplina;
 import moodle.dados.Aluno;
 import moodle.dados.Curso;
 
