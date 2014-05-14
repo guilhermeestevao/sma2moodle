@@ -55,10 +55,11 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 	@Override
 	public void execute(Environment env, Object[] params) {
 
-		System.out.println("Action chamada");
+		
 		if(!ControleActions.isInformarNotasAtrasadas())
 			return;
 		
+		System.out.println("Action chamada");
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
@@ -127,7 +128,7 @@ public class InformarNotasAtrasadas extends ActionMoodle{
 							continue;
 						else{
 							Timestamp atual = new Timestamp(System.currentTimeMillis());
-							AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), useridto, curso.getId(),atual,smallmessage);
+						//	AgenteUtil.addActionAgente(getId_action(), comp.getIdAgente(), useridto, curso.getId(),atual,smallmessage);
 						}
 						String fullmessage = smallmessage;
 						fullmessage += "\n--------------------------------------------------------------------- \nEste e-mail � uma copia de uma mensagem que foi enviada para você em \"GESMA\". Clique http://127.0.1.1/moodle/message/index.php?user=" + useridto + "&id= " + useridfrom +" para responder. ";
