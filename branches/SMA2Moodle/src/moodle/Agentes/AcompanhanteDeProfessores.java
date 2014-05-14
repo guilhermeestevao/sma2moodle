@@ -5,23 +5,23 @@ import java.util.Map;
 
 import moodle.Agentes.actions.AcompanhanteDeProfessores.InformarNotasAtrasadas;
 import jamder.Environment;
-import jamder.agents.ModelAgent;
+import jamder.agents.ReflexAgent;
 import jamder.behavioural.Action;
 import jamder.roles.AgentRole;
-import jamder.structural.Belief;
 
-public class AcompanhanteDeProfessores extends ModelAgent{
+public class AcompanhanteDeProfessores extends ReflexAgent{
 
 	private int idAgente;
 	
-	public AcompanhanteDeProfessores(String name, Environment environment, AgentRole agentRole) {
+	public AcompanhanteDeProfessores(String name, Environment environment,
+			AgentRole agentRole) {
 		super(name, environment, agentRole);
+		setIdAgente(8);
+		System.out.println("Agente Teste chamado");
 		
-
 		Action informarNotasAtrasadas = new InformarNotasAtrasadas("informarNotasAtrasadas", null, null, new BigInteger(""+idAgente));
-		addAction("informarNotasAtrasadas", informarNotasAtrasadas);
+		//addAction("informarNotasAtrasadas", informarNotasAtrasadas);
 		
-		setIdAgente(1);
 		
 	}
 	
@@ -36,12 +36,6 @@ public class AcompanhanteDeProfessores extends ModelAgent{
 			}
 		}
 	}
-
-	@Override
-	protected Belief nextFunction(Belief arg0, String arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	public int getIdAgente() {
 		return idAgente;
@@ -51,5 +45,6 @@ public class AcompanhanteDeProfessores extends ModelAgent{
 	public void setIdAgente(int idAgente) {
 		this.idAgente = idAgente;
 	}
+
 
 }

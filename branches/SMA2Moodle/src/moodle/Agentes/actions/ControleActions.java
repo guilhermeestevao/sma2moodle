@@ -28,6 +28,7 @@ public class ControleActions {
 	//Agente formador e grupos
 	private static boolean formargrupos = false;
 	private static boolean classificandoAlunos;
+	private static boolean orientarAlunoNotaBaixa = false;
 	
 	//agente pedagogico 
 	private static boolean informaAtividadeDisciplina = false;
@@ -223,6 +224,14 @@ public class ControleActions {
 		ControleActions.classificandoAlunos = classificandoAlunos;
 	}
 
+	public static boolean isOrientarAlunoNotaBaixa() {
+		return orientarAlunoNotaBaixa;
+	}
+
+	public static void setOrientarAlunoNotaBaixa(boolean orientarAlunoNotaBaixa) {
+		ControleActions.orientarAlunoNotaBaixa = orientarAlunoNotaBaixa;
+	}
+
 	public static void liberarActions(){
 		//Action companheiro de aprendizagem 
 		criaChat = true;
@@ -245,6 +254,7 @@ public class ControleActions {
 		//Formador de grupos
 		formargrupos = true;
 		classificandoAlunos = true;
+		orientarAlunoNotaBaixa = true;
 		
 		//agente pedagogico 
 		informaAtividadeDisciplina = true;
@@ -284,7 +294,7 @@ public class ControleActions {
 		(exibirDicasForum = false) &&
 		(exibirDicasPArticipantes = false) && 
 		(criarUrl = false) &&
-		(criarFolderFiles = false)){
+		(criarFolderFiles = false) && (orientarAlunoNotaBaixa = false)){
 			return true;
 		}else{
 			return false;
