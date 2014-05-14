@@ -13,7 +13,7 @@ import java.util.Map;
 
 import moodle.Agentes.actions.Pedagogico.ativas.InformarAtividadesDisciplina;
 import moodle.Agentes.actions.Pedagogico.ativas.InformarPreRequisitos;
-import moodle.Agentes.actions.Pedagogico.comunicacao.OrientarAlunoNotaBaixaDisciplina;
+import moodle.Agentes.actions.Pedagogico.ativas.OrientarAlunoNotaBaixaDisciplina;
 import moodle.Agentes.actions.Pedagogico.comunicacao.ResponderAgentes;
 import jamder.agents.*;
 

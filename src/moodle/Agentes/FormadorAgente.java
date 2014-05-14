@@ -7,13 +7,17 @@ import jamder.Environment;
 import jamder.roles.AgentRole;
 import jamder.structural.*;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 
 
+
+
 import moodle.Agentes.actions.Formador.ativas.ClassificandoAlunos;
 import moodle.Agentes.actions.Formador.ativas.FormarGrupos;
+import moodle.Agentes.actions.Formador.ativas.OrientarAlunoNotaBaixa;
 import moodle.Agentes.actions.Formador.comunicacao.ResponderAgentes;
 import jamder.agents.*;
 
@@ -26,19 +30,19 @@ public class FormadorAgente extends UtilityAgent {
     super(name, env, agRole);
     
     idAgente = 6;
-    
+    System.out.println("Agente Formador chamado");
     addBelief("crencasFormaGrupos.pl", new Belief("crencasFormaGrupos.pl", "String", ""));
     
     Action classificandoAlunos = new ClassificandoAlunos("classificandoAlunos");
-   // addAction("classificandoAlunos", classificandoAlunos);
+    //addAction("classificandoAlunos", classificandoAlunos);
     
     Action formarGrupos = new FormarGrupos("formarGrupos");
-   // addAction("formarGrupos", formarGrupos);
+    //addAction("formarGrupos", formarGrupos);
     
-  
+    Action OrientaAlunoNotaBaixa = new OrientarAlunoNotaBaixa("orientarAlunoNotaBaixa",null,null, new BigInteger(""+idAgente));
+    //addAction("orientarAlunoNotaBaixa", OrientaAlunoNotaBaixa);  
     
     
-  
   }
   
   @Override
