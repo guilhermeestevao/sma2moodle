@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -16,7 +17,7 @@ import javax.persistence.JoinColumn;;
 @NamedQuery(name = "MaterialByCurso", query = "SELECT material FROM Material material")
 public class Material implements Serializable{
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String nome;
 	private String link;

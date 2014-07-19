@@ -194,13 +194,13 @@ public class MantemForumAtivo extends ActionMoodle{
 				
 			}
 			}catch(NullPointerException e){
-				JPAUtil.closeEntityManager();
+				JPAUtil.closeEntityManager(this.getClass());
 				ControleActions.setMantemForumAtivo(false);
 			}
 			
 		}
 		}
-		JPAUtil.closeEntityManager();
+		JPAUtil.closeEntityManager(this.getClass());
 		ControleActions.setMantemForumAtivo(false);
 	}
 	

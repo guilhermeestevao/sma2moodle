@@ -167,9 +167,9 @@ public class InformarNovaDisciplina extends ActionMoodle {
 									ControleEnvio.enviar(msg, env, idAction);
 									
 								}
-								JPAUtil.closeEntityManager();
+								JPAUtil.closeEntityManager(this.getClass());
 							} catch (NullPointerException e) {
-								JPAUtil.closeEntityManager();
+								JPAUtil.closeEntityManager(this.getClass());
 								ControleActions
 										.setInformaAtividadeDisciplina(false);
 							}

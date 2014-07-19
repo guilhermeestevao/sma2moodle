@@ -84,7 +84,7 @@ public class CriarFolderFiles extends ActionMoodle {
 		d_Atual.setTime(dataAtual);
 		
 		List<Curso> cursos = manager.getCursos();
-		JPAUtil.beginTransaction();
+		JPAUtil.beginTransaction(this.getClass());
 		synchronized (cursos) {
 			for(Curso c: cursos){
 				;
@@ -415,7 +415,7 @@ public class CriarFolderFiles extends ActionMoodle {
 			}
 
 		}
-		JPAUtil.closeEntityManager();
+		JPAUtil.closeEntityManager(this.getClass());
 		
 		ControleActions.setCriarFolderFiles(false);
 	}

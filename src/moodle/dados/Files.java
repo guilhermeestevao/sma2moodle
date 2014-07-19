@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NamedQuery(name = "FilesByFolder", query = "SELECT files FROM Files files WHERE contextid = ?1")
 public class Files implements Serializable {
 
-	@Id@GeneratedValue
+	@Id@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String contenthash;
 	private String pathnamehash;

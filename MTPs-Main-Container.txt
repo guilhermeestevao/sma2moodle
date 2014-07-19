@@ -1,1 +1,1 @@
-http://guilherme-A410-K-BE47P1:7778/acc
+http://guilherme:7778/acc

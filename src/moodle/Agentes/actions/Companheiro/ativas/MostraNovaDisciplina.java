@@ -64,8 +64,6 @@ public class MostraNovaDisciplina extends ActionMoodle{
 		System.out.println(myAgent.getLocalName()+" - "+this.getName());
 		SalvarLog.salvarArquivo(myAgent.getLocalName()+" - "+this.getName());
 		
-		System.out.println("Action chamada");
-		
 		GerenciaCurso manager = ((MoodleEnv) env).getGerenciaCurso();
 
 		BigInteger useridfrom = new BigInteger("2");
@@ -89,8 +87,6 @@ public class MostraNovaDisciplina extends ActionMoodle{
 				novosCursos.add(curso);
 		}
 		
-		System.out.println("Cursos Novos Vazio:"+ novosCursos.isEmpty());
-
 		if (!novosCursos.isEmpty()) {
 			podeEnviar = true;
 			
@@ -98,20 +94,13 @@ public class MostraNovaDisciplina extends ActionMoodle{
 			SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
 			for(Curso c : manager.getCursos()){
-					System.out.println("Curso velho: "+c.getFullName());
-					System.out.println("Curso velho categoria: "+c.getCategory());
+				
 				for (Curso cn : novosCursos) {
 					//Se os dois cursos estiverem na mesma categoria
-					System.out.println("Curso novo: "+cn.getFullName());
-					System.out.println("Curso novo categoria: "+cn.getCategory());
-					
+				
 					if(c.getCategory().equals(cn.getCategory())){
 					
-						
-					System.out.println("Vai percorrer os alunos");
 					for (Aluno al : c.getAlunos()) {
-						
-						System.out.println("Aluno: "+al.getCompleteName());
 						
 						EntityManager entManager = JPAUtil.getEntityManager();
 						try {
@@ -171,7 +160,7 @@ public class MostraNovaDisciplina extends ActionMoodle{
 				
 				
 			}
-			JPAUtil.closeEntityManager();
+			
 			
 		}
 		

@@ -161,7 +161,7 @@ public class AlunosParticipantes extends ActionMoodle {
 				//smallmessage += "É necessário que você incentive e acompanhe a participação desse(s) aluno(s) nos respectivos fórum(s).";
 
 				
-				JPAUtil.closeEntityManager();
+				JPAUtil.closeEntityManager(this.getClass());
 				
 					if (podeEnviar) {
 						//Timestamp atual = new Timestamp(System.currentTimeMillis());

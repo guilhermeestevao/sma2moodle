@@ -7,6 +7,7 @@ import java.util.HashSet;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -21,7 +22,7 @@ import javax.persistence.CascadeType;
 @Table(name = "ag_assunto")
 @NamedQuery(name = "AssuntoByMaterial", query = "SELECT assunto FROM Assunto assunto")
 public class Assunto implements Serializable{
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 

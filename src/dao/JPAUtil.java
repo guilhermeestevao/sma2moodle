@@ -27,7 +27,7 @@ public class JPAUtil {
 		/**
 		 *  Fecha o EntityManager atrelado à  Thread atual e retira-o da ThreadLocal.
 		 */
-		public static void closeEntityManager() {
+		public static void closeEntityManager(Class<?> classe) {
 			EntityManager em = ems.get();
 			if (em != null) {
 				EntityTransaction tx = em.getTransaction();
@@ -36,10 +36,12 @@ public class JPAUtil {
 				}
 				em.close();
 				ems.set(null);
+				//System.err.println("Transação fechada - "+classe.getSimpleName()+"\n");
 			}
 		}
 	 
-		public static void beginTransaction() {
+		public static void beginTransaction(Class<?> classes) {
+			//System.err.println("Iniciou-se uma transação - "+ classes.getSimpleName()+"\n");
 			getEntityManager().getTransaction().begin();
 		}
 		

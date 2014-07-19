@@ -88,8 +88,7 @@ public class PesquisarData extends ActionMoodle {
 			System.out.println(">"+curso.getFullName());
 			
 			for(Aluno aluno : curso.getAlunos()){
-				System.out.println("Aluno ->"+aluno.getCompleteName());
-				
+			
 				podeEnviar = false;
 				
 				BigInteger useridto = aluno.getId();
@@ -211,8 +210,6 @@ public class PesquisarData extends ActionMoodle {
 				
 			}
 		}
-		
-		JPAUtil.closeEntityManager();
 		
 		ControleActions.setPesquisaData(false);
 		

@@ -14,8 +14,8 @@ import javax.persistence.Table;
 public class ModuloCurso {
 	
 	
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Id
+	
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 	private BigInteger course;
 	private BigInteger module;

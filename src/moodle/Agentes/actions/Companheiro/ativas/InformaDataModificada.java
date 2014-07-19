@@ -90,7 +90,7 @@ public class InformaDataModificada extends ActionMoodle{
 			
 			//Percorrendo ativiades do ambiente para comparar se ouveram mudan�as de datas
 			for(Atividade atividade : atividadesDoAmbiente){
-				System.out.println("Atividade: "+atividade.getName());
+				
 				//Verifica se a atividade � puramente avaliativa
 				if(atividade instanceof AtividadeNota){
 					AtividadeNota atAmbiente = (AtividadeNota) atividade;
@@ -111,7 +111,7 @@ public class InformaDataModificada extends ActionMoodle{
 								//Se o horario tiver mudado a set da agente user� atualizado com o do ambiente
 								if(!dataDoAgente.equals(dataDoAmbiente)){
 									//JOptionPane.showMessageDialog(null, "A atividade "+atAgente.getName()+" mudou \n De: "+dateFormat.format(dataDoAgente)+" para "+dateFormat.format(dataDoAmbiente));
-									System.out.println("Atividade: "+atividade.getName()+" mudou a data");
+									
 									enviarMensgem(env, c.getAlunos(), atAgente, atAmbiente, c.getId());
 									ativadadesDoAgente.remove(dataDoAgente);
 									ativadadesDoAgente.add(atAmbiente);

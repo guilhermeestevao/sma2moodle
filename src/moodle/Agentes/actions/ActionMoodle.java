@@ -43,7 +43,7 @@ public class ActionMoodle extends Action {
 		
 		try{
 			
-			JPAUtil.beginTransaction();
+			JPAUtil.beginTransaction(this.getClass());
 			
 			Query q = 	JPAUtil.getEntityManager().createNativeQuery("SELECT id FROM ag_actions_agentes WHERE id_curso = ? AND id_aluno = ? AND id_action = ?");
 			q.setParameter(1, idCurso);
@@ -58,7 +58,7 @@ public class ActionMoodle extends Action {
 			
 			return false;
 		}finally{
-			JPAUtil.closeEntityManager();
+			JPAUtil.closeEntityManager(this.getClass());
 		}
 		
 		
@@ -67,7 +67,7 @@ public class ActionMoodle extends Action {
 	protected boolean verificaMens(BigInteger idCurso, BigInteger idAluno, String mens){
 		try{
 			
-			JPAUtil.beginTransaction();
+			JPAUtil.beginTransaction(this.getClass());
 			
 			Query q = 	JPAUtil.getEntityManager().createNativeQuery("SELECT mensagem FROM ag_actions_agentes WHERE id_aluno = ? AND id_action = ?");
 			q.setParameter(1, idAluno);
@@ -87,7 +87,7 @@ public class ActionMoodle extends Action {
 			// retornando falso ele irá enviar a mensagem
 			return false;
 		}finally{
-			JPAUtil.closeEntityManager();
+			JPAUtil.closeEntityManager(this.getClass());
 		}
 		//retorna false caso exista mensagem enviada por essa action mas não sejá igual a que já foi enviada.
 		return false;

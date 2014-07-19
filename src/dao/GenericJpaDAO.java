@@ -158,7 +158,7 @@ public abstract class GenericJpaDAO<T> implements GenericDAO<T> {
 	}
  
 	public void beginTransaction() {
-		JPAUtil.beginTransaction();
+		JPAUtil.beginTransaction(persistentClass);
 	}
  
 	public void commit() {
@@ -170,7 +170,7 @@ public abstract class GenericJpaDAO<T> implements GenericDAO<T> {
 	}
  
 	public void close() {
-		JPAUtil.closeEntityManager();
+		JPAUtil.closeEntityManager(persistentClass);
 	}
  
 }

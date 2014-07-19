@@ -98,10 +98,10 @@ public class CriaChat extends ActionMoodle {
 				if (an instanceof Questionario) {
 					
 					Questionario questionario = (Questionario) an;
-					System.out.println("Questionario -> "+questionario.getName());
+					
 					if (difDias(questionario.getDataFinal()) == 3) {
 						podeEnviar = true;
-						System.out.println("Falta 3 dias");
+						
 						//JPAUtil.beginTransaction();
 						EntityManager entManager = JPAUtil.getEntityManager();
 						
@@ -111,7 +111,6 @@ public class CriaChat extends ActionMoodle {
 						List<Chat> chats = query.getResultList();
 						
 						if(!chats.isEmpty()){
-							JPAUtil.closeEntityManager();
 							continue;
 						}
 						
@@ -160,13 +159,12 @@ public class CriaChat extends ActionMoodle {
 						
 						c.setSectioncache(" ");
 						
-						JPAUtil.closeEntityManager();
 						
 						for(Aluno aluno : c.getAlunos()){
 							
 							if(podeEnviar){
 							
-								System.out.println("Aluno: "+aluno.getCompleteName());
+						
 						//		JPAUtil.beginTransaction();
 								EntityManager entManager2 = JPAUtil.getEntityManager();
 								BigInteger useridfrom = new BigInteger("2");
@@ -181,7 +179,7 @@ public class CriaChat extends ActionMoodle {
 								smallmessage = smallmessage.replaceAll("<nome do aluno>", aluno.getCompleteName());
 								smallmessage = smallmessage.replaceAll("<data do chat>", dateFormat.format(chat.getChattime()));
 								
-								JPAUtil.closeEntityManager();
+							
 								smallmessage += "\n";
 								
 								CompanheiroAgente comp = (CompanheiroAgente)myAgent;
