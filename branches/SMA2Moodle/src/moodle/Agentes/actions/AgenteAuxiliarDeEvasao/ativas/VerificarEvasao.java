@@ -53,7 +53,7 @@ public class VerificarEvasao extends ActionMoodle{
 		block(10 * 1000L);
 		if(!mantemAtivo)
 			return;
-		JPAUtil.beginTransaction();
+		JPAUtil.beginTransaction(this.getClass());
 		EntityManager entManager = JPAUtil.getEntityManager();		
 		String sql = "Select login from ag_login";
 		Query q = entManager.createNativeQuery(sql);
@@ -125,7 +125,7 @@ public class VerificarEvasao extends ActionMoodle{
         		}
         		//break;
         }
-       	JPAUtil.closeEntityManager();	
+       	JPAUtil.closeEntityManager(this.getClass());	
 	}
 
 	

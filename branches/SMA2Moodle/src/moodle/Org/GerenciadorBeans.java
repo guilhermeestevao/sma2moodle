@@ -51,7 +51,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 				try {
 
-					JPAUtil.beginTransaction();
+					JPAUtil.beginTransaction(this.getClass());
 
 					for (Curso c : listaCursos) {
 						System.out.println("Atualizando ambiente...");
@@ -92,7 +92,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 					System.out.println("\n************** ERRO ************\nMensagem: "+ e.getMessage());
 					System.out.println("Causa: " + e.getCause());
 				} finally {
-					JPAUtil.closeEntityManager();
+					JPAUtil.closeEntityManager(this.getClass());
 				}
 
 				List<Mensagem> mensagens = environment.getMensagens();
@@ -108,7 +108,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 						for (Mensagem msg : mensagens) {
 							managerDao.persist(msg);
-
+							
 						}
 
 					}

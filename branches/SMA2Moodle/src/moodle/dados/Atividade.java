@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -20,7 +21,7 @@ import javax.persistence.Transient;
 public abstract class Atividade implements Serializable {
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 	private String name;
 	

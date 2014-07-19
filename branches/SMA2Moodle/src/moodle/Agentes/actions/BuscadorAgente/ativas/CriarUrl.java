@@ -142,7 +142,7 @@ public class CriarUrl extends ActionMoodle{
 	// Metodos para persistir a URL.
 	public void inserirUrl(Curso c, Questionario qst, BigInteger m){
 		
-		JPAUtil.beginTransaction();
+		JPAUtil.beginTransaction(this.getClass());
 		EntityManager entManager = JPAUtil.getEntityManager();
 		
 			for(Material mate : qst.getMateriais()){
@@ -200,13 +200,13 @@ public class CriarUrl extends ActionMoodle{
 				c.setSectioncache(" ");
 				entManager.merge(c);	
 		  }
-		JPAUtil.closeEntityManager();
+		JPAUtil.closeEntityManager(this.getClass());
 	}
 	
 
 public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 		
-	JPAUtil.beginTransaction();
+	JPAUtil.beginTransaction(this.getClass());
 	EntityManager entManager = JPAUtil.getEntityManager();
 	
 			for(Material mate : trf.getMateriais()){
@@ -303,7 +303,7 @@ public void inserirUrl(Curso c, Tarefa trf, BigInteger m){
 				entManager.merge(c);
 
 			}
-			JPAUtil.closeEntityManager();
+			JPAUtil.closeEntityManager(this.getClass());
 		
 	}
 	

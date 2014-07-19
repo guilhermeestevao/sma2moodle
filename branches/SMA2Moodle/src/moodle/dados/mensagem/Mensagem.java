@@ -1,17 +1,21 @@
 package moodle.dados.mensagem;
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "mdl_message")
 public class Mensagem {
 
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private BigInteger useridfrom;
 	private BigInteger useridto;
@@ -19,12 +23,10 @@ public class Mensagem {
 	private String fullmessage;
 	private String smallmessage;
 	private Long timecreated;
-	//private int fullmessageformat;
-	//private String fullmessagehtml;
-	//private int notification;
 	
-	
-	public Mensagem(){}
+	public Mensagem(){
+		
+	}
 	
 	public Long getId() {
 		return id;

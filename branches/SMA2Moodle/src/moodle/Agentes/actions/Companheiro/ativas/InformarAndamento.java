@@ -180,7 +180,6 @@ public class InformarAndamento extends ActionMoodle {
 
 				}
 				*/
-				JPAUtil.closeEntityManager();				
 			
 				if(nota == null && atividadesAlunoSemNota.isEmpty()){
 					//smallmessage += "\n\n Sem atividades no curso até o momento.";

@@ -25,13 +25,13 @@ public class AjudanteAgente extends ReflexAgent {
    setIdAgente(2);
    
    Action exibirDicasForuns = new ExibirDicasForuns("exibirDicasForuns", null, null, new BigInteger(""+idAgente));
-   //addAction("exibirDicasForuns", exibirDicasForuns);
+   addAction("exibirDicasForuns", exibirDicasForuns);
    Action exibirDicasCalendario = new ExibirDicasCalendario("exibirDicasCalendario", null, null, new BigInteger(""+idAgente));
-   //addAction("exibirDicasCalendario", exibirDicasCalendario);
+   addAction("exibirDicasCalendario", exibirDicasCalendario);
    Action exibirDicasConfiguracoes = new ExibirDicasConfiguracoes("exibirDicasConfiguracoes", null, null, new BigInteger(""+idAgente));
-  // addAction("exibirDicasConfiguracoes", exibirDicasConfiguracoes);
+   addAction("exibirDicasConfiguracoes", exibirDicasConfiguracoes);
    Action exibirDicasParticipantes = new ExibirDicasParticipantes("exibirDicasParticipantes", null, null,  new BigInteger(""+idAgente));
-   //addAction("exibirDicasParticipantes", exibirDicasParticipantes);
+   addAction("exibirDicasParticipantes", exibirDicasParticipantes);
    
  
    }

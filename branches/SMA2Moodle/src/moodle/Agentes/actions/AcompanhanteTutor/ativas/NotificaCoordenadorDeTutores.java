@@ -77,7 +77,7 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 
 		boolean podeEnviar = false;
 
-		JPAUtil.beginTransaction();
+		JPAUtil.beginTransaction(this.getClass());
 		EntityManager entManager = JPAUtil.getEntityManager();		
 		String sql = "Select login from ag_login";
 		Query q = entManager.createNativeQuery(sql);
@@ -85,7 +85,7 @@ public class NotificaCoordenadorDeTutores extends ActionMoodle {
 		senha = "#Gesma2@Moodle4&Sma$";
 		
 		
-		JPAUtil.closeEntityManager();
+		JPAUtil.closeEntityManager(this.getClass());
 		
 		List<Curso> cursos = new ArrayList<Curso>(manager.getCursos());
 		

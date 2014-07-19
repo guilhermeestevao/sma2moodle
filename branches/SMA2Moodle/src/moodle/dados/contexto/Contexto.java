@@ -14,8 +14,7 @@ import javax.persistence.Table;
 @Table(name="mdl_context")
 public class Contexto {
 	 
-//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 	private BigInteger contextlevel;
 	private BigInteger instanceid;

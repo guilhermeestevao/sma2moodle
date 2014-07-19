@@ -41,7 +41,7 @@ public class AddNota extends Action {
 	
         block(10 * 1000L);
         
-        JPAUtil.beginTransaction();
+        JPAUtil.beginTransaction(this.getClass());
         EntityManager manager = JPAUtil.getEntityManager();
         double media = 0;
         BigInteger userId  = null;
@@ -95,7 +95,7 @@ public class AddNota extends Action {
                 //Se o commit acima lan�ar rollback, entao nao foi adicionado nova nota, assim nao preciso
                 // recalcular a media
                 
-                JPAUtil.beginTransaction();
+                JPAUtil.beginTransaction(this.getClass());
                 
                 userId = new BigInteger(new Long(ag.getId()).toString());
                 
@@ -143,7 +143,7 @@ public class AddNota extends Action {
                 JPAUtil.rollback();
         
         }finally{
-            JPAUtil.closeEntityManager();
+            JPAUtil.closeEntityManager(this.getClass());
                 
         }
 	  

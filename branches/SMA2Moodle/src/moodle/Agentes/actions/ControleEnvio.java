@@ -43,21 +43,21 @@ public class ControleEnvio {
 		formasDeEnvio = new HashMap<Integer, String>();
 		formasDeEnvio.put(new Integer(1), "SMS");
 		formasDeEnvio.put(new Integer(2), "E-Mail");
-		formasDeEnvio.put(new Integer(3), "Moodle");
-		
+		formasDeEnvio.put(new Integer(3), "Moodle");	
 	}
 
 	public static List<Integer> verificaFormasEnvio(int action){
 		try{
-			JPAUtil.beginTransaction();
 			Query query = JPAUtil.getEntityManager().createNativeQuery("SELECT forma FROM ag_forma_envio_action WHERE action = ?");
 			query.setParameter(1, action);
 			List<Integer> formas = query.getResultList();
+			
 			return formas;
 		}catch(NoResultException e){
+			System.err.println(e.getMessage());
 			return null;
 		}finally{
-			JPAUtil.closeEntityManager();
+			
 		}
 	}
 
@@ -108,7 +108,6 @@ public class ControleEnvio {
 
 			destinatario = "guilhermeestevo@gmail.com";
 			
-			JPAUtil.beginTransaction();
 			EntityManager entManager = JPAUtil.getEntityManager();		
 			String sqlLogin = "Select login from ag_login";
 			Query queryLogin = entManager.createNativeQuery(sqlLogin);
@@ -118,8 +117,6 @@ public class ControleEnvio {
 			String sqlSenha = "Select senha from ag_login";
 			Query querySenha = entManager.createNativeQuery(sqlSenha);
 			senha = (String)querySenha.getSingleResult();	
-
-			JPAUtil.closeEntityManager();
 
 			Properties props = new Properties();
 			props.put("mail.smtp.auth", "true");
@@ -175,7 +172,7 @@ public class ControleEnvio {
 			String username="guilhermeestevo"; 
 			String password="guilhermeestevo";  
 			String mensagemaenviar= mensagem.getSmallmessage();
-			System.out.println(mensagemaenviar);
+			
 			mensagemaenviar.replaceAll(" ", "+");
 			String mensagemlonga = "0";
 			String tipo = "normal"; 

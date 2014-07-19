@@ -21,7 +21,8 @@ public class ControleActions {
 	private static boolean manteTutorAtivo = false;
 	private static boolean notificaCoordenadorDeTutores = false;
 	private static boolean tutoresPArticipantes = false;
-	
+	private static boolean ClassificaAluno = false; 
+
 	//Agente ompanheiro de professores
 	private static boolean informarNotasAtrasadas = false;
 	
@@ -49,6 +50,14 @@ public class ControleActions {
 		return criaChat;
 	}
 	
+	public static boolean isClassificaAluno() {
+		return ClassificaAluno;
+	}
+	
+	public static void setClassificaAluno(boolean classificaAluno) {
+		ClassificaAluno = classificaAluno;
+	}
+
 	public static void setCriaChat(boolean criaChat) {
 		ControleActions.criaChat = criaChat;
 	}
@@ -247,6 +256,7 @@ public class ControleActions {
 		manteTutorAtivo = true;
 		notificaCoordenadorDeTutores = true;
 		tutoresPArticipantes = true;
+		classificandoAlunos = true;
 		
 		//Agente ompanheiro de professores
 		informarNotasAtrasadas = true;
@@ -287,6 +297,7 @@ public class ControleActions {
 		(informarNotasAtrasadas = false) &&
 		(informaAtividadeDisciplina = false) &&
 		(informaPreRequisito = false) &&
+		(ClassificaAluno = false) &&
 		(formargrupos = false)&&
 		(classificandoAlunos = false) &&
 		(exibirDicasCalendario = false) &&

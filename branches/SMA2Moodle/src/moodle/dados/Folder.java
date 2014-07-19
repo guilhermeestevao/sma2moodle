@@ -16,6 +16,7 @@ import moodle.dados.grupos.Grupo;
 @NamedQuery(name="FolderByCurso", query="SELECT folder FROM Folder folder WHERE course= ?1")
 public class Folder implements Serializable{
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private BigInteger id;
 	private BigInteger course;
 	private String name;
