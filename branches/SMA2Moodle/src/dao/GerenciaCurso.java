@@ -102,6 +102,7 @@ public class GerenciaCurso {
 		try{
 			EntityManager manager = JPAUtil.getEntityManager();
 			Query query = manager.createNativeQuery("SELECT id_agente FROM ag_agente_curso WHERE id_curso = ?1");
+			System.out.println("ID CURSO: "+curso.getFullName());
 			query.setParameter(1, curso.getId());
 			List<BigInteger> agIds = query.getResultList();
 			curso.definirAgentesAtivos(agIds);
