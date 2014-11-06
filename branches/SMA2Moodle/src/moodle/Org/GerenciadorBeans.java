@@ -38,7 +38,7 @@ public class GerenciadorBeans extends ThreadsServicos {
 
 				gerenciador.getCursos().clear();
 
-				gerenciador.addCurso(new BigInteger("203"));
+				gerenciador.addCurso(new BigInteger("2"));
 //				gerenciador.addCurso(new BigInteger("282"));
 //				gerenciador.addCurso(new BigInteger("242"));
 //				gerenciador.addCurso(new BigInteger("232"));
