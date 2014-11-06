@@ -58,7 +58,7 @@ public class OrientarAlunoNotaBaixa extends Action {
 		MoodleEnv envir = (MoodleEnv) env;
 		System.out.println("Action Orientar chamada");
 		
-		
+		System.out.println("TAMANHO: "+alunosNotaBaixa.size());
 			for(Map.Entry<Curso, List<Aluno>> results : alunosNotaBaixa.entrySet()){
 				
 				if(results.getValue().isEmpty())

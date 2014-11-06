@@ -1,28 +1,21 @@
 package moodle.Agentes;
-import jade.core.AID;
-import jade.core.behaviours.TickerBehaviour;
-import jade.lang.acl.ACLMessage;
 import jamder.behavioural.*;
 import jamder.Environment;
 import jamder.roles.AgentRole;
 import jamder.structural.*;
 
 import java.math.BigInteger;
-import java.util.Collection;
-import java.util.List;
+
 import java.util.Map;
 
 import Util.SalvarLog;
-import moodle.Agentes.actions.Companheiro.ativas.CriaChat;
 import moodle.Agentes.actions.Companheiro.ativas.InformaDataModificada;
 import moodle.Agentes.actions.Companheiro.ativas.InformarAndamento;
 import moodle.Agentes.actions.Companheiro.ativas.MostraNovaDisciplina;
-import moodle.Agentes.actions.Companheiro.ativas.PesquisarData;
 import moodle.Agentes.actions.Companheiro.comunicacao.ComunicarAcompanhanteTutorAgAtividadesEncerrando;
 import moodle.Agentes.actions.Companheiro.comunicacao.ComunicarAcompanhanteTutorAgNotasBaixas;
 import moodle.Agentes.actions.Companheiro.comunicacao.ComunicarFormadorAgNotasBaixas;
 import moodle.Agentes.actions.Companheiro.comunicacao.ComunicarPedagogicoAgNotasBaixas;
-import moodle.dados.Aluno;
 import jamder.agents.*;
 
 public class CompanheiroAgente extends ModelAgent {
@@ -66,11 +59,11 @@ public class CompanheiroAgente extends ModelAgent {
      Action informarAndamento = new InformarAndamento("informarAndamento", null, null, new BigInteger(""+idAgente));
      //addAction("informarAndamento", informarAndamento);
      
-     Action pesquisarDatas = new PesquisarData("pesquisarDatas", null, null, new BigInteger(""+idAgente));
-     addAction("pesquisarDatas", pesquisarDatas);
+//     Action pesquisarDatas = new PesquisarData("pesquisarDatas", null, null, new BigInteger(""+idAgente));
+  //   addAction("pesquisarDatas", pesquisarDatas);
      
-     Action criaChat = new CriaChat("criaChat", null, null, new BigInteger(""+idAgente));
-     addAction("criaChat", criaChat);
+     //Action criaChat = new CriaChat("criaChat", null, null, new BigInteger(""+idAgente));
+     //addAction("criaChat", criaChat);
      
      Action mostraNovaDisciplina = new MostraNovaDisciplina("mostraNovaDisciplina", null, null, new BigInteger(""+idAgente));
      addAction("mostraNovaDisciplina", mostraNovaDisciplina);

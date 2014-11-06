@@ -30,10 +30,10 @@ public class PedagogicoAgente extends GoalAgent {
      addBelief("crencasPedagogico.pl", new Belief("crencasPedagogico.pl", "String", ""));
  
      Action informarPreRequisito = new InformarPreRequisitos("informarPreRequisito", null, null, new BigInteger(""+idAgente));
-     //addAction("informarPreRequisito", informarPreRequisito);
+     addAction("informarPreRequisito", informarPreRequisito);
      
      Action informarAtividadesDisciplina = new InformarAtividadesDisciplina("informarAtividadesDisciplina", null, null, new BigInteger(""+idAgente));
-     //addAction("informarAtividadesDisciplina", informarAtividadesDisciplina);
+     addAction("informarAtividadesDisciplina", informarAtividadesDisciplina);
      
    }
    

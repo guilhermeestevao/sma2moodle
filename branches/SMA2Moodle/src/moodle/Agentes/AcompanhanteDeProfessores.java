@@ -20,7 +20,7 @@ public class AcompanhanteDeProfessores extends ReflexAgent{
 		System.out.println("Agente Teste chamado");
 		
 		Action informarNotasAtrasadas = new InformarNotasAtrasadas("informarNotasAtrasadas", null, null, new BigInteger(""+idAgente));
-		//addAction("informarNotasAtrasadas", informarNotasAtrasadas);
+		addAction("informarNotasAtrasadas", informarNotasAtrasadas);
 		
 		
 	}
